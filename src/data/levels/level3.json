@@ -1,0 +1,56 @@
+{
+  "id": "level3",
+  "name": "Quiet Night Street",
+  "background": "bg_street",
+  "bgColor": "#2c2f4a",
+  "objects": [
+    {
+      "id": "obj_streetlamp",
+      "name": "Glowing Streetlamp",
+      "sprite": "streetlamp",
+      "idleAnim": "breathe",
+      "x": 280, "y": 330,
+      "bbox": { "x": 250, "y": 250, "w": 60, "h": 170 },
+      "mission": "Photograph the warmest light",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_noodlecart",
+      "name": "Noodle Cart",
+      "sprite": "noodlecart",
+      "idleAnim": "sway",
+      "x": 620, "y": 450,
+      "bbox": { "x": 545, "y": 395, "w": 150, "h": 110 },
+      "mission": "Capture a late-night snack spot",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_puddle",
+      "name": "Neon Puddle",
+      "sprite": "puddle",
+      "idleAnim": "breathe",
+      "x": 520, "y": 600,
+      "bbox": { "x": 445, "y": 575, "w": 150, "h": 50 },
+      "mission": "Find a reflection on the ground",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_fox",
+      "name": "City Fox",
+      "sprite": "fox",
+      "idleAnim": "bob",
+      "x": 960, "y": 540,
+      "bbox": { "x": 905, "y": 500, "w": 110, "h": 80 },
+      "mission": "Spot who else is out this late",
+      "isSpecial": true,
+      "dialog": {
+        "speaker": "City Fox",
+        "lines": [
+          "You found me between the lamplight and the steam.",
+          "Most people look straight ahead and miss the night.",
+          "Not you. Go home warm, photographer."
+        ]
+      }
+    }
+  ]
+}

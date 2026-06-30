@@ -1,0 +1,93 @@
+// ResultScene — the result panel. Reveals which missions were actually captured
+// across the roll (the risk of confirming early), the score, and a grade.
+import Phaser from 'phaser';
+import { CONFIG } from '../config/gameConfig.js';
+import { LEVELS } from './levels.js';
+import { popIn, pressDip, gradeReveal, checkPop, fadeScene, EASE, DUR } from '../anim/motion.js';
+
+export class ResultScene extends Phaser.Scene {
+  constructor() { super('ResultScene'); }
+  init(data) { this.payload = data || {}; }
+
+  create() {
+    const { width: W, height: H } = this.cameras.main;
+    this.cameras.main.setBackgroundColor('#20242f');
+    fadeScene(this, 'in');
+
+    const total = Math.round(this.payload.total ?? 0);
+    const max = this.payload.max ?? 0;
+    const frac = max > 0 ? total / max : 0;
+    const levelIndex = this.payload.levelIndex ?? 0;
+    const results = this.payload.missionResults ?? [];
+
+    let grade = 'Bronze', color = '#cd7f32';
+    if (frac >= CONFIG.GRADE.gold) { grade = 'Gold'; color = '#ffd24a'; }
+    else if (frac >= CONFIG.GRADE.silver) { grade = 'Silver'; color = '#cfd6dc'; }
+
+    const head = this.add.text(W / 2, 70, this.payload.levelName || 'Results', {
+      fontFamily: 'system-ui, sans-serif', fontSize: '32px', color: '#fff5e6', fontStyle: 'bold',
+    }).setOrigin(0.5);
+    popIn(head);
+
+    // Mission breakdown list (staggered reveal).
+    const doneCount = results.filter((r) => r.done).length;
+    const listX = W / 2 - 280;
+    let y = 150;
+    results.forEach((r, i) => {
+      const row = this.add.container(listX, y);
+      const mark = this.add.text(0, 0, r.done ? '✓' : '✗', {
+        fontFamily: 'system-ui, sans-serif', fontSize: '24px',
+        color: r.done ? '#9be07a' : '#d98a8a', fontStyle: 'bold',
+      }).setOrigin(0.5).setScale(0);
+      const name = this.add.text(28, -12, `${r.name}${r.isSpecial ? '  ★' : ''}`, {
+        fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: r.done ? '#ffffff' : '#9b958a',
+      }).setOrigin(0, 0);
+      const sub = this.add.text(28, 10, r.done ? `${r.mission} — ${r.score} pts` : `${r.mission} — missed`, {
+        fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#a39d92',
+      }).setOrigin(0, 0);
+      row.add([mark, name, sub]);
+      checkPop(mark, { delay: 200 + i * 120 }); // staggered, overshoot
+      y += 56;
+    });
+
+    const summary = this.add.text(W / 2, y + 16, `${doneCount} / ${results.length} missions  ·  ${total} / ${max} pts`, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#fff5e6',
+    }).setOrigin(0.5);
+    popIn(summary, { delay: 200 + results.length * 120 });
+
+    const gradeT = this.add.text(W / 2, y + 80, grade, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '64px', color, fontStyle: 'bold',
+    }).setOrigin(0.5);
+    gradeReveal(gradeT, { });
+
+    const hasNext = levelIndex < LEVELS.length - 1;
+    const by = H - 60;
+    if (hasNext) {
+      const next = this._button(W / 2 - 130, by, 'Next Level', 0x7bbf6a,
+        () => this._go('LevelScene', { levelIndex: levelIndex + 1 }));
+      popIn(next, { delay: 500 });
+    }
+    const menu = this._button(W / 2 + (hasNext ? 130 : 0), by, 'Menu', 0x4a5a7a,
+      () => this._go('MainMenuScene'));
+    popIn(menu, { delay: 560 });
+  }
+
+  _go(scene, data) {
+    fadeScene(this, 'out', { onComplete: () => this.scene.start(scene, data) });
+  }
+
+  _button(x, y, label, color, onClick, w = 220, h = 56) {
+    const c = this.add.container(x, y);
+    const bg = this.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
+    const txt = this.add.text(0, 0, label, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#ffffff',
+    }).setOrigin(0.5);
+    c.add([bg, txt]);
+    c.setSize(w, h).setInteractive(new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h), Phaser.Geom.Rectangle.Contains);
+    c.on('pointerover', () => this.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, ease: EASE.out, duration: DUR.press }));
+    c.on('pointerout', () => this.tweens.add({ targets: c, scaleX: 1, scaleY: 1, ease: EASE.out, duration: DUR.press }));
+    c.on('pointerdown', () => pressDip(c, { onComplete: onClick }));
+    return c;
+  }
+}
+export default ResultScene;

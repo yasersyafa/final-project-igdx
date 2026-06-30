@@ -1,0 +1,56 @@
+{
+  "id": "level1",
+  "name": "Morning in the Park",
+  "background": "bg_park",
+  "bgColor": "#8fae6b",
+  "objects": [
+    {
+      "id": "obj_bench",
+      "name": "Wooden Bench",
+      "sprite": "bench",
+      "idleAnim": "sway",
+      "x": 300, "y": 470,
+      "bbox": { "x": 240, "y": 425, "w": 120, "h": 90 },
+      "mission": "Photograph a place to sit",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_fountain",
+      "name": "Stone Fountain",
+      "sprite": "fountain",
+      "idleAnim": "breathe",
+      "x": 660, "y": 380,
+      "bbox": { "x": 595, "y": 320, "w": 130, "h": 120 },
+      "mission": "Capture something with running water",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_lamp",
+      "name": "Park Lamp",
+      "sprite": "lamp",
+      "idleAnim": "sway",
+      "x": 980, "y": 360,
+      "bbox": { "x": 955, "y": 280, "w": 50, "h": 160 },
+      "mission": "Frame the tallest thing around",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_cat",
+      "name": "Sleeping Cat",
+      "sprite": "cat",
+      "idleAnim": "breathe",
+      "x": 520, "y": 560,
+      "bbox": { "x": 475, "y": 525, "w": 90, "h": 70 },
+      "mission": "Find the napping resident",
+      "isSpecial": true,
+      "dialog": {
+        "speaker": "Narrator",
+        "lines": [
+          "The cat cracks one eye open, unbothered.",
+          "It has decided you are now part of its morning.",
+          "A tiny purr. Permission granted."
+        ]
+      }
+    }
+  ]
+}

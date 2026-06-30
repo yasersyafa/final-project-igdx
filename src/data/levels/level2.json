@@ -1,0 +1,56 @@
+{
+  "id": "level2",
+  "name": "Afternoon Kitchen",
+  "background": "bg_kitchen",
+  "bgColor": "#caa37a",
+  "objects": [
+    {
+      "id": "obj_kettle",
+      "name": "Copper Kettle",
+      "sprite": "kettle",
+      "idleAnim": "breathe",
+      "x": 320, "y": 360,
+      "bbox": { "x": 270, "y": 315, "w": 100, "h": 90 },
+      "mission": "Photograph what makes the tea",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_fruitbowl",
+      "name": "Bowl of Fruit",
+      "sprite": "fruitbowl",
+      "idleAnim": "bob",
+      "x": 640, "y": 430,
+      "bbox": { "x": 575, "y": 390, "w": 130, "h": 80 },
+      "mission": "Capture something fresh to eat",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_window",
+      "name": "Sunny Window",
+      "sprite": "window",
+      "idleAnim": "sway",
+      "x": 980, "y": 300,
+      "bbox": { "x": 905, "y": 220, "w": 150, "h": 160 },
+      "mission": "Frame where the light comes in",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_plant",
+      "name": "Windowsill Sprout",
+      "sprite": "plant",
+      "idleAnim": "sway",
+      "x": 880, "y": 470,
+      "bbox": { "x": 845, "y": 415, "w": 70, "h": 100 },
+      "mission": "Find the smallest living thing here",
+      "isSpecial": true,
+      "dialog": {
+        "speaker": "The Sprout",
+        "lines": [
+          "Two new leaves this week. A good week.",
+          "Keep the kettle warm and the window open,",
+          "and I will keep growing toward the light."
+        ]
+      }
+    }
+  ]
+}
