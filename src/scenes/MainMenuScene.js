@@ -46,7 +46,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   _play(index) {
-    fadeScene(this, 'out', { onComplete: () => this.scene.start('LevelScene', { levelIndex: index }) });
+    fadeScene(this, 'out', { onComplete: () => this.scene.start('CutsceneScene', { levelIndex: index }) });
   }
 
   _button(x, y, label, color, onClick, w = 220, h = 60, fs = 24) {

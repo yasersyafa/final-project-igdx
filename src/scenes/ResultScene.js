@@ -84,7 +84,7 @@ export class ResultScene extends Phaser.Scene {
     const by = H - 60;
     if (hasNext) {
       const next = this._button(W / 2 - 130, by, 'Next Level', 0x7bbf6a,
-        () => this._go('LevelScene', { levelIndex: levelIndex + 1 }));
+        () => this._go('CutsceneScene', { levelIndex: levelIndex + 1 }));
       popIn(next, { delay: 500 });
     }
     const menu = this._button(W / 2 + (hasNext ? 130 : 0), by, 'Menu', 0x4a5a7a,

@@ -3,6 +3,11 @@
   "name": "Morning in the Park",
   "background": "bg_park",
   "bgColor": "#8fae6b",
+  "cutscene": [
+    "Morning settles over the park.",
+    "Your camera hangs ready at your side.",
+    "Find the small moments before the dew lifts."
+  ],
   "objects": [
     {
       "id": "obj_bench",

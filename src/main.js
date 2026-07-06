@@ -1,4 +1,4 @@
-// Phaser game bootstrap. Scene flow: Boot -> Preload -> MainMenu -> Level -> Result.
+// Phaser game bootstrap. Scene flow: Boot -> Preload -> MainMenu -> Cutscene -> Level -> Result.
 import Phaser from 'phaser';
 import { WORLD } from './config/gameConfig.js';
 import { setReducedMotion } from './anim/motion.js';
@@ -6,6 +6,7 @@ import { setReducedMotion } from './anim/motion.js';
 import { BootScene } from './scenes/BootScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
+import { CutsceneScene } from './scenes/CutsceneScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
 import { ResultScene } from './scenes/ResultScene.js';
 
@@ -24,7 +25,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, LevelScene, ResultScene],
+  scene: [BootScene, PreloadScene, MainMenuScene, CutsceneScene, LevelScene, ResultScene],
 };
 
 // eslint-disable-next-line no-new

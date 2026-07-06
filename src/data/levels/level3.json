@@ -3,6 +3,11 @@
   "name": "Quiet Night Street",
   "background": "bg_street",
   "bgColor": "#2c2f4a",
+  "cutscene": [
+    "Night falls on the quiet street.",
+    "The lamps flick on; the city softens.",
+    "Frame the warmth between the shadows."
+  ],
   "objects": [
     {
       "id": "obj_streetlamp",

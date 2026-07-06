@@ -3,6 +3,11 @@
   "name": "Afternoon Kitchen",
   "background": "bg_kitchen",
   "bgColor": "#caa37a",
+  "cutscene": [
+    "Golden afternoon leaks into the kitchen.",
+    "Light and quiet pile up on the table.",
+    "Catch the calm before dusk."
+  ],
   "objects": [
     {
       "id": "obj_kettle",

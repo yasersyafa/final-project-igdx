@@ -8,6 +8,10 @@ Each level file lives in `src/data/levels/levelN.json`.
   "name": "Morning in the Park", // display name
   "background": "bg_park",   // texture key loaded in PreloadScene (placeholder for now)
   "bgColor": "#8fae6b",      // flat fallback color drawn until real bg art exists
+  "cutscene": [              // optional: cinematic intro cards (CutsceneScene), one string per card
+    "Morning settles over the park.",
+    "Find the small moments before the dew lifts."
+  ],
   "objects": [
     {
       "id": "obj_bench",     // unique within the level
@@ -38,6 +42,8 @@ Each level file lives in `src/data/levels/levelN.json`.
 ```
 
 ## Rules
+- `cutscene` is **optional** — an array of card strings shown before the level
+  (`"\n"` allowed for a two-line card). Omit or leave empty to skip straight in.
 - Each level has **3–5 objects**.
 - **Exactly one** object has `isSpecial: true` and carries a `dialog`.
 - `idleAnim` maps to a procedural motion preset name, not a spritesheet (for now):
