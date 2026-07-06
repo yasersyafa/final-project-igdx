@@ -1,6 +1,7 @@
-// ControlBar — Raise Camera + Confirm buttons. Visible only in IDLE (camera lowered).
+// ControlBar — Confirm button. Visible only in IDLE (camera lowered).
 // Hidden on CAMERA_RAISED so the player can focus on the camera vibes.
 // Confirm can be pressed at any time in IDLE — that finalizes the level (the risk).
+// Raising the camera is done with the SPACE key (see CameraTool), not a button.
 import Phaser from 'phaser';
 import { EVENTS } from '../config/events.js';
 import { EASE, DUR, popIn, popOut, pressDip } from '../anim/motion.js';
@@ -11,16 +12,14 @@ export class ControlBar {
     this.bus = bus;
     const W = scene.cameras.main.width, H = scene.cameras.main.height;
 
-    this.raiseBtn = this._button(W / 2 - 150, H - 64, '📷  Raise Camera', 0x4a6a8a,
-      () => bus.emit(EVENTS.RAISE_REQUESTED));
-    this.confirmBtn = this._button(W / 2 + 150, H - 64, '✓  Confirm', 0x7bbf6a,
+    this.confirmBtn = this._button(W / 2, H - 64, '✓  Confirm', 0x7bbf6a,
       () => bus.emit(EVENTS.SUBMIT_REQUESTED));
 
-    this.tip = scene.add.text(W / 2, H - 110, 'Raise the camera to shoot · Confirm when you are happy with your roll', {
+    this.tip = scene.add.text(W / 2, H - 110, 'Press SPACE to raise the camera · Confirm when you are happy with your roll', {
       fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#e8e2d6',
     }).setOrigin(0.5).setDepth(depth);
 
-    this.group = [this.raiseBtn, this.confirmBtn, this.tip];
+    this.group = [this.confirmBtn, this.tip];
     this.group.forEach((g) => g.setVisible(false).setScale(0)); // shown on first CAMERA_LOWERED
 
     this._onRaised = () => this.hide();
