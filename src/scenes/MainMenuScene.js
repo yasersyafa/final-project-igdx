@@ -1,6 +1,7 @@
 // MainMenuScene — cozy title + Start, with a small level select.
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
+import { loadProgress } from '../core/progress.js';
 import { popIn, pressDip, fadeScene, EASE, DUR, idleBob } from '../anim/motion.js';
 
 export class MainMenuScene extends Phaser.Scene {
@@ -28,9 +29,19 @@ export class MainMenuScene extends Phaser.Scene {
     this.add.text(W / 2, H * 0.66, 'or pick a level', {
       fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#9b958a',
     }).setOrigin(0.5);
+    const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
-      const b = this._button(W / 2 + (i - 1) * 200, H * 0.76, lv.name, 0x4a5a7a, () => this._play(i), 180, 48, 15);
+      const bx = W / 2 + (i - 1) * 200;
+      const b = this._button(bx, H * 0.76, lv.name, 0x4a5a7a, () => this._play(i), 180, 48, 15);
       popIn(b, { delay: 200 + i * 70 });
+
+      // Saved best: filled/empty stars, or a gentle "not played yet".
+      const entry = progress[i];
+      const label = entry ? '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars) : '— not played';
+      this.add.text(bx, H * 0.76 + 40, label, {
+        fontFamily: 'system-ui, sans-serif', fontSize: '16px',
+        color: entry ? '#ffd24a' : '#6b6459',
+      }).setOrigin(0.5);
     });
   }
 

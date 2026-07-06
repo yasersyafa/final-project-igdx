@@ -3,6 +3,7 @@
 import { EVENTS } from '../config/events.js';
 import { CONFIG } from '../config/gameConfig.js';
 import { evaluate, evaluateSession } from './PhotoEvaluator.js';
+import { rateShot } from '../config/feedbackConfig.js';
 import { PhotoObject } from '../objects/PhotoObject.js';
 
 export function initLogicSystem(scene, bus, levelData) {
@@ -21,16 +22,25 @@ export function initLogicSystem(scene, bus, levelData) {
   }));
 
   const roll = [];            // every photo taken: { frameBounds, thumbKey }
+  const captured = new Set();  // mission objectIds already ticked off (fire-once)
   let specialShown = false;
 
   const onPhoto = ({ frameBounds, thumbKey }) => {
     roll.push({ frameBounds, thumbKey });
 
-    // Per-shot evaluate only to fire the special-object dialog once.
+    // Per-shot evaluate: drives live feedback + the special-object dialog.
     const res = evaluate(frameBounds, evalObjects, { isComplete: () => false }, CONFIG);
     if (res.success) {
       const sprite = sprites.get(res.objectId);
       if (sprite) sprite.flashHighlight();
+      // Cozy per-shot feedback: encouraging Good / Great / Perfect badge.
+      const tier = rateShot(res.framingScore);
+      if (tier) bus.emit(EVENTS.SHOT_RATED, tier);
+      // Live shot-list check-off: fire once per mission object.
+      if (!captured.has(res.objectId)) {
+        captured.add(res.objectId);
+        bus.emit(EVENTS.MISSION_CAPTURED, { objectId: res.objectId });
+      }
     }
     if (res.success && res.isSpecial && !specialShown) {
       specialShown = true;

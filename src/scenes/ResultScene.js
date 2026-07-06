@@ -1,8 +1,8 @@
 // ResultScene — the result panel. Reveals which missions were actually captured
 // across the roll (the risk of confirming early), the score, and a grade.
 import Phaser from 'phaser';
-import { CONFIG } from '../config/gameConfig.js';
 import { LEVELS } from './levels.js';
+import { gradeForFrac, starsForFrac, recordResult } from '../core/progress.js';
 import { popIn, pressDip, gradeReveal, checkPop, fadeScene, EASE, DUR } from '../anim/motion.js';
 
 export class ResultScene extends Phaser.Scene {
@@ -20,9 +20,10 @@ export class ResultScene extends Phaser.Scene {
     const levelIndex = this.payload.levelIndex ?? 0;
     const results = this.payload.missionResults ?? [];
 
-    let grade = 'Bronze', color = '#cd7f32';
-    if (frac >= CONFIG.GRADE.gold) { grade = 'Gold'; color = '#ffd24a'; }
-    else if (frac >= CONFIG.GRADE.silver) { grade = 'Silver'; color = '#cfd6dc'; }
+    const { grade, color } = gradeForFrac(frac);
+    const stars = starsForFrac(frac);
+    // Persist best result; celebrate if this run beat the stored best.
+    const { improved } = recordResult(levelIndex, { frac, total });
 
     const head = this.add.text(W / 2, 70, this.payload.levelName || 'Results', {
       fontFamily: 'system-ui, sans-serif', fontSize: '32px', color: '#fff5e6', fontStyle: 'bold',
@@ -59,6 +60,25 @@ export class ResultScene extends Phaser.Scene {
       fontFamily: 'system-ui, sans-serif', fontSize: '64px', color, fontStyle: 'bold',
     }).setOrigin(0.5);
     gradeReveal(gradeT, { });
+
+    // Star row (★★★ / ★★☆) — staggered pop, each star its own object.
+    const starY = y + 132;
+    const gap = 44;
+    for (let i = 0; i < 3; i++) {
+      const filled = i < stars;
+      const star = this.add.text(W / 2 + (i - 1) * gap, starY, '★', {
+        fontFamily: 'system-ui, sans-serif', fontSize: '36px',
+        color: filled ? '#ffd24a' : '#4a4f5c', fontStyle: 'bold',
+      }).setOrigin(0.5);
+      checkPop(star, { delay: 400 + i * 130 });
+    }
+
+    if (improved) {
+      const best = this.add.text(W / 2, starY + 42, 'New best!', {
+        fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#9be07a', fontStyle: 'bold',
+      }).setOrigin(0.5);
+      popIn(best, { delay: 400 + 3 * 130 });
+    }
 
     const hasNext = levelIndex < LEVELS.length - 1;
     const by = H - 60;
