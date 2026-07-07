@@ -88,8 +88,8 @@ export class ResultScene extends Phaser.Scene {
         () => this._go('CutsceneScene', { levelIndex: levelIndex + 1 }));
       popIn(next, { delay: 500 });
     }
-    const menu = this._button(W / 2 + (hasNext ? 130 : 0), by, 'Menu', 0x4a5a7a,
-      () => this._go('MainMenuScene'));
+    const menu = this._button(W / 2 + (hasNext ? 130 : 0), by, 'Levels', 0x4a5a7a,
+      () => this._go('LevelSelectScene'));
     popIn(menu, { delay: 560 });
   }
 
