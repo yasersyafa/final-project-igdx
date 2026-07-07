@@ -4,6 +4,7 @@ export const CONFIG = {
   CAPTURE_THRESHOLD: 0.55,                 // min coverage to count as captured
   SCORING: { base: 100, wCenter: 0.5, wCoverage: 0.5 }, // no time component
   GRADE: { gold: 0.85, silver: 0.6 },      // fraction of max score
+  MAX_PHOTOS: 7,                           // roll capacity per level (delete to free slots)
 };
 
 // World size — matches main.js Phaser config. Used by camera clamping.

@@ -36,6 +36,21 @@ export function evaluateSession(photos, objects, config) {
   return { total, max, breakdown, missionResults };
 }
 
+// capturedMissionIds — pure. Which mission objects are captured in a roll: any object
+// with a `mission` covered >= CAPTURE_THRESHOLD in at least one photo. Used for live
+// shot-list reconciliation (e.g. after a photo is deleted). Returns a Set of ids.
+export function capturedMissionIds(photos, objects, config) {
+  const threshold = config.CAPTURE_THRESHOLD;
+  const ids = new Set();
+  for (const o of objects) {
+    if (!o.mission) continue;
+    for (const p of photos) {
+      if (coverage(o.bbox, p.frameBounds) >= threshold) { ids.add(o.id); break; }
+    }
+  }
+  return ids;
+}
+
 const EMPTY = {
   success: false,
   objectId: null,

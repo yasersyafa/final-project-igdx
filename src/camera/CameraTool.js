@@ -10,7 +10,7 @@ import { EVENTS } from '../config/events.js';
 import { CONFIG, WORLD } from '../config/gameConfig.js';
 import { createStateMachine } from '../core/stateMachine.js';
 import { EASE, DUR } from '../anim/motion.js';
-import { playFlash, playClick } from './CaptureFeedback.js';
+import { playFlash, playClick, playMiss } from './CaptureFeedback.js';
 
 const STATES = ['INTRO', 'IDLE', 'AIMING'];
 
@@ -38,6 +38,8 @@ export class CameraTool {
 
     this.sm = createStateMachine('INTRO', STATES);
     this._photoCount = 0;
+    this.rollCount = 0; // photos currently in the roll (capped at CONFIG.MAX_PHOTOS)
+    this._hintDefault = 'aim — click to shoot · space/right-click to lower';
 
     this._buildOverlay();
     this._wireInput();
@@ -179,17 +181,31 @@ export class CameraTool {
 
   // ---- shooting -------------------------------------------------------------
   _shoot() {
+    // Roll capacity: block when full (cozy — gentle cue, no penalty). Delete to free a slot.
+    if (this.rollCount >= CONFIG.MAX_PHOTOS) { this._rollFullCue(); return; }
+    this.rollCount++; // reserve the slot now so rapid clicks can't overshoot the cap
+
     const fb = this.frameBounds;
     playClick(this.scene);
     // Snapshot the CLEAN strip first, then flash + announce in the callback so the
     // photo doesn't capture the white flash.
-    const key = `photo_${++this._photoCount}_${Date.now()}`;
-    this._snapshotStrip(key, (ok) => {
+    const id = `photo_${++this._photoCount}_${Date.now()}`;
+    this._snapshotStrip(id, (ok) => {
       // EXAGGERATION: flash slightly larger than the frame strip.
       playFlash(this.scene, { x: this.barW, y: 0, w: this.stripW, h: WORLD.height });
       // SECONDARY ACTION: frame border pulses once.
       this.scene.tweens.add({ targets: this.frame, scaleX: 1.01, scaleY: 1.01, ease: EASE.out, duration: DUR.micro, yoyo: true });
-      this.bus.emit(EVENTS.PHOTO_TAKEN, { frameBounds: fb, thumbKey: ok ? key : null });
+      this.bus.emit(EVENTS.PHOTO_TAKEN, { id, frameBounds: fb, thumbKey: ok ? id : null });
+    });
+  }
+
+  // Cozy "roll full" cue: soft reticle pulse + a temporary hint. No shake, no penalty.
+  _rollFullCue() {
+    try { playMiss(this.scene, this.dot); } catch { /* optional */ }
+    if (!this.hint) return;
+    this.hint.setText('Roll full — lower the camera to delete a photo').setColor('#ffcaca');
+    this.scene.time.delayedCall(1400, () => {
+      if (this.hint) this.hint.setText(this._hintDefault).setColor('#ffffff');
     });
   }
 
@@ -213,13 +229,16 @@ export class CameraTool {
     // lock raising until it closes.
     const onDialogShow = () => { this.dialogOpen = true; if (this.sm.is('AIMING')) this.lower(); };
     const onDialogClosed = () => { this.dialogOpen = false; };
+    const onPhotoDeleted = () => { this.rollCount = Math.max(0, this.rollCount - 1); };
     this.bus.on(EVENTS.RAISE_REQUESTED, onRaiseReq);
     this.bus.on(EVENTS.DIALOG_SHOW, onDialogShow);
     this.bus.on(EVENTS.DIALOG_CLOSED, onDialogClosed);
+    this.bus.on(EVENTS.PHOTO_DELETED, onPhotoDeleted);
     this.scene.events.once('shutdown', () => {
       this.bus.off(EVENTS.RAISE_REQUESTED, onRaiseReq);
       this.bus.off(EVENTS.DIALOG_SHOW, onDialogShow);
       this.bus.off(EVENTS.DIALOG_CLOSED, onDialogClosed);
+      this.bus.off(EVENTS.PHOTO_DELETED, onPhotoDeleted);
     });
   }
 

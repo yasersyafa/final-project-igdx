@@ -46,13 +46,16 @@ export class MissionListUI {
     this._onRaised = () => this.hide();
     this._onLowered = () => this.show();
     this._onCaptured = ({ objectId }) => this._markDone(objectId);
+    this._onSync = ({ capturedIds }) => this._syncDone(capturedIds || []);
     bus.on(EVENTS.CAMERA_RAISED, this._onRaised);
     bus.on(EVENTS.CAMERA_LOWERED, this._onLowered);
     bus.on(EVENTS.MISSION_CAPTURED, this._onCaptured);
+    bus.on(EVENTS.MISSIONS_SYNC, this._onSync);
     scene.events.once('shutdown', () => {
       bus.off(EVENTS.CAMERA_RAISED, this._onRaised);
       bus.off(EVENTS.CAMERA_LOWERED, this._onLowered);
       bus.off(EVENTS.MISSION_CAPTURED, this._onCaptured);
+      bus.off(EVENTS.MISSIONS_SYNC, this._onSync);
     });
   }
 
@@ -62,11 +65,33 @@ export class MissionListUI {
     const row = this.rows.find((r) => r.objectId === objectId);
     if (!row) return;
     this.done.add(objectId);
+    this._applyDone(row, true);
+  }
+
+  // Reconcile ticks to exactly `capturedIds` (after a photo delete). Tick missing
+  // ones without a pop; un-tick rows no longer captured.
+  _syncDone(capturedIds) {
+    const set = new Set(capturedIds);
+    this.rows.forEach((row) => {
+      const shouldBe = set.has(row.objectId);
+      if (shouldBe && !row.done) { this.done.add(row.objectId); this._applyDone(row, false); }
+      else if (!shouldBe && row.done) { this.done.delete(row.objectId); this._applyUndone(row); }
+    });
+  }
+
+  _applyDone(row, pop) {
     row.done = true;
     row.box.setFillStyle(DONE_GREEN, 1).setStrokeStyle(2, DONE_GREEN, 1);
     row.check.setVisible(true);
     row.text.setColor('#9be07a');
-    checkPop(row.check); // Back-overshoot pop (only if the row is currently visible)
+    if (pop) checkPop(row.check); // Back-overshoot pop (only if the row is visible)
+  }
+
+  _applyUndone(row) {
+    row.done = false;
+    row.box.setFillStyle(0x000000, 0.25).setStrokeStyle(2, 0xffffff, 0.6);
+    row.check.setVisible(false).setScale(1);
+    row.text.setColor('#ffffff');
   }
 
   show() { this.group.forEach((g, i) => { g.setVisible(true); popIn(g, { delay: i * 40 }); }); }

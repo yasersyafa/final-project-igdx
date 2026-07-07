@@ -2,7 +2,7 @@
 // special-object dialog), and the final session evaluation on Confirm.
 import { EVENTS } from '../config/events.js';
 import { CONFIG } from '../config/gameConfig.js';
-import { evaluate, evaluateSession } from './PhotoEvaluator.js';
+import { evaluate, evaluateSession, capturedMissionIds } from './PhotoEvaluator.js';
 import { rateShot } from '../config/feedbackConfig.js';
 import { PhotoObject } from '../objects/PhotoObject.js';
 
@@ -28,12 +28,12 @@ export function initLogicSystem(scene, bus, levelData) {
     id: o.id, bbox: o.bbox, mission: o.mission, isSpecial: o.isSpecial, name: o.name,
   }));
 
-  const roll = [];            // every photo taken: { frameBounds, thumbKey }
-  const captured = new Set();  // mission objectIds already ticked off (fire-once)
+  const roll = [];            // every photo taken: { id, frameBounds, thumbKey }
+  const captured = new Set();  // mission objectIds currently captured in the roll
   let specialShown = false;
 
-  const onPhoto = ({ frameBounds, thumbKey }) => {
-    roll.push({ frameBounds, thumbKey });
+  const onPhoto = ({ id, frameBounds, thumbKey }) => {
+    roll.push({ id, frameBounds, thumbKey });
 
     // Per-shot evaluate: drives live feedback + the special-object dialog.
     const res = evaluate(frameBounds, evalObjects, { isComplete: () => false }, CONFIG);
@@ -58,15 +58,29 @@ export function initLogicSystem(scene, bus, levelData) {
     }
   };
 
+  // Player deleted a photo: drop it from the roll and reconcile the shot-list ticks
+  // (a mission may no longer be captured; re-shooting it later re-fires its pop).
+  const onPhotoDeleted = ({ id }) => {
+    const i = roll.findIndex((p) => p.id === id);
+    if (i === -1) return;
+    roll.splice(i, 1);
+    const ids = capturedMissionIds(roll, evalObjects, CONFIG);
+    captured.clear();
+    ids.forEach((x) => captured.add(x));
+    bus.emit(EVENTS.MISSIONS_SYNC, { capturedIds: [...ids] });
+  };
+
   const onSubmit = () => {
     const result = evaluateSession(roll, objects, CONFIG); // forgiving, best framing per mission
     bus.emit(EVENTS.LEVEL_COMPLETED, result);
   };
 
   bus.on(EVENTS.PHOTO_TAKEN, onPhoto);
+  bus.on(EVENTS.PHOTO_DELETED, onPhotoDeleted);
   bus.on(EVENTS.SUBMIT_REQUESTED, onSubmit);
   scene.events.once('shutdown', () => {
     bus.off(EVENTS.PHOTO_TAKEN, onPhoto);
+    bus.off(EVENTS.PHOTO_DELETED, onPhotoDeleted);
     bus.off(EVENTS.SUBMIT_REQUESTED, onSubmit);
   });
 

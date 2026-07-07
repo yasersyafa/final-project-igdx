@@ -6,9 +6,11 @@ export const EVENTS = {
   CAMERA_RAISED:   'camera:raised',    // player raised camera -> zoomed AIMING, hide HUD
   CAMERA_LOWERED:  'camera:lowered',   // player lowered camera -> IDLE, show HUD
 
-  PHOTO_TAKEN:     'photo:taken',      // a shot fired -> { frameBounds, thumbKey, captured }
+  PHOTO_TAKEN:     'photo:taken',      // a shot fired -> { id, frameBounds, thumbKey, captured }
+  PHOTO_DELETED:   'photo:deleted',    // player removed a photo from the roll -> { id }
   SHOT_RATED:      'photo:rated',      // successful mission shot -> { key, label, color }
   MISSION_CAPTURED:'mission:captured', // first good shot of a mission -> { objectId }
+  MISSIONS_SYNC:   'mission:sync',     // reconcile ticks after a delete -> { capturedIds: string[] }
   SUBMIT_REQUESTED:'submit:requested', // Confirm clicked -> finalize & evaluate session
 
   DIALOG_SHOW:     'dialog:show',      // -> { speaker, lines: string[] }
@@ -17,6 +19,10 @@ export const EVENTS = {
   LEVEL_COMPLETED: 'level:completed',  // -> { total, max, breakdown, missionResults }
 };
 
+// PHOTO_TAKEN.id = stable unique id for the photo (deletable even if thumbKey is null).
+// PHOTO_DELETED.id matches a PHOTO_TAKEN.id. MISSIONS_SYNC.capturedIds = mission object
+// ids still captured in the remaining roll (drives tick / un-tick after a delete).
+//
 // PHOTO_TAKEN.captured = the per-shot evaluate() result (CAPTURE_RESULT shape):
 // {
 //   success: boolean,        // framed a valid mission object well enough
