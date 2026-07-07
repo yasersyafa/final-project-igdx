@@ -4,9 +4,9 @@
   "background": "bg_bandung",
   "bgColor": "#7d9e77",
   "cutscene": [
-    "The train climbs into cool, green highlands.",
-    "Bandung — the heart of Sunda, wrapped in mist and music.",
-    "Find what these mountains are proud of."
+    "The train climbs up into the cool, green highlands.",
+    "This is Bandung, the heart of Sunda, all mist and music.",
+    "Go find what these mountains are proud of."
   ],
   "decor": [
     { "id": "dec_pine_l", "name": "Pine Tree", "sprite": "pine", "idleAnim": "sway", "x": 130, "y": 340, "bbox": { "x": 100, "y": 240, "w": 60, "h": 200 } },
@@ -47,9 +47,9 @@
       "dialog": {
         "speaker": "Guide",
         "lines": [
-          "The old hall wears its satay skewer like a crown.",
-          "Six ornaments, they say — one for each year of its making.",
-          "Afternoon light slides down the arches, waiting for you."
+          "The old hall wears that satay skewer on top like a crown.",
+          "Six ornaments up there. One for every year it took to build.",
+          "The afternoon light's coming down the arches. It's waiting for you."
         ]
       }
     }

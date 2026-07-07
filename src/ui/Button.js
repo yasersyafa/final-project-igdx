@@ -5,6 +5,7 @@
 import Phaser from 'phaser';
 import { EASE, DUR } from '../anim/motion.js';
 import { DEBUG } from '../config/debug.js';
+import { FONTS } from '../config/fonts.js';
 
 export function makeButton(scene, opts) {
   const {
@@ -16,7 +17,7 @@ export function makeButton(scene, opts) {
   const bg = scene.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
   const hi = scene.add.rectangle(0, 0, w, h, 0xffffff, 1).setOrigin(0.5).setAlpha(0); // highlight overlay
   const txt = scene.add.text(0, 0, label, {
-    fontFamily: 'system-ui, sans-serif', fontSize: `${fontSize}px`, color: '#ffffff',
+    fontFamily: FONTS.display, fontSize: `${fontSize}px`, color: '#ffffff',
     align: 'center', wordWrap: { width: w - 16 },
   }).setOrigin(0.5);
   c.add([bg, hi, txt]);

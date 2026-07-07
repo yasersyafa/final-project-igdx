@@ -1,13 +1,14 @@
 // ScoreUI — small score readout, updated on SCORE_UPDATED.
 import { EVENTS } from '../config/events.js';
 import { checkPop } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 export class ScoreUI {
   constructor(scene, bus, levelData, depth = 1000) {
     this.scene = scene;
     const W = scene.cameras.main.width;
     this.label = scene.add.text(W - 24, 24, 'Score 0', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.body, fontSize: '22px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(1, 0).setDepth(depth).setScrollFactor(0);
 
     this._onUpdate = ({ total, max }) => {

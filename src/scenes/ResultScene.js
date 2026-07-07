@@ -5,6 +5,7 @@ import { LEVELS } from './levels.js';
 import { gradeForFrac, starsForFrac, recordResult } from '../core/progress.js';
 import { popIn, gradeReveal, checkPop, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
+import { FONTS } from '../config/fonts.js';
 
 export class ResultScene extends Phaser.Scene {
   constructor() { super('ResultScene'); }
@@ -27,7 +28,7 @@ export class ResultScene extends Phaser.Scene {
     const { improved } = recordResult(levelIndex, { frac, total });
 
     const head = this.add.text(W / 2, 70, this.payload.levelName || 'Results', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '32px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '32px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5);
     popIn(head);
 
@@ -38,14 +39,14 @@ export class ResultScene extends Phaser.Scene {
     results.forEach((r, i) => {
       const row = this.add.container(listX, y);
       const mark = this.add.text(0, 0, r.done ? '✓' : '✗', {
-        fontFamily: 'system-ui, sans-serif', fontSize: '24px',
+        fontFamily: FONTS.body, fontSize: '24px',
         color: r.done ? '#9be07a' : '#d98a8a', fontStyle: 'bold',
       }).setOrigin(0.5).setScale(0);
       const name = this.add.text(28, -12, `${r.name}${r.isSpecial ? '  ★' : ''}`, {
-        fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: r.done ? '#ffffff' : '#9b958a',
+        fontFamily: FONTS.body, fontSize: '18px', color: r.done ? '#ffffff' : '#9b958a',
       }).setOrigin(0, 0);
       const sub = this.add.text(28, 10, r.done ? `${r.mission} — ${r.score} pts` : `${r.mission} — missed`, {
-        fontFamily: 'system-ui, sans-serif', fontSize: '13px', color: '#a39d92',
+        fontFamily: FONTS.body, fontSize: '13px', color: '#a39d92',
       }).setOrigin(0, 0);
       row.add([mark, name, sub]);
       checkPop(mark, { delay: 200 + i * 120 }); // staggered, overshoot
@@ -53,12 +54,12 @@ export class ResultScene extends Phaser.Scene {
     });
 
     const summary = this.add.text(W / 2, y + 16, `${doneCount} / ${results.length} missions  ·  ${total} / ${max} pts`, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#fff5e6',
+      fontFamily: FONTS.body, fontSize: '22px', color: '#fff5e6',
     }).setOrigin(0.5);
     popIn(summary, { delay: 200 + results.length * 120 });
 
     const gradeT = this.add.text(W / 2, y + 80, grade, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '64px', color, fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '64px', color, fontStyle: 'bold',
     }).setOrigin(0.5);
     gradeReveal(gradeT, { });
 
@@ -68,7 +69,7 @@ export class ResultScene extends Phaser.Scene {
     for (let i = 0; i < 3; i++) {
       const filled = i < stars;
       const star = this.add.text(W / 2 + (i - 1) * gap, starY, '★', {
-        fontFamily: 'system-ui, sans-serif', fontSize: '36px',
+        fontFamily: FONTS.body, fontSize: '36px',
         color: filled ? '#ffd24a' : '#4a4f5c', fontStyle: 'bold',
       }).setOrigin(0.5);
       checkPop(star, { delay: 400 + i * 130 });
@@ -76,7 +77,7 @@ export class ResultScene extends Phaser.Scene {
 
     if (improved) {
       const best = this.add.text(W / 2, starY + 42, 'New best!', {
-        fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#9be07a', fontStyle: 'bold',
+        fontFamily: FONTS.body, fontSize: '20px', color: '#9be07a', fontStyle: 'bold',
       }).setOrigin(0.5);
       popIn(best, { delay: 400 + 3 * 130 });
     }

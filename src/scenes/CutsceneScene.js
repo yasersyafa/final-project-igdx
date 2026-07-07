@@ -5,6 +5,7 @@
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
 import { fadeScene, motionFlags, EASE, DUR } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 const BAR_H = 90;
 
@@ -42,13 +43,13 @@ export class CutsceneScene extends Phaser.Scene {
 
     // Level-name eyebrow.
     this.add.text(W / 2, BAR_H + 34, (this.level.name || '').toUpperCase(), {
-      fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#8b93a7',
+      fontFamily: FONTS.body, fontSize: '14px', color: '#8b93a7',
       letterSpacing: 2,
     }).setOrigin(0.5).setDepth(11);
 
     // Center narration.
     this.card = this.add.text(W / 2, H / 2, '', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '30px', color: '#fff5e6',
+      fontFamily: FONTS.body, fontSize: '30px', color: '#fff5e6',
       align: 'center', wordWrap: { width: W - 240 }, lineSpacing: 10,
     }).setOrigin(0.5).setDepth(11).setAlpha(0);
 
@@ -60,7 +61,7 @@ export class CutsceneScene extends Phaser.Scene {
 
     // Skip button (on top).
     const skip = this.add.text(W - 28, H - 26, 'Skip  ▸', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#c9c2b6',
+      fontFamily: FONTS.display, fontSize: '16px', color: '#c9c2b6',
     }).setOrigin(1, 0.5).setDepth(12).setInteractive({ useHandCursor: true });
     skip.on('pointerover', () => skip.setColor('#ffffff'));
     skip.on('pointerout', () => skip.setColor('#c9c2b6'));

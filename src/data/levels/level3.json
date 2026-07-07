@@ -4,9 +4,9 @@
   "background": "bg_yogyakarta",
   "bgColor": "#a9713f",
   "cutscene": [
-    "South now, to the soul of Java.",
-    "Yogyakarta hums along Malioboro, old and unhurried.",
-    "One last roll of film for the archive."
+    "Heading south now, into the soul of Java.",
+    "Yogyakarta hums along Malioboro Street, old and in no hurry.",
+    "One last roll of film to finish the archive."
   ],
   "decor": [
     { "id": "dec_andong", "name": "Andong", "sprite": "andong", "idleAnim": "sway", "x": 150, "y": 470, "bbox": { "x": 70, "y": 410, "w": 160, "h": 120 } },
@@ -47,9 +47,9 @@
       "dialog": {
         "speaker": "The Dalang",
         "lines": [
-          "Behind the screen, leather breathes and shadows speak.",
-          "A whole night of love and war on a lamplit cloth.",
-          "He tilts a puppet toward you: 'Go on — take it home.'"
+          "Behind the screen, the leather comes alive and the shadows do the talking.",
+          "A whole night of love and war, played out on a lit-up cloth.",
+          "He turns a puppet toward you. 'Go on, take it home.'"
         ]
       }
     }

@@ -4,6 +4,7 @@
 // what's left. Ticked rows stay ticked across raise/lower.
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut, checkPop } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 const DONE_GREEN = 0x9be07a;
 
@@ -19,7 +20,7 @@ export class MissionListUI {
     let y = 24;
 
     this.title = scene.add.text(x, y, 'Shot list', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
     }).setDepth(depth);
     y += 34;
 
@@ -28,10 +29,10 @@ export class MissionListUI {
       const row = scene.add.container(x, y).setDepth(depth);
       const box = scene.add.rectangle(8, 10, 14, 14, 0x000000, 0.25).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.6);
       const check = scene.add.text(8, 9, '✓', {
-        fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#20242f', fontStyle: 'bold',
+        fontFamily: FONTS.body, fontSize: '16px', color: '#20242f', fontStyle: 'bold',
       }).setOrigin(0.5).setVisible(false);
       const text = scene.add.text(26, 0, o.mission, {
-        fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#ffffff',
+        fontFamily: FONTS.body, fontSize: '16px', color: '#ffffff',
         wordWrap: { width: 300 },
       }).setOrigin(0, 0);
       row.add([box, check, text]);

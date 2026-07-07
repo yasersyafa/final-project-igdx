@@ -3,6 +3,7 @@
 // OVERLAPPING ACTION (panel -> speaker -> line stagger in). Close: popOut.
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 export class DialogBox {
   constructor(scene, bus, levelData, depth = 1500) {
@@ -23,14 +24,14 @@ export class DialogBox {
     this.panel = scene.add.container(W / 2, H - 140).setDepth(depth + 1).setVisible(false);
     const bg = scene.add.rectangle(0, 0, pw, ph, 0x2b2230, 0.96).setOrigin(0.5).setStrokeStyle(3, 0xffe08a, 0.8);
     this.speaker = scene.add.text(-pw / 2 + 28, -ph / 2 + 18, '', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#ffe08a', fontStyle: 'bold',
+      fontFamily: FONTS.body, fontSize: '20px', color: '#ffe08a', fontStyle: 'bold',
     }).setOrigin(0, 0);
     this.body = scene.add.text(-pw / 2 + 28, -ph / 2 + 54, '', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#ffffff',
+      fontFamily: FONTS.body, fontSize: '20px', color: '#ffffff',
       wordWrap: { width: pw - 56 }, lineSpacing: 6,
     }).setOrigin(0, 0);
     this.hint = scene.add.text(pw / 2 - 24, ph / 2 - 26, 'click / space ▸', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#bbbbbb',
+      fontFamily: FONTS.body, fontSize: '14px', color: '#bbbbbb',
     }).setOrigin(1, 0);
     this.panel.add([bg, this.speaker, this.body, this.hint]);
 

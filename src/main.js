@@ -29,5 +29,19 @@ const config = {
   scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, CutsceneScene, LevelScene, ResultScene],
 };
 
-// eslint-disable-next-line no-new
-new Phaser.Game(config);
+// Wait for the web fonts (Baloo 2 / Nunito) before starting so canvas text renders
+// in the right face instead of a fallback. Falls back gracefully if fonts/API fail.
+function startGame() {
+  // eslint-disable-next-line no-new
+  new Phaser.Game(config);
+}
+
+const fontsToLoad = ['600 1em "Baloo 2"', '700 1em "Baloo 2"', '400 1em "Nunito"', '600 1em "Nunito"'];
+if (document.fonts && document.fonts.load) {
+  Promise.all(fontsToLoad.map((f) => document.fonts.load(f)))
+    .then(() => document.fonts.ready)
+    .catch(() => {})
+    .finally(startGame);
+} else {
+  startGame();
+}

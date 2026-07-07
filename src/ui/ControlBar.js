@@ -5,6 +5,7 @@
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut } from '../anim/motion.js';
 import { makeButton } from './Button.js';
+import { FONTS } from '../config/fonts.js';
 
 export class ControlBar {
   constructor(scene, bus, levelData, depth = 1000) {
@@ -16,7 +17,7 @@ export class ControlBar {
       () => bus.emit(EVENTS.SUBMIT_REQUESTED));
 
     this.tip = scene.add.text(W / 2, H - 110, 'Press SPACE to raise the camera · Confirm when you are happy with your roll', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#e8e2d6',
+      fontFamily: FONTS.body, fontSize: '15px', color: '#e8e2d6',
     }).setOrigin(0.5).setDepth(depth);
 
     this.group = [this.confirmBtn, this.tip];

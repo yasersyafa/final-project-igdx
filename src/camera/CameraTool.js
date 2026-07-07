@@ -9,6 +9,7 @@ import Phaser from 'phaser';
 import { EVENTS } from '../config/events.js';
 import { CONFIG, WORLD } from '../config/gameConfig.js';
 import { createStateMachine } from '../core/stateMachine.js';
+import { FONTS } from '../config/fonts.js';
 import { EASE, DUR } from '../anim/motion.js';
 import { playFlash, playClick, playMiss } from './CaptureFeedback.js';
 
@@ -64,7 +65,7 @@ export class CameraTool {
     this.dot = s.add.circle(W / 2, H / 2, 3, 0xffffff, 0.7).setDepth(801);
     // "REC"-ish hint.
     this.hint = s.add.text(16, 14, 'aim — click to shoot · space/right-click to lower', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#ffffff',
+      fontFamily: FONTS.body, fontSize: '14px', color: '#ffffff',
     }).setDepth(801).setAlpha(0.8);
 
     this.overlay = [this.barL, this.barR, this.frame, this.corners, this.dot, this.hint];

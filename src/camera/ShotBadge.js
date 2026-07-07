@@ -4,6 +4,7 @@
 // overlay while aiming (the HUD is hidden then). Never shown for misses.
 import { EVENTS } from '../config/events.js';
 import { checkPop, EASE, DUR } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 const DEPTH = 950; // above shutter flash (900) and overlay
 
@@ -19,7 +20,7 @@ export function initShotBadge(scene, bus) {
     const cx = scene.cameras.main.width / 2;
     const cy = scene.cameras.main.height * 0.32;
     const badge = scene.add.text(cx, cy, tier.label, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '44px',
+      fontFamily: FONTS.display, fontSize: '44px',
       color: tier.color, fontStyle: 'bold',
       stroke: '#20242f', strokeThickness: 6,
     }).setOrigin(0.5).setDepth(DEPTH);

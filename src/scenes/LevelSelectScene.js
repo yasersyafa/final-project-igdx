@@ -6,6 +6,7 @@ import { LEVELS } from './levels.js';
 import { loadProgress } from '../core/progress.js';
 import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
+import { FONTS } from '../config/fonts.js';
 
 export class LevelSelectScene extends Phaser.Scene {
   constructor() { super('LevelSelectScene'); }
@@ -16,7 +17,7 @@ export class LevelSelectScene extends Phaser.Scene {
     fadeScene(this, 'in');
 
     const head = this.add.text(W / 2, H * 0.22, 'Choose a destination', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '40px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '40px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5);
     popIn(head);
 
@@ -33,7 +34,7 @@ export class LevelSelectScene extends Phaser.Scene {
       const entry = progress[i];
       const label = entry ? '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars) : '— not played';
       this.add.text(bx, H * 0.5 + 52, label, {
-        fontFamily: 'system-ui, sans-serif', fontSize: '18px',
+        fontFamily: FONTS.body, fontSize: '18px',
         color: entry ? '#ffd24a' : '#6b6459',
       }).setOrigin(0.5);
     });

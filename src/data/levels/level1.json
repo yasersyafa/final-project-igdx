@@ -4,9 +4,9 @@
   "background": "bg_padang",
   "bgColor": "#d9a066",
   "cutscene": [
-    "Your assignment: document the living culture of Indonesia.",
-    "First stop — Padang, where roofs curve like buffalo horns.",
-    "Camera ready. Let's see what Minangkabau keeps."
+    "The job's simple. Photograph the culture that's still alive out here.",
+    "First stop is Padang, where the rooftops curve like buffalo horns.",
+    "Camera's ready. Let's see what the Minangkabau have held onto."
   ],
   "decor": [
     { "id": "dec_palm_l", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 120, "y": 360, "bbox": { "x": 90, "y": 250, "w": 60, "h": 220 } },
@@ -47,9 +47,9 @@
       "dialog": {
         "speaker": "Local Dancer",
         "lines": [
-          "The plates flash in her palms, never once slipping.",
-          "Decades of practice, folded into a heartbeat.",
-          "She nods at your lens — some things are meant to be kept."
+          "Watch her hands. The plates spin and never once slip.",
+          "That's decades of practice, all in a single beat.",
+          "She catches your camera and nods. Some things are worth keeping."
         ]
       }
     }

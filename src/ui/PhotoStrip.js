@@ -8,6 +8,7 @@ import { CONFIG } from '../config/gameConfig.js';
 import { EASE, DUR, checkPop } from '../anim/motion.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
 import { DEBUG } from '../config/debug.js';
+import { FONTS } from '../config/fonts.js';
 
 const MAX = CONFIG.MAX_PHOTOS;
 const TW = 80, TH = 60;              // photo size (4:3)
@@ -28,7 +29,7 @@ export class PhotoStrip {
     this.confirm = new ConfirmDialog(scene);
 
     this.header = scene.add.text(SLOT_X, 108, `Roll  0 / ${MAX}`, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.body, fontSize: '16px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5, 0.5).setDepth(depth);
 
     this._onPhoto = (p) => this.addPhoto(p);
@@ -58,7 +59,7 @@ export class PhotoStrip {
     // ✕ delete button — a REAL interactive child, so its collider == the drawn circle.
     const xBtn = s.add.container(XB_DX, XB_DY).setVisible(false);
     const xbg = s.add.circle(0, 0, XB_R, 0xc0504a, 1).setStrokeStyle(2, 0xffffff, 0.9);
-    const xtx = s.add.text(0, -1, '✕', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
+    const xtx = s.add.text(0, -1, '✕', { fontFamily: FONTS.body, fontSize: '14px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
     xBtn.add([xbg, xtx]);
 
     c.add([border, photo, xBtn]);

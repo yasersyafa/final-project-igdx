@@ -6,6 +6,7 @@ import { bus } from '../core/EventBus.js';
 import { EVENTS } from '../config/events.js';
 import { LEVELS } from './levels.js';
 import { fadeScene } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 import { initCameraSystem } from '../camera/index.js';
 import { initLogicSystem } from '../domain/index.js';
@@ -34,7 +35,7 @@ export class LevelScene extends Phaser.Scene {
 
     // Brief level title card (screen-space, fades in/out).
     const title = this.add.text(W / 2, 70, level.name, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '26px', color: '#ffffff',
+      fontFamily: FONTS.display, fontSize: '26px', color: '#ffffff',
     }).setOrigin(0.5).setDepth(700).setAlpha(0);
     this.tweens.add({ targets: title, alpha: 1, duration: 400, yoyo: true, hold: 1400, ease: 'Sine.easeInOut',
       onComplete: () => title.destroy() });

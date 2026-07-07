@@ -3,6 +3,7 @@
 // no motion edits. Idle motion + capture highlight come from src/anim/motion.js.
 import Phaser from 'phaser';
 import { idleByName, checkPop, EASE, DUR } from '../anim/motion.js';
+import { FONTS } from '../config/fonts.js';
 
 // Stable color per id so placeholder shapes are distinguishable.
 function hashColor(id) {
@@ -32,7 +33,7 @@ export class PhotoObject extends Phaser.GameObjects.Container {
     this.body_.setStrokeStyle(2, 0xffffff, 0.35);
 
     this.label = scene.add.text(0, 0, data.name, {
-      fontFamily: 'system-ui, sans-serif',
+      fontFamily: FONTS.body,
       fontSize: '14px',
       color: '#ffffff',
       align: 'center',
