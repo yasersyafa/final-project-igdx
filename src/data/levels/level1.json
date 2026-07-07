@@ -1,59 +1,55 @@
 {
   "id": "level1",
-  "name": "Morning in the Park",
-  "background": "bg_park",
-  "bgColor": "#8fae6b",
+  "name": "Padang",
+  "background": "bg_padang",
+  "bgColor": "#d9a066",
   "cutscene": [
-    "Morning settles over the park.",
-    "Your camera hangs ready at your side.",
-    "Find the small moments before the dew lifts."
+    "Your assignment: document the living culture of Indonesia.",
+    "First stop — Padang, where roofs curve like buffalo horns.",
+    "Camera ready. Let's see what Minangkabau keeps."
+  ],
+  "decor": [
+    { "id": "dec_palm_l", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 120, "y": 360, "bbox": { "x": 90, "y": 250, "w": 60, "h": 220 } },
+    { "id": "dec_palm_r", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 1170, "y": 360, "bbox": { "x": 1140, "y": 250, "w": 60, "h": 220 } },
+    { "id": "dec_marawa", "name": "Marawa Flag", "sprite": "marawa", "idleAnim": "sway", "x": 500, "y": 300, "bbox": { "x": 480, "y": 240, "w": 40, "h": 140 } },
+    { "id": "dec_surau", "name": "Surau", "sprite": "surau", "idleAnim": "breathe", "x": 1050, "y": 250, "bbox": { "x": 980, "y": 190, "w": 140, "h": 120 } }
   ],
   "objects": [
     {
-      "id": "obj_bench",
-      "name": "Wooden Bench",
-      "sprite": "bench",
-      "idleAnim": "sway",
-      "x": 300, "y": 470,
-      "bbox": { "x": 240, "y": 425, "w": 120, "h": 90 },
-      "mission": "Photograph a place to sit",
-      "isSpecial": false
-    },
-    {
-      "id": "obj_fountain",
-      "name": "Stone Fountain",
-      "sprite": "fountain",
+      "id": "obj_rumahgadang",
+      "name": "Rumah Gadang",
+      "sprite": "rumah_gadang",
       "idleAnim": "breathe",
-      "x": 660, "y": 380,
-      "bbox": { "x": 595, "y": 320, "w": 130, "h": 120 },
-      "mission": "Capture something with running water",
+      "x": 340, "y": 420,
+      "bbox": { "x": 255, "y": 360, "w": 170, "h": 120 },
+      "mission": "Frame the house whose roof curves like buffalo horns",
       "isSpecial": false
     },
     {
-      "id": "obj_lamp",
-      "name": "Park Lamp",
-      "sprite": "lamp",
-      "idleAnim": "sway",
-      "x": 980, "y": 360,
-      "bbox": { "x": 955, "y": 280, "w": 50, "h": 160 },
-      "mission": "Frame the tallest thing around",
-      "isSpecial": false
-    },
-    {
-      "id": "obj_cat",
-      "name": "Sleeping Cat",
-      "sprite": "cat",
+      "id": "obj_nasipadang",
+      "name": "Nasi Padang Display",
+      "sprite": "nasi_padang",
       "idleAnim": "breathe",
-      "x": 520, "y": 560,
-      "bbox": { "x": 475, "y": 525, "w": 90, "h": 70 },
-      "mission": "Find the napping resident",
+      "x": 960, "y": 450,
+      "bbox": { "x": 895, "y": 402, "w": 130, "h": 95 },
+      "mission": "Capture a window stacked with a dozen plates",
+      "isSpecial": false
+    },
+    {
+      "id": "obj_taripiring",
+      "name": "Tari Piring Dancer",
+      "sprite": "tari_piring",
+      "idleAnim": "sway",
+      "x": 650, "y": 440,
+      "bbox": { "x": 610, "y": 365, "w": 80, "h": 150 },
+      "mission": "Find the dancer spinning plates in her palms",
       "isSpecial": true,
       "dialog": {
-        "speaker": "Narrator",
+        "speaker": "Local Dancer",
         "lines": [
-          "The cat cracks one eye open, unbothered.",
-          "It has decided you are now part of its morning.",
-          "A tiny purr. Permission granted."
+          "The plates flash in her palms, never once slipping.",
+          "Decades of practice, folded into a heartbeat.",
+          "She nods at your lens — some things are meant to be kept."
         ]
       }
     }

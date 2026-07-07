@@ -9,6 +9,13 @@ import { PhotoObject } from '../objects/PhotoObject.js';
 export function initLogicSystem(scene, bus, levelData) {
   const objects = levelData.objects;
 
+  // Ambient decor: rendered for atmosphere but NOT photographable targets. Added
+  // first so it sits behind the mission objects, and never registered for eval.
+  (levelData.decor || []).forEach((d) => {
+    const po = new PhotoObject(scene, { ...d, decor: true });
+    if (scene.world) scene.world.add(po);
+  });
+
   // Build visible PhotoObjects (placeholder shapes) into the zoomable world layer.
   const sprites = new Map();
   objects.forEach((o) => {

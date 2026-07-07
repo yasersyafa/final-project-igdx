@@ -1,59 +1,55 @@
 {
   "id": "level3",
-  "name": "Quiet Night Street",
-  "background": "bg_street",
-  "bgColor": "#2c2f4a",
+  "name": "Yogyakarta",
+  "background": "bg_yogyakarta",
+  "bgColor": "#a9713f",
   "cutscene": [
-    "Night falls on the quiet street.",
-    "The lamps flick on; the city softens.",
-    "Frame the warmth between the shadows."
+    "South now, to the soul of Java.",
+    "Yogyakarta hums along Malioboro, old and unhurried.",
+    "One last roll of film for the archive."
+  ],
+  "decor": [
+    { "id": "dec_andong", "name": "Andong", "sprite": "andong", "idleAnim": "sway", "x": 150, "y": 470, "bbox": { "x": 70, "y": 410, "w": 160, "h": 120 } },
+    { "id": "dec_lantern", "name": "Street Lantern", "sprite": "lantern", "idleAnim": "sway", "x": 500, "y": 300, "bbox": { "x": 485, "y": 230, "w": 30, "h": 150 } },
+    { "id": "dec_gudeg", "name": "Gudeg Cart", "sprite": "gudeg_cart", "idleAnim": "breathe", "x": 1130, "y": 470, "bbox": { "x": 1070, "y": 420, "w": 120, "h": 100 } },
+    { "id": "dec_tugu", "name": "Tugu", "sprite": "tugu", "idleAnim": "breathe", "x": 500, "y": 230, "bbox": { "x": 480, "y": 170, "w": 40, "h": 130 } }
   ],
   "objects": [
     {
-      "id": "obj_streetlamp",
-      "name": "Glowing Streetlamp",
-      "sprite": "streetlamp",
-      "idleAnim": "breathe",
-      "x": 280, "y": 330,
-      "bbox": { "x": 250, "y": 250, "w": 60, "h": 170 },
-      "mission": "Photograph the warmest light",
-      "isSpecial": false
-    },
-    {
-      "id": "obj_noodlecart",
-      "name": "Noodle Cart",
-      "sprite": "noodlecart",
+      "id": "obj_becak",
+      "name": "Becak",
+      "sprite": "becak",
       "idleAnim": "sway",
-      "x": 620, "y": 450,
-      "bbox": { "x": 545, "y": 395, "w": 150, "h": 110 },
-      "mission": "Capture a late-night snack spot",
+      "x": 340, "y": 450,
+      "bbox": { "x": 265, "y": 395, "w": 150, "h": 110 },
+      "mission": "Frame the three-wheeled cart pedalled by hand",
       "isSpecial": false
     },
     {
-      "id": "obj_puddle",
-      "name": "Neon Puddle",
-      "sprite": "puddle",
+      "id": "obj_batik",
+      "name": "Batik Canting",
+      "sprite": "batik_canting",
       "idleAnim": "breathe",
-      "x": 520, "y": 600,
-      "bbox": { "x": 445, "y": 575, "w": 150, "h": 50 },
-      "mission": "Find a reflection on the ground",
+      "x": 650, "y": 460,
+      "bbox": { "x": 605, "y": 420, "w": 90, "h": 80 },
+      "mission": "Capture the little copper pen that writes in wax",
       "isSpecial": false
     },
     {
-      "id": "obj_fox",
-      "name": "City Fox",
-      "sprite": "fox",
-      "idleAnim": "bob",
-      "x": 960, "y": 540,
-      "bbox": { "x": 905, "y": 500, "w": 110, "h": 80 },
-      "mission": "Spot who else is out this late",
+      "id": "obj_wayangkulit",
+      "name": "Wayang Kulit",
+      "sprite": "wayang_kulit",
+      "idleAnim": "sway",
+      "x": 960, "y": 430,
+      "bbox": { "x": 910, "y": 355, "w": 100, "h": 150 },
+      "mission": "Find the leather puppet that lives in shadow",
       "isSpecial": true,
       "dialog": {
-        "speaker": "City Fox",
+        "speaker": "The Dalang",
         "lines": [
-          "You found me between the lamplight and the steam.",
-          "Most people look straight ahead and miss the night.",
-          "Not you. Go home warm, photographer."
+          "Behind the screen, leather breathes and shadows speak.",
+          "A whole night of love and war on a lamplit cloth.",
+          "He tilts a puppet toward you: 'Go on — take it home.'"
         ]
       }
     }

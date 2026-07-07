@@ -12,6 +12,10 @@ Each level file lives in `src/data/levels/levelN.json`.
     "Morning settles over the park.",
     "Find the small moments before the dew lifts."
   ],
+  "decor": [                 // optional: ambient props for atmosphere — NOT missions, NOT scored
+    { "id": "dec_palm", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway",
+      "x": 120, "y": 360, "bbox": { "x": 90, "y": 250, "w": 60, "h": 220 } }
+  ],
   "objects": [
     {
       "id": "obj_bench",     // unique within the level
@@ -44,7 +48,11 @@ Each level file lives in `src/data/levels/levelN.json`.
 ## Rules
 - `cutscene` is **optional** — an array of card strings shown before the level
   (`"\n"` allowed for a two-line card). Omit or leave empty to skip straight in.
-- Each level has **3–5 objects**.
+- `decor` is **optional** — ambient props rendered into the world for atmosphere.
+  Same fields as an object **minus** `mission`/`isSpecial`/`dialog`. Decor is
+  **excluded** from the shot list and from capture scoring (it fills the scene so it
+  doesn't look empty; framing it does nothing). Render slightly recessed.
+- Each level has **3–5 objects** (mission targets); add `decor` freely on top.
 - **Exactly one** object has `isSpecial: true` and carries a `dialog`.
 - `idleAnim` maps to a procedural motion preset name, not a spritesheet (for now):
   `"bob"`, `"breathe"`, or `"sway"`. Omit for a fully static object.

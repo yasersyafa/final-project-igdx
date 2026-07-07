@@ -43,6 +43,12 @@ export class PhotoObject extends Phaser.GameObjects.Container {
       this.body_.setStrokeStyle(3, 0xffe08a, 0.9); // gentle highlight for the special one
     }
 
+    // Decor props: ambient scenery, not a target. Recede so they read as background.
+    if (data.decor) {
+      this.setAlpha(0.88);
+      this.label.setColor('#e8e2d6').setAlpha(0.6);
+    }
+
     this.add([this.shadow, this.body_, this.label]);
     scene.add.existing(this);
 
