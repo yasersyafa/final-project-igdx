@@ -2,9 +2,9 @@
 // Hidden on CAMERA_RAISED so the player can focus on the camera vibes.
 // Confirm can be pressed at any time in IDLE — that finalizes the level (the risk).
 // Raising the camera is done with the SPACE key (see CameraTool), not a button.
-import Phaser from 'phaser';
 import { EVENTS } from '../config/events.js';
-import { EASE, DUR, popIn, popOut, pressDip } from '../anim/motion.js';
+import { popIn, popOut } from '../anim/motion.js';
+import { makeButton } from './Button.js';
 
 export class ControlBar {
   constructor(scene, bus, levelData, depth = 1000) {
@@ -41,18 +41,7 @@ export class ControlBar {
   }
 
   _button(x, y, label, color, onClick, w = 240, h = 56) {
-    const s = this.scene;
-    const c = s.add.container(x, y).setDepth(1000);
-    const bg = s.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
-    const txt = s.add.text(0, 0, label, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#ffffff',
-    }).setOrigin(0.5);
-    c.add([bg, txt]);
-    c.setSize(w, h).setInteractive(new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h), Phaser.Geom.Rectangle.Contains);
-    c.on('pointerover', () => s.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerout', () => s.tweens.add({ targets: c, scaleX: 1, scaleY: 1, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerdown', () => pressDip(c, { onComplete: onClick }));
-    return c;
+    return makeButton(this.scene, { x, y, w, h, label, color, fontSize: 20, onClick, depth: 1000 });
   }
 }
 

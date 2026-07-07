@@ -5,15 +5,18 @@
 import Phaser from 'phaser';
 import { EVENTS } from '../config/events.js';
 import { CONFIG } from '../config/gameConfig.js';
-import { EASE, DUR } from '../anim/motion.js';
+import { EASE, DUR, checkPop } from '../anim/motion.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
+import { DEBUG } from '../config/debug.js';
 
 const MAX = CONFIG.MAX_PHOTOS;
 const TW = 80, TH = 60;              // photo size (4:3)
 const BW = TW + 8, BH = TH + 16;     // film border size
+const PHOTO_DY = -6;                 // photo image y-offset within the card
 const SLOT_X = 1280 - 60;            // right rail center x
 const SLOT_TOP = 140, SLOT_STEP = 80;
-const XB_DX = BW / 2 - 6, XB_DY = -BH / 2 + 6, XB_HIT = 16; // ✕ hotspot (world offset from center)
+const XB_R = 12;                     // ✕ button radius
+const XB_DX = BW / 2 - 6, XB_DY = -BH / 2 + 6; // ✕ position (card top-right)
 
 export class PhotoStrip {
   constructor(scene, bus, levelData, depth = 1000) {
@@ -48,13 +51,13 @@ export class PhotoStrip {
     const border = s.add.rectangle(0, 0, BW, BH, 0xf7f3ea, 1).setOrigin(0.5).setStrokeStyle(2, 0x000000, 0.15);
     let photo;
     if (thumbKey && s.textures.exists(thumbKey)) {
-      photo = s.add.image(0, -6, thumbKey).setDisplaySize(TW, TH).setOrigin(0.5);
+      photo = s.add.image(0, PHOTO_DY, thumbKey).setDisplaySize(TW, TH).setOrigin(0.5);
     } else {
-      photo = s.add.rectangle(0, -6, TW, TH, 0x444a55, 1).setOrigin(0.5);
+      photo = s.add.rectangle(0, PHOTO_DY, TW, TH, 0x444a55, 1).setOrigin(0.5);
     }
-    // ✕ delete affordance (visual only; click handled on the container to avoid input conflicts).
+    // ✕ delete button — a REAL interactive child, so its collider == the drawn circle.
     const xBtn = s.add.container(XB_DX, XB_DY).setVisible(false);
-    const xbg = s.add.circle(0, 0, 12, 0xc0504a, 1).setStrokeStyle(2, 0xffffff, 0.9);
+    const xbg = s.add.circle(0, 0, XB_R, 0xc0504a, 1).setStrokeStyle(2, 0xffffff, 0.9);
     const xtx = s.add.text(0, -1, '✕', { fontFamily: 'system-ui, sans-serif', fontSize: '14px', color: '#ffffff', fontStyle: 'bold' }).setOrigin(0.5);
     xBtn.add([xbg, xtx]);
 
@@ -64,21 +67,37 @@ export class PhotoStrip {
     const item = { c, id, key: thumbKey, xBtn };
     this.items.push(item);
 
-    c.setSize(BW, BH).setInteractive(new Phaser.Geom.Rectangle(-BW / 2, -BH / 2, BW, BH), Phaser.Geom.Rectangle.Contains);
-    c.on('pointerover', () => { if (this.enabled) xBtn.setVisible(true); });
-    c.on('pointerout', () => xBtn.setVisible(false));
-    c.on('pointerdown', (pointer) => {
-      if (!this.enabled) return; // aiming-clicks shoot; deletes only when lowered
-      const dx = pointer.x - (c.x + XB_DX);
-      const dy = pointer.y - (c.y + XB_DY);
-      if (dx * dx + dy * dy <= XB_HIT * XB_HIT) {
-        this.confirm.open({ message: 'Delete this photo?', onConfirm: () => this._deleteItem(item) });
-      }
+    // Card hover area == the visible photo (not the padded film card).
+    c.setInteractive(new Phaser.Geom.Rectangle(-TW / 2, PHOTO_DY - TH / 2, TW, TH), Phaser.Geom.Rectangle.Contains);
+    c.on('pointerover', () => this._showX(item));
+    c.on('pointerout', () => this._hideX(item));
+
+    // The ✕ is its own button: exact circular collider, own hover, own click.
+    xBtn.setInteractive(new Phaser.Geom.Circle(0, 0, XB_R), Phaser.Geom.Circle.Contains);
+    xBtn.on('pointerover', () => this._showX(item));
+    xBtn.on('pointerout', () => this._hideX(item));
+    xBtn.on('pointerdown', (p, lx, ly, e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (!this.enabled) return;
+      this.confirm.open({ message: 'Delete this photo?', onConfirm: () => this._deleteItem(item) });
     });
+
+    if (DEBUG.hitboxes) {
+      s.input.enableDebug(c, 0x00ffff);    // cyan = photo hover area
+      s.input.enableDebug(xBtn, 0xff00ff); // magenta = ✕ delete hit area
+    }
 
     this._relayout(c);
     this._updateHeader();
   }
+
+  _showX(item) {
+    if (!this.enabled) return;
+    item.xBtn.setVisible(true);
+    if (!item._xPopped) { item._xPopped = true; checkPop(item.xBtn); } // pop once, no boundary flicker
+  }
+
+  _hideX(item) { item.xBtn.setVisible(false); }
 
   _deleteItem(item) {
     const s = this.scene;

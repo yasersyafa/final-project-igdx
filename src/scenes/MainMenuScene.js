@@ -2,7 +2,8 @@
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
 import { loadProgress } from '../core/progress.js';
-import { popIn, pressDip, fadeScene, EASE, DUR, idleBob } from '../anim/motion.js';
+import { popIn, fadeScene, DUR, idleBob } from '../anim/motion.js';
+import { makeButton } from '../ui/Button.js';
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() { super('MainMenuScene'); }
@@ -50,18 +51,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   _button(x, y, label, color, onClick, w = 220, h = 60, fs = 24) {
-    const c = this.add.container(x, y);
-    const bg = this.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
-    const txt = this.add.text(0, 0, label, {
-      fontFamily: 'system-ui, sans-serif', fontSize: `${fs}px`, color: '#ffffff',
-      align: 'center', wordWrap: { width: w - 16 },
-    }).setOrigin(0.5);
-    c.add([bg, txt]);
-    c.setSize(w, h).setInteractive(new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h), Phaser.Geom.Rectangle.Contains);
-    c.on('pointerover', () => this.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerout', () => this.tweens.add({ targets: c, scaleX: 1, scaleY: 1, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerdown', () => pressDip(c, { onComplete: onClick }));
-    return c;
+    return makeButton(this, { x, y, w, h, label, color, fontSize: fs, onClick });
   }
 }
 export default MainMenuScene;

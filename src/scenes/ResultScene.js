@@ -3,7 +3,8 @@
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
 import { gradeForFrac, starsForFrac, recordResult } from '../core/progress.js';
-import { popIn, pressDip, gradeReveal, checkPop, fadeScene, EASE, DUR } from '../anim/motion.js';
+import { popIn, gradeReveal, checkPop, fadeScene } from '../anim/motion.js';
+import { makeButton } from '../ui/Button.js';
 
 export class ResultScene extends Phaser.Scene {
   constructor() { super('ResultScene'); }
@@ -97,17 +98,7 @@ export class ResultScene extends Phaser.Scene {
   }
 
   _button(x, y, label, color, onClick, w = 220, h = 56) {
-    const c = this.add.container(x, y);
-    const bg = this.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
-    const txt = this.add.text(0, 0, label, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#ffffff',
-    }).setOrigin(0.5);
-    c.add([bg, txt]);
-    c.setSize(w, h).setInteractive(new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h), Phaser.Geom.Rectangle.Contains);
-    c.on('pointerover', () => this.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerout', () => this.tweens.add({ targets: c, scaleX: 1, scaleY: 1, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerdown', () => pressDip(c, { onComplete: onClick }));
-    return c;
+    return makeButton(this, { x, y, w, h, label, color, fontSize: 22, onClick });
   }
 }
 export default ResultScene;

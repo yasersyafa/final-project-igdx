@@ -1,8 +1,8 @@
 // ConfirmDialog — small reusable yes/no modal. Dim overlay swallows input; a panel
 // with Delete / Cancel buttons. open({ message, onConfirm }); Delete runs the callback.
 // Not bus-driven — the caller owns it and passes a callback.
-import Phaser from 'phaser';
-import { popIn, popOut, pressDip, EASE, DUR } from '../anim/motion.js';
+import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
+import { makeButton } from './Button.js';
 
 export class ConfirmDialog {
   constructor(scene, depth = 1600) {
@@ -52,18 +52,7 @@ export class ConfirmDialog {
   }
 
   _button(x, y, label, color, onClick, w = 150, h = 48) {
-    const s = this.scene;
-    const c = s.add.container(x, y);
-    const bg = s.add.rectangle(0, 0, w, h, color, 1).setOrigin(0.5).setStrokeStyle(2, 0xffffff, 0.5);
-    const txt = s.add.text(0, 0, label, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '18px', color: '#ffffff',
-    }).setOrigin(0.5);
-    c.add([bg, txt]);
-    c.setSize(w, h).setInteractive(new Phaser.Geom.Rectangle(-w / 2, -h / 2, w, h), Phaser.Geom.Rectangle.Contains);
-    c.on('pointerover', () => s.tweens.add({ targets: c, scaleX: 1.06, scaleY: 1.06, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerout', () => s.tweens.add({ targets: c, scaleX: 1, scaleY: 1, ease: EASE.out, duration: DUR.press }));
-    c.on('pointerdown', (p, lx, ly, e) => { e && e.stopPropagation && e.stopPropagation(); pressDip(c, { onComplete: onClick }); });
-    return c;
+    return makeButton(this.scene, { x, y, w, h, label, color, fontSize: 18, onClick, stopPropagation: true });
   }
 }
 
