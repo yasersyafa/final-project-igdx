@@ -4,8 +4,10 @@
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
 import { loadProgress } from '../core/progress.js';
+import { hasPhotos } from '../core/gallery.js';
 import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
+import { LevelInfoDialog } from '../ui/LevelInfoDialog.js';
 import { FONTS } from '../config/fonts.js';
 
 export class LevelSelectScene extends Phaser.Scene {
@@ -26,6 +28,8 @@ export class LevelSelectScene extends Phaser.Scene {
       fontFamily: FONTS.body, fontSize: '18px', color: '#ff9a6b',
     }).setOrigin(0.5).setAlpha(0);
 
+    this._info = new LevelInfoDialog(this); // level intro popup (Main / Gallery)
+
     const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
       const bx = W / 2 + (i - 1) * 220;
@@ -35,7 +39,7 @@ export class LevelSelectScene extends Phaser.Scene {
         x: bx, y: H * 0.5, w: 190, h: 64,
         label: unlocked ? lv.name : `🔒 ${lv.name}`,
         color: unlocked ? 0x4a5a7a : 0x3a3f4a, fontSize: 20,
-        onClick: () => (unlocked ? this._play(i) : this._denied(card)),
+        onClick: () => (unlocked ? this._openInfo(i) : this._denied(card)),
       });
       if (!unlocked) card.setAlpha(0.55);
       popIn(card, { delay: 150 + i * 80 });
@@ -56,6 +60,21 @@ export class LevelSelectScene extends Phaser.Scene {
       onClick: () => fadeScene(this, 'out', { onComplete: () => this.scene.start('MainMenuScene') }),
     });
     popIn(back, { delay: 420 });
+  }
+
+  // _openInfo — level intro popup: description + Main (play) and, when the level
+  // already has saved photos, a Gallery button.
+  _openInfo(index) {
+    const lv = LEVELS[index];
+    this._info.open({
+      name: lv.name,
+      description: (lv.cutscene && lv.cutscene[0]) || '',
+      hasGallery: hasPhotos(lv.id),
+      onPlay: () => this._play(index),
+      onGallery: () => fadeScene(this, 'out', {
+        onComplete: () => this.scene.start('GalleryScene', { levelIndex: index }),
+      }),
+    });
   }
 
   _play(index) {

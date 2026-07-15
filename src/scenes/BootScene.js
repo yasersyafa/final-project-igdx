@@ -1,9 +1,11 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 export class BootScene extends Phaser.Scene {
-  constructor() { super('BootScene'); }
+  constructor() {
+    super("BootScene");
+  }
   create() {
-    this.scene.start('PreloadScene');
+    this.scene.start("PreloadScene");
   }
 }
 export default BootScene;

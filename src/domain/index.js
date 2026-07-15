@@ -5,6 +5,7 @@ import { CONFIG } from '../config/gameConfig.js';
 import { evaluate, evaluateSession, capturedMissionIds } from './PhotoEvaluator.js';
 import { rateShot } from '../config/feedbackConfig.js';
 import { PhotoObject } from '../objects/PhotoObject.js';
+import { addPhoto, removePhoto, textureToDataURL } from '../core/gallery.js';
 
 export function initLogicSystem(scene, bus, levelData) {
   const objects = levelData.objects;
@@ -35,6 +36,13 @@ export function initLogicSystem(scene, bus, levelData) {
   const onPhoto = ({ id, frameBounds, thumbKey }) => {
     roll.push({ id, frameBounds, thumbKey });
 
+    // Persist the shot to the per-level gallery (auto-save on capture). The
+    // snapshot texture exists here since PHOTO_TAKEN fires in its callback.
+    if (thumbKey && scene.textures.exists(thumbKey)) {
+      const dataUrl = textureToDataURL(scene, thumbKey);
+      if (dataUrl) addPhoto(levelData.id, { id, dataUrl });
+    }
+
     // Per-shot evaluate: drives live feedback + the special-object dialog.
     const res = evaluate(frameBounds, evalObjects, { isComplete: () => false }, CONFIG);
     if (res.success) {
@@ -64,6 +72,7 @@ export function initLogicSystem(scene, bus, levelData) {
     const i = roll.findIndex((p) => p.id === id);
     if (i === -1) return;
     roll.splice(i, 1);
+    removePhoto(levelData.id, id); // keep gallery in sync with roll deletes
     const ids = capturedMissionIds(roll, evalObjects, CONFIG);
     captured.clear();
     ids.forEach((x) => captured.add(x));
