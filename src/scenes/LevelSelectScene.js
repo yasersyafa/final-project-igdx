@@ -21,21 +21,33 @@ export class LevelSelectScene extends Phaser.Scene {
     }).setOrigin(0.5);
     popIn(head);
 
+    // Locked-level hint — created once, hidden; flashed by _denied() on a locked tap.
+    this._hint = this.add.text(W / 2, H * 0.22 + 44, 'Selesaikan level sebelumnya dulu', {
+      fontFamily: FONTS.body, fontSize: '18px', color: '#ff9a6b',
+    }).setOrigin(0.5).setAlpha(0);
+
     const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
       const bx = W / 2 + (i - 1) * 220;
+      // Sequential unlock: level 0 is always open; later levels need the previous one finished.
+      const unlocked = i === 0 || Boolean(progress[i - 1]);
       const card = makeButton(this, {
-        x: bx, y: H * 0.5, w: 190, h: 64, label: lv.name, color: 0x4a5a7a, fontSize: 20,
-        onClick: () => this._play(i),
+        x: bx, y: H * 0.5, w: 190, h: 64,
+        label: unlocked ? lv.name : `🔒 ${lv.name}`,
+        color: unlocked ? 0x4a5a7a : 0x3a3f4a, fontSize: 20,
+        onClick: () => (unlocked ? this._play(i) : this._denied(card)),
       });
+      if (!unlocked) card.setAlpha(0.55);
       popIn(card, { delay: 150 + i * 80 });
 
-      // Saved best: filled/empty stars, or a gentle "not played yet".
+      // Saved best: filled/empty stars, "locked", or a gentle "not played yet".
       const entry = progress[i];
-      const label = entry ? '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars) : '— not played';
+      let label, color;
+      if (!unlocked) { label = '🔒 Terkunci'; color = '#6b6459'; }
+      else if (entry) { label = '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars); color = '#ffd24a'; }
+      else { label = '— not played'; color = '#6b6459'; }
       this.add.text(bx, H * 0.5 + 52, label, {
-        fontFamily: FONTS.body, fontSize: '18px',
-        color: entry ? '#ffd24a' : '#6b6459',
+        fontFamily: FONTS.body, fontSize: '18px', color,
       }).setOrigin(0.5);
     });
 
@@ -48,6 +60,22 @@ export class LevelSelectScene extends Phaser.Scene {
 
   _play(index) {
     fadeScene(this, 'out', { onComplete: () => this.scene.start('CutsceneScene', { levelIndex: index }) });
+  }
+
+  // _denied — feedback for tapping a locked card: shake the card + flash the hint.
+  _denied(card) {
+    const homeX = card.x;
+    this.tweens.killTweensOf(card);
+    this.tweens.add({
+      targets: card, x: homeX + 8, duration: 50, ease: 'Sine.inOut',
+      yoyo: true, repeat: 3, onComplete: () => { card.x = homeX; },
+    });
+    this.tweens.killTweensOf(this._hint);
+    this._hint.setAlpha(0);
+    this.tweens.add({
+      targets: this._hint, alpha: 1, duration: 120, ease: 'Sine.out',
+      hold: 1200, yoyo: true,
+    });
   }
 }
 export default LevelSelectScene;
