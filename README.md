@@ -19,20 +19,7 @@ bun run serve    # static server only (expects dist/ already built)
 bun test         # pure-logic unit tests
 ```
 
-Open http://localhost:3000 — click **Start**.
-
-### Core loop & controls
-- **Lowered camera (IDLE):** you see the shot list (left), the photo roll (right),
-  and the **Raise Camera** + **Confirm** buttons.
-- **Raise Camera** (button or **Space**): the world **zooms** so your view is limited
-  to the camera frame — UI hides, focus on the shot.
-- **While raised (AIMING):** move the mouse to look around, **left-click to shoot**.
-  Keep shooting as much as you like — each shot's real photo flies into the roll on
-  the right. **Space / right-click / Esc** lowers the camera.
-- **Confirm** (only in IDLE, available any time): finalizes the level. The **result
-  panel** then checks your roll and reveals which missions you actually captured —
-  confirming early is the risk. One special character per level triggers a dialog the
-  first time you photograph it (the camera lowers for the moment).
+Open http://localhost:3000
 
 ## How it's built (3-stream parallel layout)
 
@@ -40,9 +27,9 @@ Open http://localhost:3000 — click **Start**.
 through the shared `bus` using `EVENTS` names:
 
 ```
-initCameraSystem(scene, bus, levelData)   // src/camera/   — viewfinder, shutter, preview
-initLogicSystem(scene, bus, levelData)    // src/domain/   — scoring, missions, evaluator
-initUISystem(scene, bus, levelData)       // src/ui/       — checklist, score, dialog
+initCameraSystem(scene, bus, levelData)   // src/camera/  
+initLogicSystem(scene, bus, levelData)    // src/domain/   
+initUISystem(scene, bus, levelData)       // src/ui/      
 ```
 
 ### FROZEN contract — do not change without telling the whole team
