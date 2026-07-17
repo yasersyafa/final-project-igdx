@@ -1,4 +1,4 @@
-# Photo Walk — a cozy photography game
+# a cozy photography game
 
 Phaser 3 in the browser. **Bun is the toolchain only** (package manager,
 `bun build` bundler, `bun test`). Phaser never runs inside the Bun runtime.
