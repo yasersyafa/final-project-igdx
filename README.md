@@ -65,4 +65,4 @@ Placeholders are **basic shapes only**. To go real:
 1. Load assets in `src/scenes/PreloadScene.js` (marked swap-in point).
 2. Register `idleAnim` spritesheet animations there by the keys level data uses.
 3. In `src/objects/PhotoObject.js`, replace the placeholder rectangle with the
-   sprite at the same origin/bounds — motion needs no changes.
+   sprite at the same origin/bounds (motion needs no changes).
