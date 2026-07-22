@@ -4,9 +4,9 @@
   "background": "bg_bandung",
   "bgColor": "#7d9e77",
   "cutscene": [
-    "The train climbs up into the cool, green highlands.",
-    "This is Bandung, the heart of Sunda, all mist and music.",
-    "Go find what these mountains are proud of."
+    { "en": "The train climbs up into the cool, green highlands.", "id": "Kereta menanjak ke dataran tinggi yang sejuk dan hijau." },
+    { "en": "This is Bandung, the heart of Sunda, all mist and music.", "id": "Inilah Bandung, jantung Sunda, penuh kabut dan musik." },
+    { "en": "Go find what these mountains are proud of.", "id": "Pergi temukan apa yang dibanggakan pegunungan ini." }
   ],
   "decor": [
     { "id": "dec_pine_l", "name": "Pine Tree", "sprite": "pine", "idleAnim": "sway", "x": 130, "y": 340, "bbox": { "x": 100, "y": 240, "w": 60, "h": 200 } },
@@ -22,7 +22,10 @@
       "idleAnim": "sway",
       "x": 650, "y": 450,
       "bbox": { "x": 605, "y": 390, "w": 90, "h": 120 },
-      "mission": "Frame the bamboo rattle tuned to one note",
+      "mission": {
+        "en": "Frame the bamboo rattle tuned to one note",
+        "id": "Bidik alat bambu yang bernada satu"
+      },
       "isSpecial": false
     },
     {
@@ -32,7 +35,10 @@
       "idleAnim": "bob",
       "x": 960, "y": 470,
       "bbox": { "x": 905, "y": 425, "w": 110, "h": 90 },
-      "mission": "Capture the basket that gathers highland leaves",
+      "mission": {
+        "en": "Capture the basket that gathers highland leaves",
+        "id": "Abadikan keranjang pengumpul daun dari dataran tinggi"
+      },
       "isSpecial": false
     },
     {
@@ -42,14 +48,17 @@
       "idleAnim": "breathe",
       "x": 360, "y": 410,
       "bbox": { "x": 280, "y": 335, "w": 160, "h": 150 },
-      "mission": "Find the building crowned with a satay skewer",
+      "mission": {
+        "en": "Find the building crowned with a satay skewer",
+        "id": "Temukan gedung yang berpuncak tusuk sate"
+      },
       "isSpecial": true,
       "dialog": {
-        "speaker": "Guide",
+        "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
-          "The old hall wears that satay skewer on top like a crown.",
-          "Six ornaments up there. One for every year it took to build.",
-          "The afternoon light's coming down the arches. It's waiting for you."
+          { "en": "The old hall wears that satay skewer on top like a crown.", "id": "Gedung tua itu mengenakan tusuk sate di puncaknya seperti mahkota." },
+          { "en": "Six ornaments up there. One for every year it took to build.", "id": "Ada enam ornamen di atas sana. Satu untuk tiap tahun pembangunannya." },
+          { "en": "The afternoon light's coming down the arches. It's waiting for you.", "id": "Cahaya sore turun menyusuri lengkungannya. Ia menunggumu." }
         ]
       }
     }

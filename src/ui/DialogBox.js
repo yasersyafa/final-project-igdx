@@ -4,6 +4,7 @@
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
+import { t } from '../core/i18n.js';
 
 export class DialogBox {
   constructor(scene, bus, levelData, depth = 1500) {
@@ -30,7 +31,7 @@ export class DialogBox {
       fontFamily: FONTS.body, fontSize: '20px', color: '#ffffff',
       wordWrap: { width: pw - 56 }, lineSpacing: 6,
     }).setOrigin(0, 0);
-    this.hint = scene.add.text(pw / 2 - 24, ph / 2 - 26, 'click / space ▸', {
+    this.hint = scene.add.text(pw / 2 - 24, ph / 2 - 26, t('dialog.hint'), {
       fontFamily: FONTS.body, fontSize: '14px', color: '#bbbbbb',
     }).setOrigin(1, 0);
     this.panel.add([bg, this.speaker, this.body, this.hint]);

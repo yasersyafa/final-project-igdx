@@ -9,6 +9,7 @@ import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
 import { LevelInfoDialog } from '../ui/LevelInfoDialog.js';
 import { FONTS } from '../config/fonts.js';
+import { t, L } from '../core/i18n.js';
 
 export class LevelSelectScene extends Phaser.Scene {
   constructor() { super('LevelSelectScene'); }
@@ -18,13 +19,13 @@ export class LevelSelectScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor('#20242f');
     fadeScene(this, 'in');
 
-    const head = this.add.text(W / 2, H * 0.22, 'Choose a destination', {
+    const head = this.add.text(W / 2, H * 0.22, t('levelselect.title'), {
       fontFamily: FONTS.display, fontSize: '40px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5);
     popIn(head);
 
     // Locked-level hint — created once, hidden; flashed by _denied() on a locked tap.
-    this._hint = this.add.text(W / 2, H * 0.22 + 44, 'Selesaikan level sebelumnya dulu', {
+    this._hint = this.add.text(W / 2, H * 0.22 + 44, t('levelselect.lockedhint'), {
       fontFamily: FONTS.body, fontSize: '18px', color: '#ff9a6b',
     }).setOrigin(0.5).setAlpha(0);
 
@@ -47,16 +48,16 @@ export class LevelSelectScene extends Phaser.Scene {
       // Saved best: filled/empty stars, "locked", or a gentle "not played yet".
       const entry = progress[i];
       let label, color;
-      if (!unlocked) { label = '🔒 Terkunci'; color = '#6b6459'; }
+      if (!unlocked) { label = t('levelselect.locked'); color = '#6b6459'; }
       else if (entry) { label = '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars); color = '#ffd24a'; }
-      else { label = '— not played'; color = '#6b6459'; }
+      else { label = t('levelselect.notplayed'); color = '#6b6459'; }
       this.add.text(bx, H * 0.5 + 52, label, {
         fontFamily: FONTS.body, fontSize: '18px', color,
       }).setOrigin(0.5);
     });
 
     const back = makeButton(this, {
-      x: W / 2, y: H - 70, w: 160, h: 50, label: '← Back', color: 0x3a4353, fontSize: 18,
+      x: W / 2, y: H - 70, w: 160, h: 50, label: t('btn.back'), color: 0x3a4353, fontSize: 18,
       onClick: () => fadeScene(this, 'out', { onComplete: () => this.scene.start('MainMenuScene') }),
     });
     popIn(back, { delay: 420 });
@@ -68,7 +69,7 @@ export class LevelSelectScene extends Phaser.Scene {
     const lv = LEVELS[index];
     this._info.open({
       name: lv.name,
-      description: (lv.cutscene && lv.cutscene[0]) || '',
+      description: L((lv.cutscene && lv.cutscene[0]) || ''),
       hasGallery: hasPhotos(lv.id),
       onPlay: () => this._play(index),
       onGallery: () => fadeScene(this, 'out', {

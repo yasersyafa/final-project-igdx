@@ -6,6 +6,7 @@ import { EVENTS } from '../config/events.js';
 import { popIn, popOut } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { FONTS } from '../config/fonts.js';
+import { t } from '../core/i18n.js';
 
 export class ControlBar {
   constructor(scene, bus, levelData, depth = 1000) {
@@ -13,10 +14,10 @@ export class ControlBar {
     this.bus = bus;
     const W = scene.cameras.main.width, H = scene.cameras.main.height;
 
-    this.confirmBtn = this._button(W / 2, H - 64, '✓  Confirm', 0x7bbf6a,
+    this.confirmBtn = this._button(W / 2, H - 64, t('btn.confirm'), 0x7bbf6a,
       () => bus.emit(EVENTS.SUBMIT_REQUESTED));
 
-    this.tip = scene.add.text(W / 2, H - 110, 'Press SPACE to raise the camera · Confirm when you are happy with your roll', {
+    this.tip = scene.add.text(W / 2, H - 110, t('hud.controltip'), {
       fontFamily: FONTS.body, fontSize: '15px', color: '#e8e2d6',
     }).setOrigin(0.5).setDepth(depth);
 

@@ -59,3 +59,53 @@ Each level file lives in `src/data/levels/levelN.json`.
 - `bbox` is the framing/scoring hit area in world pixels (top-left origin). Keep it
   consistent with `x,y` (typically centered on the object).
 - `x,y` is the object **center** (sprites/shapes use origin 0.5, 0.5).
+
+## Localization
+
+The game is bilingual (English / Bahasa Indonesia), chosen in main menu →
+Settings and persisted via `src/core/settings.js`. Two text sources:
+
+- **UI chrome** (buttons, labels, HUD) → central locale tables
+  `src/data/locales/en.json` + `id.json`, keyed. Read with `t('key', {param})`
+  from `src/core/i18n.js`. `{param}` placeholders fill in (e.g. `hud.roll`).
+- **Level content** (`cutscene`, `mission`, `dialog.speaker`, `dialog.lines`)
+  → inline `{ "en": "...", "id": "..." }` objects in the level JSON. Read with
+  `L(value)` from `src/core/i18n.js`.
+
+`L()` also passes plain strings through unchanged, so proper nouns kept as plain
+strings — object `name`, city `name`, `decor` labels — need no translation.
+Add a language: extend `src/config/languages.js`, add its key to every locale
+table entry, every inline `{en,id}` object, and `education.json`.
+
+Example inline content:
+
+```jsonc
+"mission": { "en": "Frame the house ...", "id": "Bidik rumah ..." },
+"dialog": {
+  "speaker": { "en": "Guide", "id": "Pemandu" },
+  "lines": [ { "en": "...", "id": "..." } ]
+}
+```
+
+## Album field notes (education)
+
+Educational text shown in the Album is kept **separate** from level data in
+`src/data/education.json`, keyed by the object's `id`. This lets the notes be
+edited (and translated) without touching gameplay JSON. Each entry maps a
+language code to its text:
+
+```jsonc
+{
+  "obj_bench": {
+    "en": "A public bench ...",   // English field notes
+    "id": "Bangku umum ..."       // Bahasa Indonesia
+  }
+}
+```
+
+- Only **mission objects** get notes; random snapshots show none.
+- Language is a **global setting** (main menu → Settings), persisted via
+  `src/core/settings.js`; the Album reads it on open. To add a language, add its
+  code to `src/config/languages.js` and the matching key to every entry here.
+- Missing language falls back to `en`; a missing entry shows just the photo.
+

@@ -12,6 +12,7 @@ import { createStateMachine } from '../core/stateMachine.js';
 import { FONTS } from '../config/fonts.js';
 import { EASE, DUR } from '../anim/motion.js';
 import { playFlash, playClick, playMiss } from './CaptureFeedback.js';
+import { t } from '../core/i18n.js';
 
 const STATES = ['INTRO', 'IDLE', 'AIMING'];
 
@@ -40,7 +41,7 @@ export class CameraTool {
     this.sm = createStateMachine('INTRO', STATES);
     this._photoCount = 0;
     this.rollCount = 0; // photos currently in the roll (capped at CONFIG.MAX_PHOTOS)
-    this._hintDefault = 'aim — click to shoot · space/right-click to lower';
+    this._hintDefault = t('camera.hint');
 
     this._buildOverlay();
     this._wireInput();
@@ -64,7 +65,7 @@ export class CameraTool {
     // Center focus dot.
     this.dot = s.add.circle(W / 2, H / 2, 3, 0xffffff, 0.7).setDepth(801);
     // "REC"-ish hint.
-    this.hint = s.add.text(16, 14, 'aim — click to shoot · space/right-click to lower', {
+    this.hint = s.add.text(16, 14, this._hintDefault, {
       fontFamily: FONTS.body, fontSize: '14px', color: '#ffffff',
     }).setDepth(801).setAlpha(0.8);
 
@@ -204,7 +205,7 @@ export class CameraTool {
   _rollFullCue() {
     try { playMiss(this.scene, this.dot); } catch { /* optional */ }
     if (!this.hint) return;
-    this.hint.setText('Roll full — lower the camera to delete a photo').setColor('#ffcaca');
+    this.hint.setText(t('camera.rollfull')).setColor('#ffcaca');
     this.scene.time.delayedCall(1400, () => {
       if (this.hint) this.hint.setText(this._hintDefault).setColor('#ffffff');
     });

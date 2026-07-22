@@ -5,6 +5,7 @@
 import Phaser from "phaser";
 import { EASE, DUR } from "../anim/motion.js";
 import { FONTS } from "../config/fonts.js";
+import { t } from "../core/i18n.js";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -20,7 +21,7 @@ export class PreloadScene extends Phaser.Scene {
     const bx = W / 2 - barW / 2,
       by = H / 2;
     this.add
-      .text(W / 2, by - 40, "Loading…", {
+      .text(W / 2, by - 40, t("preload.loading"), {
         fontFamily: FONTS.body,
         fontSize: "22px",
         color: "#fff5e6",

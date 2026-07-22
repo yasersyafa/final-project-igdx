@@ -6,6 +6,7 @@ import { evaluate, evaluateSession, capturedMissionIds } from './PhotoEvaluator.
 import { rateShot } from '../config/feedbackConfig.js';
 import { PhotoObject } from '../objects/PhotoObject.js';
 import { addPhoto, removePhoto, textureToDataURL } from '../core/gallery.js';
+import { L } from '../core/i18n.js';
 
 export function initLogicSystem(scene, bus, levelData) {
   const objects = levelData.objects;
@@ -61,7 +62,10 @@ export function initLogicSystem(scene, bus, levelData) {
       specialShown = true;
       const obj = objects.find((o) => o.id === res.objectId);
       if (obj && obj.dialog) {
-        bus.emit(EVENTS.DIALOG_SHOW, { speaker: obj.dialog.speaker, lines: obj.dialog.lines });
+        bus.emit(EVENTS.DIALOG_SHOW, {
+          speaker: L(obj.dialog.speaker),
+          lines: (obj.dialog.lines || []).map(L),
+        });
       }
     }
   };

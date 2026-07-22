@@ -4,9 +4,9 @@
   "background": "bg_yogyakarta",
   "bgColor": "#a9713f",
   "cutscene": [
-    "Heading south now, into the soul of Java.",
-    "Yogyakarta hums along Malioboro Street, old and in no hurry.",
-    "One last roll of film to finish the archive."
+    { "en": "Heading south now, into the soul of Java.", "id": "Sekarang menuju selatan, ke jiwa Jawa." },
+    { "en": "Yogyakarta hums along Malioboro Street, old and in no hurry.", "id": "Yogyakarta berdenyut di sepanjang Jalan Malioboro, tua dan tak terburu-buru." },
+    { "en": "One last roll of film to finish the archive.", "id": "Satu rol film terakhir untuk melengkapi arsip." }
   ],
   "decor": [
     { "id": "dec_andong", "name": "Andong", "sprite": "andong", "idleAnim": "sway", "x": 150, "y": 470, "bbox": { "x": 70, "y": 410, "w": 160, "h": 120 } },
@@ -22,7 +22,10 @@
       "idleAnim": "sway",
       "x": 340, "y": 450,
       "bbox": { "x": 265, "y": 395, "w": 150, "h": 110 },
-      "mission": "Frame the three-wheeled cart pedalled by hand",
+      "mission": {
+        "en": "Frame the three-wheeled cart pedalled by hand",
+        "id": "Bidik kendaraan roda tiga yang dikayuh tangan"
+      },
       "isSpecial": false
     },
     {
@@ -32,7 +35,10 @@
       "idleAnim": "breathe",
       "x": 650, "y": 460,
       "bbox": { "x": 605, "y": 420, "w": 90, "h": 80 },
-      "mission": "Capture the little copper pen that writes in wax",
+      "mission": {
+        "en": "Capture the little copper pen that writes in wax",
+        "id": "Abadikan pena tembaga kecil yang menulis dengan lilin"
+      },
       "isSpecial": false
     },
     {
@@ -42,14 +48,17 @@
       "idleAnim": "sway",
       "x": 960, "y": 430,
       "bbox": { "x": 910, "y": 355, "w": 100, "h": 150 },
-      "mission": "Find the leather puppet that lives in shadow",
+      "mission": {
+        "en": "Find the leather puppet that lives in shadow",
+        "id": "Temukan boneka kulit yang hidup dalam bayangan"
+      },
       "isSpecial": true,
       "dialog": {
-        "speaker": "The Dalang",
+        "speaker": { "en": "The Dalang", "id": "Sang Dalang" },
         "lines": [
-          "Behind the screen, the leather comes alive and the shadows do the talking.",
-          "A whole night of love and war, played out on a lit-up cloth.",
-          "He turns a puppet toward you. 'Go on, take it home.'"
+          { "en": "Behind the screen, the leather comes alive and the shadows do the talking.", "id": "Di balik layar, kulit itu hidup dan bayangan yang berbicara." },
+          { "en": "A whole night of love and war, played out on a lit-up cloth.", "id": "Semalam penuh cinta dan perang, dimainkan di atas kain bercahaya." },
+          { "en": "He turns a puppet toward you. 'Go on, take it home.'", "id": "Ia mengarahkan wayang ke arahmu. 'Ayo, bawa pulang.'" }
         ]
       }
     }

@@ -4,6 +4,7 @@
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { FONTS } from '../config/fonts.js';
+import { t } from '../core/i18n.js';
 
 export class ConfirmDialog {
   constructor(scene, depth = 1600) {
@@ -19,11 +20,11 @@ export class ConfirmDialog {
     const pw = 420, ph = 168;
     this.panel = scene.add.container(W / 2, H / 2).setDepth(depth + 1).setVisible(false);
     const bg = scene.add.rectangle(0, 0, pw, ph, 0x2b2230, 0.98).setOrigin(0.5).setStrokeStyle(3, 0xffe08a, 0.8);
-    this.msg = scene.add.text(0, -44, 'Delete this photo?', {
+    this.msg = scene.add.text(0, -44, t('confirm.deletephoto'), {
       fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5);
-    const del = this._button(-92, 36, 'Delete', 0xc06060, () => this._confirm());
-    const cancel = this._button(92, 36, 'Cancel', 0x4a5a7a, () => this.close());
+    const del = this._button(-92, 36, t('btn.delete'), 0xc06060, () => this._confirm());
+    const cancel = this._button(92, 36, t('btn.cancel'), 0x4a5a7a, () => this.close());
     this.panel.add([bg, this.msg, del, cancel]);
   }
 

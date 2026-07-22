@@ -9,6 +9,7 @@ import { EASE, DUR, checkPop } from '../anim/motion.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
 import { DEBUG } from '../config/debug.js';
 import { FONTS } from '../config/fonts.js';
+import { t } from '../core/i18n.js';
 
 const MAX = CONFIG.MAX_PHOTOS;
 const TW = 80, TH = 60;              // photo size (4:3)
@@ -28,7 +29,7 @@ export class PhotoStrip {
     this.enabled = false;  // delete interactions only while camera lowered (IDLE)
     this.confirm = new ConfirmDialog(scene);
 
-    this.header = scene.add.text(SLOT_X, 108, `Roll  0 / ${MAX}`, {
+    this.header = scene.add.text(SLOT_X, 108, t('hud.roll', { n: 0, max: MAX }), {
       fontFamily: FONTS.body, fontSize: '16px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5, 0.5).setDepth(depth);
 
@@ -80,7 +81,7 @@ export class PhotoStrip {
     xBtn.on('pointerdown', (p, lx, ly, e) => {
       if (e && e.stopPropagation) e.stopPropagation();
       if (!this.enabled) return;
-      this.confirm.open({ message: 'Delete this photo?', onConfirm: () => this._deleteItem(item) });
+      this.confirm.open({ message: t('confirm.deletephoto'), onConfirm: () => this._deleteItem(item) });
     });
 
     if (DEBUG.hitboxes) {
@@ -117,7 +118,7 @@ export class PhotoStrip {
 
   _updateHeader() {
     const n = this.items.length;
-    this.header.setText(`Roll  ${n} / ${MAX}`);
+    this.header.setText(t('hud.roll', { n, max: MAX }));
     this.header.setColor(n >= MAX ? '#ffcaca' : '#fff5e6');
   }
 

@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { popIn, fadeScene, DUR, idleBob } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { FONTS } from "../config/fonts.js";
+import { t } from "../core/i18n.js";
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -25,7 +26,7 @@ export class MainMenuScene extends Phaser.Scene {
     idleBob(title, { amount: 6, duration: DUR.idleBreathe });
 
     this.add
-      .text(W / 2, H * 0.28 + 56, "a cozy photography game", {
+      .text(W / 2, H * 0.28 + 56, t("menu.subtitle"), {
         fontFamily: FONTS.body,
         fontSize: "20px",
         color: "#c9c2b6",
@@ -37,7 +38,7 @@ export class MainMenuScene extends Phaser.Scene {
       y: H * 0.58,
       w: 240,
       h: 66,
-      label: "Play",
+      label: t("btn.play"),
       color: 0x7bbf6a,
       fontSize: 26,
       onClick: () =>

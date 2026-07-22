@@ -6,6 +6,7 @@ import { gradeForFrac, starsForFrac, recordResult } from "../core/progress.js";
 import { popIn, gradeReveal, checkPop, fadeScene } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { FONTS } from "../config/fonts.js";
+import { t, L } from "../core/i18n.js";
 
 export class ResultScene extends Phaser.Scene {
   constructor() {
@@ -32,7 +33,7 @@ export class ResultScene extends Phaser.Scene {
     const { improved } = recordResult(levelIndex, { frac, total });
 
     const head = this.add
-      .text(W / 2, 70, this.payload.levelName || "Results", {
+      .text(W / 2, 70, this.payload.levelName || t("result.title"), {
         fontFamily: FONTS.display,
         fontSize: "32px",
         color: "#fff5e6",
@@ -67,7 +68,9 @@ export class ResultScene extends Phaser.Scene {
         .text(
           28,
           10,
-          r.done ? `${r.mission} — ${r.score} pts` : `${r.mission} — missed`,
+          r.done
+            ? `${L(r.mission)} — ${t("result.pts", { score: r.score })}`
+            : `${L(r.mission)} — ${t("result.missed")}`,
           {
             fontFamily: FONTS.body,
             fontSize: "13px",
@@ -84,7 +87,12 @@ export class ResultScene extends Phaser.Scene {
       .text(
         W / 2,
         y + 16,
-        `${doneCount} / ${results.length} missions  ·  ${total} / ${max} pts`,
+        t("result.summary", {
+          done: doneCount,
+          total: results.length,
+          score: total,
+          max,
+        }),
         {
           fontFamily: FONTS.body,
           fontSize: "22px",
@@ -122,7 +130,7 @@ export class ResultScene extends Phaser.Scene {
 
     if (improved) {
       const best = this.add
-        .text(W / 2, starY + 42, "New best!", {
+        .text(W / 2, starY + 42, t("result.newbest"), {
           fontFamily: FONTS.body,
           fontSize: "20px",
           color: "#9be07a",
@@ -135,7 +143,7 @@ export class ResultScene extends Phaser.Scene {
     const hasNext = levelIndex < LEVELS.length - 1;
     const by = H - 60;
     if (hasNext) {
-      const next = this._button(W / 2 - 130, by, "Next Level", 0x7bbf6a, () =>
+      const next = this._button(W / 2 - 130, by, t("btn.nextlevel"), 0x7bbf6a, () =>
         this._go("CutsceneScene", { levelIndex: levelIndex + 1 }),
       );
       popIn(next, { delay: 500 });
@@ -143,7 +151,7 @@ export class ResultScene extends Phaser.Scene {
     const menu = this._button(
       W / 2 + (hasNext ? 130 : 0),
       by,
-      "Levels",
+      t("btn.levels"),
       0x4a5a7a,
       () => this._go("LevelSelectScene"),
     );
