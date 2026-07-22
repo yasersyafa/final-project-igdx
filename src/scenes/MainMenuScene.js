@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { popIn, fadeScene, DUR, idleBob } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
+import { SettingsDialog } from "../ui/SettingsDialog.js";
 import { FONTS } from "../config/fonts.js";
 import { t } from "../core/i18n.js";
 
@@ -47,6 +48,19 @@ export class MainMenuScene extends Phaser.Scene {
         }),
     });
     popIn(play, { delay: 120 });
+
+    this._settings = new SettingsDialog(this);
+    const settings = makeButton(this, {
+      x: W / 2,
+      y: H * 0.58 + 88 + 72,
+      w: 240,
+      h: 56,
+      label: t("btn.settings"),
+      color: 0x3a4353,
+      fontSize: 22,
+      onClick: () => this._settings.open(),
+    });
+    popIn(settings, { delay: 280 });
   }
 }
 export default MainMenuScene;
