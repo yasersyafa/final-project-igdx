@@ -37,15 +37,19 @@ export function initLogicSystem(scene, bus, levelData) {
   const onPhoto = ({ id, frameBounds, thumbKey }) => {
     roll.push({ id, frameBounds, thumbKey });
 
-    // Persist the shot to the per-level gallery (auto-save on capture). The
-    // snapshot texture exists here since PHOTO_TAKEN fires in its callback.
-    if (thumbKey && scene.textures.exists(thumbKey)) {
-      const dataUrl = textureToDataURL(scene, thumbKey);
-      if (dataUrl) addPhoto(levelData.id, { id, dataUrl });
-    }
-
     // Per-shot evaluate: drives live feedback + the special-object dialog.
     const res = evaluate(frameBounds, evalObjects, { isComplete: () => false }, CONFIG);
+
+    // Persist the shot to the per-level gallery (auto-save on capture). The
+    // snapshot texture exists here since PHOTO_TAKEN fires in its callback.
+    // objectId tags mission captures so the album can show its field notes;
+    // a random shot saves with objectId null (no educational info).
+    if (thumbKey && scene.textures.exists(thumbKey)) {
+      const dataUrl = textureToDataURL(scene, thumbKey);
+      const objectId = res.success ? res.objectId : null;
+      if (dataUrl) addPhoto(levelData.id, { id, dataUrl, objectId });
+    }
+
     if (res.success) {
       const sprite = sprites.get(res.objectId);
       if (sprite) sprite.flashHighlight();

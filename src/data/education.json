@@ -1,0 +1,38 @@
+{
+  "obj_rumahgadang": {
+    "en": "The Rumah Gadang is the traditional home of the Minangkabau of West Sumatra. Its roof sweeps up into sharp points like buffalo horns — a nod to the legendary buffalo duel that named the people ('minang kabau' means victorious buffalo).",
+    "id": "Rumah Gadang adalah rumah adat suku Minangkabau di Sumatra Barat. Atapnya melengkung meruncing seperti tanduk kerbau — merujuk pada legenda adu kerbau yang menamai suku ini ('minang kabau' berarti kerbau yang menang)."
+  },
+  "obj_nasipadang": {
+    "en": "Padang restaurants pile every dish into the front window at once. You are served a spread of small plates and pay only for what you eat — a hospitality style from West Sumatra now famous across Indonesia.",
+    "id": "Rumah makan Padang memajang semua lauk di etalase depan sekaligus. Kamu disuguhi banyak piring kecil dan hanya membayar yang dimakan — gaya hidang khas Sumatra Barat yang kini terkenal di seluruh Indonesia."
+  },
+  "obj_taripiring": {
+    "en": "Tari Piring, the Plate Dance, is a Minangkabau harvest thanksgiving centuries old. Dancers balance and spin porcelain plates on their palms at speed without letting one slip.",
+    "id": "Tari Piring adalah tarian syukur panen suku Minangkabau yang berusia berabad-abad. Penari memutar dan menyeimbangkan piring porselen di telapak tangan dengan cepat tanpa satu pun terjatuh."
+  },
+  "obj_angklung": {
+    "en": "The angklung is a West Javanese instrument of tuned bamboo tubes. Each frame sounds only one note, so a whole group must play together to build a melody — an art recognised by UNESCO.",
+    "id": "Angklung adalah alat musik bambu dari Jawa Barat. Tiap rangka hanya menghasilkan satu nada, jadi satu kelompok harus bermain bersama untuk membentuk melodi — kesenian yang diakui UNESCO."
+  },
+  "obj_teapicker": {
+    "en": "Bandung's cool highlands are blanketed in tea plantations. Pickers carry these baskets on their backs and pluck only the top two leaves and a bud from each bush.",
+    "id": "Dataran tinggi Bandung yang sejuk dipenuhi perkebunan teh. Pemetik menggendong keranjang ini di punggung dan hanya memetik dua daun teratas dan satu kuncup dari tiap semak."
+  },
+  "obj_gedungsate": {
+    "en": "Gedung Sate is Bandung's 1920s landmark, named for the satay-skewer ornament on its central spire. The six skewered shapes are said to mark the six million guilders it cost to build.",
+    "id": "Gedung Sate adalah landmark Bandung dari era 1920-an, dinamai dari ornamen tusuk sate di puncak menaranya. Enam bentuk tusukan itu konon menandai enam juta gulden biaya pembangunannya."
+  },
+  "obj_becak": {
+    "en": "The becak is a three-wheeled cycle-rickshaw. In Yogyakarta the driver pedals from behind the passenger — still a common, unhurried way to ride down Malioboro Street.",
+    "id": "Becak adalah kendaraan roda tiga yang dikayuh. Di Yogyakarta pengemudi mengayuh dari belakang penumpang — cara santai yang masih umum untuk menyusuri Jalan Malioboro."
+  },
+  "obj_batik": {
+    "en": "The canting is a small copper-spouted pen used to draw hot wax onto cloth for hand-drawn batik — a painstaking Javanese art recognised by UNESCO as a Masterpiece of Human Heritage.",
+    "id": "Canting adalah pena kecil bercorong tembaga untuk menorehkan malam (lilin) panas ke kain pada batik tulis — seni Jawa yang telaten dan diakui UNESCO sebagai Warisan Kemanusiaan."
+  },
+  "obj_wayangkulit": {
+    "en": "Wayang Kulit is Javanese shadow-puppet theatre. Flat leather puppets are moved behind a lit screen by a single dalang, who voices every character through an all-night story.",
+    "id": "Wayang Kulit adalah teater boneka bayangan dari Jawa. Boneka kulit pipih digerakkan di balik layar bercahaya oleh seorang dalang, yang menyuarakan setiap tokoh sepanjang cerita semalam suntuk."
+  }
+}

@@ -7,7 +7,7 @@ import { BootScene } from './scenes/BootScene.js';
 import { PreloadScene } from './scenes/PreloadScene.js';
 import { MainMenuScene } from './scenes/MainMenuScene.js';
 import { LevelSelectScene } from './scenes/LevelSelectScene.js';
-import { GalleryScene } from './scenes/GalleryScene.js';
+import { AlbumScene } from './scenes/AlbumScene.js';
 import { CutsceneScene } from './scenes/CutsceneScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
 import { ResultScene } from './scenes/ResultScene.js';
@@ -27,7 +27,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, GalleryScene, CutsceneScene, LevelScene, ResultScene],
+  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene],
 };
 
 // Wait for the web fonts (Baloo 2 / Nunito) before starting so canvas text renders

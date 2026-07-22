@@ -13,7 +13,9 @@ function storage() {
   } catch { return null; }
 }
 
-// loadGallery -> { [levelId]: [ { id, dataUrl, ts } ] }
+// loadGallery -> { [levelId]: [ { id, dataUrl, objectId, ts } ] }
+// objectId is the mission object a photo captured, or null/undefined for a
+// random snapshot (no educational info shown for those in the album).
 export function loadGallery() {
   const s = storage();
   if (!s) return {};
@@ -43,11 +45,11 @@ export function hasPhotos(levelId) {
 
 // addPhoto — append a photo, cap per level (drop oldest). On quota failure,
 // drop the oldest and retry once so a full store degrades gracefully.
-export function addPhoto(levelId, { id, dataUrl }) {
+export function addPhoto(levelId, { id, dataUrl, objectId = null }) {
   if (!dataUrl) return false;
   const data = loadGallery();
   const list = Array.isArray(data[levelId]) ? data[levelId] : [];
-  list.push({ id, dataUrl, ts: Date.now() });
+  list.push({ id, dataUrl, objectId, ts: Date.now() });
   while (list.length > CAP) list.shift();
   data[levelId] = list;
   if (saveGallery(data)) return true;

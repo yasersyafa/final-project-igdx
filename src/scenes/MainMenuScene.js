@@ -49,6 +49,21 @@ export class MainMenuScene extends Phaser.Scene {
     });
     popIn(play, { delay: 120 });
 
+    const album = makeButton(this, {
+      x: W / 2,
+      y: H * 0.58 + 88,
+      w: 240,
+      h: 56,
+      label: t("btn.album"),
+      color: 0x4a5a7a,
+      fontSize: 22,
+      onClick: () =>
+        fadeScene(this, "out", {
+          onComplete: () => this.scene.start("AlbumScene"),
+        }),
+    });
+    popIn(album, { delay: 200 });
+
     this._settings = new SettingsDialog(this);
     const settings = makeButton(this, {
       x: W / 2,

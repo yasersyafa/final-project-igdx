@@ -4,7 +4,6 @@
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
 import { loadProgress } from '../core/progress.js';
-import { hasPhotos } from '../core/gallery.js';
 import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
 import { LevelInfoDialog } from '../ui/LevelInfoDialog.js';
@@ -63,18 +62,14 @@ export class LevelSelectScene extends Phaser.Scene {
     popIn(back, { delay: 420 });
   }
 
-  // _openInfo — level intro popup: description + Main (play) and, when the level
-  // already has saved photos, a Gallery button.
+  // _openInfo — level intro popup: description + Main (play). Saved photos now
+  // live in the Album, reached from the main menu.
   _openInfo(index) {
     const lv = LEVELS[index];
     this._info.open({
       name: lv.name,
       description: L((lv.cutscene && lv.cutscene[0]) || ''),
-      hasGallery: hasPhotos(lv.id),
       onPlay: () => this._play(index),
-      onGallery: () => fadeScene(this, 'out', {
-        onComplete: () => this.scene.start('GalleryScene', { levelIndex: index }),
-      }),
     });
   }
 
