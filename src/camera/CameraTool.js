@@ -62,6 +62,9 @@ export class CameraTool {
     // Corner accents at the strip edges.
     this.corners = s.add.graphics().setDepth(801);
     this._drawCorners();
+    // Rule-of-thirds grid (9 cells) inside the strip.
+    this.grid = s.add.graphics().setDepth(801);
+    this._drawGrid();
     // Center focus dot.
     this.dot = s.add.circle(W / 2, H / 2, 3, 0xffffff, 0.7).setDepth(801);
     // "REC"-ish hint.
@@ -69,7 +72,7 @@ export class CameraTool {
       fontFamily: FONTS.body, fontSize: '14px', color: '#ffffff',
     }).setDepth(801).setAlpha(0.8);
 
-    this.overlay = [this.barL, this.barR, this.frame, this.corners, this.dot, this.hint];
+    this.overlay = [this.barL, this.barR, this.frame, this.corners, this.grid, this.dot, this.hint];
     this._setOverlayAlpha(0); // hidden until AIMING
   }
 
@@ -82,6 +85,20 @@ export class CameraTool {
     const seg = (x, y, sx, sy) => { g.beginPath(); g.moveTo(x, y + sy * L); g.lineTo(x, y); g.lineTo(x + sx * L, y); g.strokePath(); };
     seg(x0 + pad, y0 + pad, 1, 1); seg(x1 - pad, y0 + pad, -1, 1);
     seg(x0 + pad, y1 - pad, 1, -1); seg(x1 - pad, y1 - pad, -1, -1);
+  }
+
+  _drawGrid() {
+    const g = this.grid;
+    g.clear();
+    g.lineStyle(1, 0xffffff, 0.3);
+    const x0 = this.barW, x1 = WORLD.width - this.barW, y0 = 0, y1 = WORLD.height;
+    const w = x1 - x0, h = y1 - y0;
+    for (let i = 1; i <= 2; i++) {
+      const x = x0 + (w * i) / 3;
+      g.beginPath(); g.moveTo(x, y0); g.lineTo(x, y1); g.strokePath();
+      const y = y0 + (h * i) / 3;
+      g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.strokePath();
+    }
   }
 
   _setOverlayAlpha(a) { this.overlay.forEach((o) => o.setAlpha(o === this.hint ? a * 0.8 : a)); }
