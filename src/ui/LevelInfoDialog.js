@@ -5,6 +5,7 @@
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { FONTS } from '../config/fonts.js';
+import { t } from '../core/i18n.js';
 
 export class LevelInfoDialog {
   constructor(scene, depth = 1600) {
@@ -47,11 +48,11 @@ export class LevelInfoDialog {
       stopPropagation: true, onClick: () => { this.close(); if (cb) cb(); },
     });
     if (hasGallery) {
-      this.playBtn = mk(-96, 'Main', 0x7bbf6a, onPlay);
-      this.galleryBtn = mk(96, 'Gallery', 0x4a5a7a, onGallery);
+      this.playBtn = mk(-96, t('btn.main'), 0x7bbf6a, onPlay);
+      this.galleryBtn = mk(96, t('btn.album'), 0x4a5a7a, onGallery);
       this.panel.add([this.playBtn, this.galleryBtn]);
     } else {
-      this.playBtn = mk(0, 'Main', 0x7bbf6a, onPlay);
+      this.playBtn = mk(0, t('btn.main'), 0x7bbf6a, onPlay);
       this.panel.add(this.playBtn);
     }
 

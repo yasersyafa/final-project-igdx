@@ -1,7 +1,9 @@
 import Phaser from "phaser";
 import { popIn, fadeScene, DUR, idleBob } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
+import { SettingsDialog } from "../ui/SettingsDialog.js";
 import { FONTS } from "../config/fonts.js";
+import { t } from "../core/i18n.js";
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -25,7 +27,7 @@ export class MainMenuScene extends Phaser.Scene {
     idleBob(title, { amount: 6, duration: DUR.idleBreathe });
 
     this.add
-      .text(W / 2, H * 0.28 + 56, "a cozy photography game", {
+      .text(W / 2, H * 0.28 + 56, t("menu.subtitle"), {
         fontFamily: FONTS.body,
         fontSize: "20px",
         color: "#c9c2b6",
@@ -37,7 +39,7 @@ export class MainMenuScene extends Phaser.Scene {
       y: H * 0.58,
       w: 240,
       h: 66,
-      label: "Play",
+      label: t("btn.play"),
       color: 0x7bbf6a,
       fontSize: 26,
       onClick: () =>
@@ -46,6 +48,34 @@ export class MainMenuScene extends Phaser.Scene {
         }),
     });
     popIn(play, { delay: 120 });
+
+    const album = makeButton(this, {
+      x: W / 2,
+      y: H * 0.58 + 88,
+      w: 240,
+      h: 56,
+      label: t("btn.album"),
+      color: 0x4a5a7a,
+      fontSize: 22,
+      onClick: () =>
+        fadeScene(this, "out", {
+          onComplete: () => this.scene.start("AlbumScene"),
+        }),
+    });
+    popIn(album, { delay: 200 });
+
+    this._settings = new SettingsDialog(this);
+    const settings = makeButton(this, {
+      x: W / 2,
+      y: H * 0.58 + 88 + 72,
+      w: 240,
+      h: 56,
+      label: t("btn.settings"),
+      color: 0x3a4353,
+      fontSize: 22,
+      onClick: () => this._settings.open(),
+    });
+    popIn(settings, { delay: 280 });
   }
 }
 export default MainMenuScene;

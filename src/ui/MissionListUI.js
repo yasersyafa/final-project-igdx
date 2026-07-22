@@ -5,6 +5,7 @@
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut, checkPop } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
+import { t, L } from '../core/i18n.js';
 
 const DONE_GREEN = 0x9be07a;
 
@@ -19,7 +20,7 @@ export class MissionListUI {
     const x = 24;
     let y = 24;
 
-    this.title = scene.add.text(x, y, 'Shot list', {
+    this.title = scene.add.text(x, y, t('hud.shotlist'), {
       fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
     }).setDepth(depth);
     y += 34;
@@ -31,7 +32,7 @@ export class MissionListUI {
       const check = scene.add.text(8, 9, '✓', {
         fontFamily: FONTS.body, fontSize: '16px', color: '#20242f', fontStyle: 'bold',
       }).setOrigin(0.5).setVisible(false);
-      const text = scene.add.text(26, 0, o.mission, {
+      const text = scene.add.text(26, 0, L(o.mission), {
         fontFamily: FONTS.body, fontSize: '16px', color: '#ffffff',
         wordWrap: { width: 300 },
       }).setOrigin(0, 0);

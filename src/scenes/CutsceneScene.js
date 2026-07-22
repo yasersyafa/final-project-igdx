@@ -6,6 +6,7 @@ import Phaser from "phaser";
 import { LEVELS } from "./levels.js";
 import { fadeScene, motionFlags, EASE, DUR } from "../anim/motion.js";
 import { FONTS } from "../config/fonts.js";
+import { t, L } from "../core/i18n.js";
 
 const BAR_H = 90;
 
@@ -103,7 +104,7 @@ export class CutsceneScene extends Phaser.Scene {
 
     // Skip button (on top).
     const skip = this.add
-      .text(W - 28, H - 26, "Skip  ▸", {
+      .text(W - 28, H - 26, t("btn.skip"), {
         fontFamily: FONTS.display,
         fontSize: "16px",
         color: "#c9c2b6",
@@ -132,7 +133,7 @@ export class CutsceneScene extends Phaser.Scene {
     if (this.finished) return;
     this.index = i;
     const holdMs = motionFlags.reduced ? 900 : 2000;
-    this.card.setText(String(this.cards[i] ?? ""));
+    this.card.setText(L(this.cards[i] ?? ""));
     this.card.setAlpha(0);
     // Fade in, hold, then auto-advance.
     this.textTween = this.tweens.add({
