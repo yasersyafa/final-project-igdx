@@ -23,13 +23,17 @@ export class ConfirmDialog {
     this.msg = scene.add.text(0, -44, t('confirm.deletephoto'), {
       fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5);
-    const del = this._button(-92, 36, t('btn.delete'), 0xc06060, () => this._confirm());
-    const cancel = this._button(92, 36, t('btn.cancel'), 0x4a5a7a, () => this.close());
-    this.panel.add([bg, this.msg, del, cancel]);
+    this.confirmBtn = this._button(-92, 36, t('btn.delete'), 0xc06060, () => this._confirm());
+    this.cancelBtn = this._button(92, 36, t('btn.cancel'), 0x4a5a7a, () => this.close());
+    this.panel.add([bg, this.msg, this.confirmBtn, this.cancelBtn]);
   }
 
-  open({ message, onConfirm } = {}) {
+  // open({ message, onConfirm, confirmLabel, cancelLabel }) — labels default to the
+  // Delete/Cancel pair; pass overrides for a non-delete confirm (e.g. a warning).
+  open({ message, onConfirm, confirmLabel, cancelLabel } = {}) {
     if (message) this.msg.setText(message);
+    this.confirmBtn.label.setText(confirmLabel || t('btn.delete'));
+    this.cancelBtn.label.setText(cancelLabel || t('btn.cancel'));
     this._onConfirm = onConfirm || null;
     this.isOpen = true;
     this.dim.setVisible(true);
