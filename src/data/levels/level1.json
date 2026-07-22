@@ -4,9 +4,9 @@
   "background": "bg_padang",
   "bgColor": "#d9a066",
   "cutscene": [
-    { "en": "The job's simple. Photograph the culture that's still alive out here.", "id": "Tugasnya sederhana. Potret budaya yang masih hidup di luar sini." },
-    { "en": "First stop is Padang, where the rooftops curve like buffalo horns.", "id": "Perhentian pertama Padang, tempat atap-atapnya melengkung seperti tanduk kerbau." },
-    { "en": "Camera's ready. Let's see what the Minangkabau have held onto.", "id": "Kamera siap. Mari lihat apa yang masih dijaga orang Minangkabau." }
+    { "en": "The job is a simple one. Go out there and photograph the culture that is still living and breathing.", "id": "Tugasnya cukup sederhana. Pergilah ke sana dan potretlah budaya yang masih hidup dan bernapas." },
+    { "en": "Our first stop is Padang, a warm coastal town where the rooftops curve upward like the horns of a buffalo.", "id": "Perhentian pertama kita adalah Padang, kota pesisir yang hangat, tempat atap-atap rumahnya melengkung ke atas seperti tanduk kerbau." },
+    { "en": "Your camera is loaded and ready. Let us go and see what the Minangkabau people have held close to their hearts.", "id": "Kameramu sudah terisi dan siap. Mari kita lihat apa yang masih dijaga erat oleh orang Minangkabau." }
   ],
   "decor": [
     { "id": "dec_palm_l", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 120, "y": 360, "bbox": { "x": 90, "y": 250, "w": 60, "h": 220 } },
@@ -23,8 +23,8 @@
       "x": 340, "y": 420,
       "bbox": { "x": 255, "y": 360, "w": 170, "h": 120 },
       "mission": {
-        "en": "Frame the house whose roof curves like buffalo horns",
-        "id": "Bidik rumah yang atapnya melengkung seperti tanduk kerbau"
+        "en": "Frame the grand house whose roof curves up like a pair of buffalo horns",
+        "id": "Bidik rumah megah yang atapnya melengkung seperti sepasang tanduk kerbau"
       },
       "isSpecial": false
     },
@@ -36,8 +36,8 @@
       "x": 960, "y": 450,
       "bbox": { "x": 895, "y": 402, "w": 130, "h": 95 },
       "mission": {
-        "en": "Capture a window stacked with a dozen plates",
-        "id": "Abadikan etalase yang penuh tumpukan belasan piring"
+        "en": "Capture the restaurant window stacked high with a dozen little plates",
+        "id": "Abadikan etalase rumah makan yang penuh tumpukan belasan piring kecil"
       },
       "isSpecial": false
     },
@@ -49,16 +49,16 @@
       "x": 650, "y": 440,
       "bbox": { "x": 610, "y": 365, "w": 80, "h": 150 },
       "mission": {
-        "en": "Find the dancer spinning plates in her palms",
-        "id": "Temukan penari yang memutar piring di telapak tangannya"
+        "en": "Find the dancer spinning porcelain plates on her open palms",
+        "id": "Temukan penari yang memutar piring porselen di telapak tangannya yang terbuka"
       },
       "isSpecial": true,
       "dialog": {
         "speaker": { "en": "Local Dancer", "id": "Penari Setempat" },
         "lines": [
-          { "en": "Watch her hands. The plates spin and never once slip.", "id": "Perhatikan tangannya. Piring berputar dan tak pernah sekali pun terlepas." },
-          { "en": "That's decades of practice, all in a single beat.", "id": "Itu hasil latihan puluhan tahun, semua dalam satu ketukan." },
-          { "en": "She catches your camera and nods. Some things are worth keeping.", "id": "Ia melihat kameramu dan mengangguk. Beberapa hal memang layak disimpan." }
+          { "en": "Watch her hands closely. The plates keep spinning and never once slip.", "id": "Perhatikan tangannya baik-baik. Piring-piring itu terus berputar dan tak sekali pun terlepas." },
+          { "en": "That is decades of quiet practice, all folded into a single beat.", "id": "Itu adalah hasil latihan bertahun-tahun yang tenang, semua terangkum dalam satu ketukan." },
+          { "en": "She notices your camera and gives a warm nod. Some moments are truly worth keeping.", "id": "Ia melihat kameramu dan memberi anggukan hangat. Beberapa momen memang layak untuk disimpan." }
         ]
       }
     }

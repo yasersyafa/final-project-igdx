@@ -17,14 +17,16 @@ export class ConfirmDialog {
       .setVisible(false).setInteractive();
     this.dim.on('pointerdown', () => this.close()); // click outside = cancel
 
-    const pw = 420, ph = 168;
+    const pw = 460, ph = 230;
     this.panel = scene.add.container(W / 2, H / 2).setDepth(depth + 1).setVisible(false);
     const bg = scene.add.rectangle(0, 0, pw, ph, 0x2b2230, 0.98).setOrigin(0.5).setStrokeStyle(3, 0xffe08a, 0.8);
-    this.msg = scene.add.text(0, -44, t('confirm.deletephoto'), {
+    // Message sits in the upper half and wraps; buttons pinned to the lower edge.
+    this.msg = scene.add.text(0, -52, t('confirm.deletephoto'), {
       fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
+      align: 'center', wordWrap: { width: pw - 56 }, lineSpacing: 4,
     }).setOrigin(0.5);
-    this.confirmBtn = this._button(-92, 36, t('btn.delete'), 0xc06060, () => this._confirm());
-    this.cancelBtn = this._button(92, 36, t('btn.cancel'), 0x4a5a7a, () => this.close());
+    this.confirmBtn = this._button(-96, 62, t('btn.delete'), 0xc06060, () => this._confirm());
+    this.cancelBtn = this._button(96, 62, t('btn.cancel'), 0x4a5a7a, () => this.close());
     this.panel.add([bg, this.msg, this.confirmBtn, this.cancelBtn]);
   }
 

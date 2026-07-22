@@ -4,9 +4,9 @@
   "background": "bg_bandung",
   "bgColor": "#7d9e77",
   "cutscene": [
-    { "en": "The train climbs up into the cool, green highlands.", "id": "Kereta menanjak ke dataran tinggi yang sejuk dan hijau." },
-    { "en": "This is Bandung, the heart of Sunda, all mist and music.", "id": "Inilah Bandung, jantung Sunda, penuh kabut dan musik." },
-    { "en": "Go find what these mountains are proud of.", "id": "Pergi temukan apa yang dibanggakan pegunungan ini." }
+    { "en": "The little train climbs slowly up into the cool, green highlands.", "id": "Kereta kecil itu menanjak perlahan ke dataran tinggi yang sejuk dan hijau." },
+    { "en": "This is Bandung, the beating heart of Sunda, wrapped in soft mist and gentle music.", "id": "Inilah Bandung, jantung tanah Sunda yang berdenyut, diselimuti kabut lembut dan musik yang menenangkan." },
+    { "en": "Go and find the things these mountains are quietly proud of.", "id": "Pergilah dan temukan hal-hal yang diam-diam dibanggakan oleh pegunungan ini." }
   ],
   "decor": [
     { "id": "dec_pine_l", "name": "Pine Tree", "sprite": "pine", "idleAnim": "sway", "x": 130, "y": 340, "bbox": { "x": 100, "y": 240, "w": 60, "h": 200 } },
@@ -23,8 +23,8 @@
       "x": 650, "y": 450,
       "bbox": { "x": 605, "y": 390, "w": 90, "h": 120 },
       "mission": {
-        "en": "Frame the bamboo rattle tuned to one note",
-        "id": "Bidik alat bambu yang bernada satu"
+        "en": "Frame the shaking bamboo instrument that sounds a single note",
+        "id": "Bidik alat musik bambu yang digetarkan dan hanya bernada satu"
       },
       "isSpecial": false
     },
@@ -36,8 +36,8 @@
       "x": 960, "y": 470,
       "bbox": { "x": 905, "y": 425, "w": 110, "h": 90 },
       "mission": {
-        "en": "Capture the basket that gathers highland leaves",
-        "id": "Abadikan keranjang pengumpul daun dari dataran tinggi"
+        "en": "Capture the woven basket that gathers the tender highland tea leaves",
+        "id": "Abadikan keranjang anyaman yang menampung daun teh muda dari dataran tinggi"
       },
       "isSpecial": false
     },
@@ -49,16 +49,16 @@
       "x": 360, "y": 410,
       "bbox": { "x": 280, "y": 335, "w": 160, "h": 150 },
       "mission": {
-        "en": "Find the building crowned with a satay skewer",
-        "id": "Temukan gedung yang berpuncak tusuk sate"
+        "en": "Find the old building crowned with an ornament shaped like a satay skewer",
+        "id": "Temukan gedung tua yang berpuncak ornamen berbentuk tusuk sate"
       },
       "isSpecial": true,
       "dialog": {
         "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
-          { "en": "The old hall wears that satay skewer on top like a crown.", "id": "Gedung tua itu mengenakan tusuk sate di puncaknya seperti mahkota." },
-          { "en": "Six ornaments up there. One for every year it took to build.", "id": "Ada enam ornamen di atas sana. Satu untuk tiap tahun pembangunannya." },
-          { "en": "The afternoon light's coming down the arches. It's waiting for you.", "id": "Cahaya sore turun menyusuri lengkungannya. Ia menunggumu." }
+          { "en": "The old hall wears that satay skewer high on its spire, like a little crown.", "id": "Gedung tua itu mengenakan tusuk sate tinggi di puncak menaranya, bagaikan mahkota kecil." },
+          { "en": "There are six ornaments up there, one for every year it took to raise this place.", "id": "Ada enam ornamen di atas sana, satu untuk tiap tahun yang diperlukan untuk mendirikan tempat ini." },
+          { "en": "The soft afternoon light is spilling down the arches. It has been waiting just for you.", "id": "Cahaya sore yang lembut turun menyusuri lengkungannya. Ia sudah menunggu, hanya untukmu." }
         ]
       }
     }
