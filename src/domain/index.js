@@ -24,6 +24,10 @@ export function initLogicSystem(scene, bus, levelData) {
     const po = new PhotoObject(scene, o);
     if (scene.world) scene.world.add(po);
     sprites.set(o.id, po);
+
+    if (o.id.endsWith("_after")) {
+      po.setVisible(false);
+    }
   });
 
   const evalObjects = objects.map((o) => ({
@@ -62,13 +66,43 @@ export function initLogicSystem(scene, bus, levelData) {
         bus.emit(EVENTS.MISSION_CAPTURED, { objectId: res.objectId });
       }
     }
-    if (res.success && res.isSpecial && !specialShown) {
-      specialShown = true;
-      const obj = objects.find((o) => o.id === res.objectId);
-      if (obj && obj.dialog) {
+
+    var obj = objects.find((o) => o.id === res.objectId);
+    const newObjId = res.objectId + "_after";
+    if(res.success){
+      if(obj && obj.dialog && obj.challenge == "before"){
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(obj.dialog.speaker),
           lines: (obj.dialog.lines || []).map(L),
+        });
+        const beforeSprite = sprites.get(res.objectId);
+        if (beforeSprite) beforeSprite.setVisible(false);
+
+        const afterSprite = sprites.get(newObjId);
+        if (afterSprite) {
+          afterSprite.setVisible(true);
+          obj = objects.find((o) => o.id === newObjId);
+        }
+      }
+
+      else if(obj && obj.dialog && obj.challenge == "after"){
+        bus.emit(EVENTS.DIALOG_SHOW, {
+          speaker: L(newObj.dialog.speaker),
+          lines: (newObj.dialog.lines || []).map(L),
+        });
+      }
+    }
+
+    var newObj = objects.find((o) => o.id === newObjId);
+    
+
+    if (res.success && res.isSpecial && !specialShown) {
+      specialShown = true;
+      const specialObj = objects.find((o) => o.id === res.objectId);
+      if (specialObj && specialObj.dialog) {
+        bus.emit(EVENTS.DIALOG_SHOW, {
+          speaker: L(specialObj.dialog.speaker),
+          lines: (specialObj.dialog.lines || []).map(L),
         });
       }
     }

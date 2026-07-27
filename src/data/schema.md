@@ -25,7 +25,8 @@ Each level file lives in `src/data/levels/levelN.json`.
       "x": 300, "y": 470,    // placement in scene (object CENTER)
       "bbox": { "x": 240, "y": 425, "w": 120, "h": 90 }, // hit area for framing math (top-left origin)
       "mission": "Photograph a place to sit", // omit if the object is not a mission target
-      "isSpecial": false     // exactly ONE object per level is true
+      "isSpecial": false,     // exactly ONE object per level is true
+      "challenge": "after"   // status if object is part of challenge (if not, "none") and if object the after or before
     },
     {
       "id": "obj_cat",

@@ -26,7 +26,8 @@
         "en": "Frame the grand house whose roof curves up like a pair of buffalo horns",
         "id": "Bidik rumah megah yang atapnya melengkung seperti sepasang tanduk kerbau"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "challenge" : "none"
     },
     {
       "id": "obj_nasipadang",
@@ -39,7 +40,8 @@
         "en": "Capture the restaurant window stacked high with a dozen little plates",
         "id": "Abadikan etalase rumah makan yang penuh tumpukan belasan piring kecil"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "challenge" : "none"
     },
     {
       "id": "obj_taripiring",
@@ -53,6 +55,7 @@
         "id": "Temukan penari yang memutar piring porselen di telapak tangannya yang terbuka"
       },
       "isSpecial": true,
+      "challenge" : "none",
       "dialog": {
         "speaker": { "en": "Local Dancer", "id": "Penari Setempat" },
         "lines": [

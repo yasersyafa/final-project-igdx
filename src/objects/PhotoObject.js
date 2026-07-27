@@ -40,6 +40,12 @@ export class PhotoObject extends Phaser.GameObjects.Container {
       wordWrap: { width: w - 8 },
     }).setOrigin(0.5, 0.5);
 
+    // if (data.challenge == "after") { // Invisible for first spawn
+    //   this.body_.setVisible(false); 
+    //   this.label.setVisible(false);
+    //   this.shadow.setVisible(false);
+    // }
+
     if (data.isSpecial) {
       this.body_.setStrokeStyle(3, 0xffe08a, 0.9); // gentle highlight for the special one
     }

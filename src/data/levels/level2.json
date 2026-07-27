@@ -17,7 +17,7 @@
   "objects": [
     {
       "id": "obj_angklung",
-      "name": "Angklung",
+      "name": "Angklung Before",
       "sprite": "angklung",
       "idleAnim": "sway",
       "x": 650, "y": 450,
@@ -26,7 +26,35 @@
         "en": "Frame the shaking bamboo instrument that sounds a single note",
         "id": "Bidik alat musik bambu yang digetarkan dan hanya bernada satu"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Grrr! The blanket over it is covering it up!", "id": "Grrr! Kain itu menutupi objeknya!" },
+          { "en": "Oh! Look, someone is lifting it up! This is our chance to get a better picture", "id": "Oh! Lihat, seserang menangkat kainnya! Ini kesempatan kita untuk mengambil foto yang lebih baik" }
+        ]
+      }
+    },
+    {
+      "id": "obj_angklung_after",
+      "name": "Angklung After",
+      "sprite": "angklung_after",
+      "idleAnim": "sway",
+      "x": 650, "y": 450,
+      "bbox": { "x": 605, "y": 390, "w": 90, "h": 120 },
+      "mission": {
+        "en": "Frame the shaking bamboo instrument that sounds a single note",
+        "id": "Bidik alat musik bambu yang digetarkan dan hanya bernada satu"
+      },
+      "isSpecial": false,
+      "challenge": "after",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "That's it! The one and only, Angklung!", "id": "Itu dia! si Angklung legendaris!" }
+        ]
+      }
     },
     {
       "id": "obj_teapicker",
