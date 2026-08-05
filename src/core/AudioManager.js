@@ -11,8 +11,13 @@ function play(key, config) {
   try { soundManager.play(key, config); } catch { /* audio optional */ }
 }
 
+// rate = playback speed, which also shifts pitch — cheap way to add variation
+// without extra audio files.
+const randomRate = (min, max) => min + Math.random() * (max - min);
+
 const LISTENERS = [
   [EVENTS.UI_BUTTON_CLICK, () => play('sfx_button_click', { volume: 0.5 })],
+  [EVENTS.UI_BUTTON_HOVER, () => play('sfx_button_hover', { volume: 0.35, rate: randomRate(0.9, 1.1) })],
 ];
 
 export function init(sound) {

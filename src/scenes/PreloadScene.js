@@ -42,6 +42,7 @@ export class PreloadScene extends Phaser.Scene {
     // Object atlases: this.load.atlas('cat', 'assets/cat.png', 'assets/cat.json');
     // Audio:          this.load.audio('shutter', 'assets/sfx/shutter.mp3');
     this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.mp3');
+    this.load.audio('sfx_button_hover', 'src/sounds/sfx/button-hovered.mp3');
     // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }

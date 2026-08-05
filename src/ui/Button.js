@@ -31,7 +31,7 @@ export function makeButton(scene, opts) {
   if (DEBUG.hitboxes) scene.input.enableDebug(c, 0x00ff00); // green outline = button hit area
 
   const fade = (target) => scene.tweens.add({ targets: hi, alpha: target, ease: EASE.out, duration: DUR.press });
-  c.on('pointerover', () => fade(0.14));
+  c.on('pointerover', () => { fade(0.14); bus.emit(EVENTS.UI_BUTTON_HOVER); });
   c.on('pointerout', () => fade(0));
   c.on('pointerdown', (p, lx, ly, e) => {
     if (stopPropagation && e && e.stopPropagation) e.stopPropagation();
