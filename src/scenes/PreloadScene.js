@@ -41,11 +41,12 @@ export class PreloadScene extends Phaser.Scene {
     // Backgrounds:    this.load.image('bg_park', 'assets/bg/park.png');
     // Object atlases: this.load.atlas('cat', 'assets/cat.png', 'assets/cat.json');
     // Audio:          this.load.audio('shutter', 'assets/sfx/shutter.mp3');
-    this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.mp3');
+    this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.wav');
     this.load.audio('sfx_button_hover', 'src/sounds/sfx/button-hovered.mp3');
     this.load.audio('sfx_shutter_click', 'src/sounds/sfx/shutter-clicked.mp3');
     this.load.audio('sfx_camera_captured', 'src/sounds/sfx/camera-captured.mp3');
     this.load.audio('sfx_perfect_captured', 'src/sounds/sfx/perfect-captured.mp3');
+    this.load.audio('sfx_level_enter', 'src/sounds/sfx/level-enter-clicked.wav');
     // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }

@@ -43,16 +43,16 @@ export class LevelInfoDialog {
     if (this.galleryBtn) { this.galleryBtn.destroy(); this.galleryBtn = null; }
 
     const by = 78;
-    const mk = (x, label, color, cb) => makeButton(this.scene, {
+    const mk = (x, label, color, cb, clickSfx) => makeButton(this.scene, {
       x, y: by, w: 170, h: 52, label, color, fontSize: 20, depth: 2000,
-      stopPropagation: true, onClick: () => { this.close(); if (cb) cb(); },
+      stopPropagation: true, clickSfx, onClick: () => { this.close(); if (cb) cb(); },
     });
     if (hasGallery) {
-      this.playBtn = mk(-96, t('btn.main'), 0x7bbf6a, onPlay);
+      this.playBtn = mk(-96, t('btn.main'), 0x7bbf6a, onPlay, 'sfx_level_enter');
       this.galleryBtn = mk(96, t('btn.album'), 0x4a5a7a, onGallery);
       this.panel.add([this.playBtn, this.galleryBtn]);
     } else {
-      this.playBtn = mk(0, t('btn.main'), 0x7bbf6a, onPlay);
+      this.playBtn = mk(0, t('btn.main'), 0x7bbf6a, onPlay, 'sfx_level_enter');
       this.panel.add(this.playBtn);
     }
 

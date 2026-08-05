@@ -32,7 +32,7 @@
         "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
           { "en": "Grrr! The blanket over it is covering it up!", "id": "Grrr! Kain itu menutupi objeknya!" },
-          { "en": "Oh! Look, someone is lifting it up! This is our chance to get a better picture", "id": "Oh! Lihat, seserang menangkat kainnya! Ini kesempatan kita untuk mengambil foto yang lebih baik" }
+          { "en": "Oh! Look, someone is lifting it up! This is our chance to get a better picture", "id": "Oh! Lihat, seserang mengangkat kainnya! Ini kesempatan kita untuk mengambil foto yang lebih baik" }
         ]
       }
     },

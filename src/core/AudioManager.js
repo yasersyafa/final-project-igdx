@@ -16,12 +16,12 @@ function play(key, config) {
 const randomRate = (min, max) => min + Math.random() * (max - min);
 
 const LISTENERS = [
-  [EVENTS.UI_BUTTON_CLICK, () => play('sfx_button_click', { volume: 0.5 })],
+  [EVENTS.UI_BUTTON_CLICK, (payload) => play(payload?.key || 'sfx_button_click', { volume: 0.5 })],
   [EVENTS.UI_BUTTON_HOVER, () => play('sfx_button_hover', { volume: 0.35, rate: randomRate(0.9, 1.1) })],
   // Both fire off the same SHUTTER_CLICK signal, so shutter + capture cue overlap.
   [EVENTS.SHUTTER_CLICK, () => play('sfx_shutter_click', { volume: 0.6 })],
   [EVENTS.SHUTTER_CLICK, () => play('sfx_camera_captured', { volume: 0.6 })],
-  [EVENTS.SHOT_RATED, (tier) => { if (tier && tier.key === 'perfect') play('sfx_perfect_captured', { volume: 0.6 }); }],
+  [EVENTS.SHOT_RATED, (tier) => { if (tier && tier.key === 'perfect') play('sfx_perfect_captured', { volume: 0.15 }); }],
 ];
 
 export function init(sound) {
