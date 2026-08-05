@@ -17,6 +17,8 @@ export const EVENTS = {
   DIALOG_CLOSED:   'dialog:closed',
 
   LEVEL_COMPLETED: 'level:completed',  // -> { total, max, breakdown, missionResults }
+
+  UI_BUTTON_CLICK: 'ui:buttonClick',   // any makeButton() pointerdown -> AudioManager plays sfx
 };
 
 // PHOTO_TAKEN.id = stable unique id for the photo (deletable even if thumbKey is null).

@@ -6,6 +6,7 @@ import Phaser from "phaser";
 import { EASE, DUR } from "../anim/motion.js";
 import { FONTS } from "../config/fonts.js";
 import { t } from "../core/i18n.js";
+import * as AudioManager from "../core/AudioManager.js";
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -40,7 +41,8 @@ export class PreloadScene extends Phaser.Scene {
     // Backgrounds:    this.load.image('bg_park', 'assets/bg/park.png');
     // Object atlases: this.load.atlas('cat', 'assets/cat.png', 'assets/cat.json');
     // Audio:          this.load.audio('shutter', 'assets/sfx/shutter.mp3');
-    // For now load nothing real; ensure the bar still animates to 100%.
+    this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.mp3');
+    // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }
 
@@ -48,6 +50,10 @@ export class PreloadScene extends Phaser.Scene {
     // --- REGISTER idleAnim ANIMATIONS HERE when real spritesheets exist ----
     // this.anims.create({ key: 'cat_breathe', frames: ..., repeat: -1 });
     // (Idle motion is procedural for now — see src/anim/motion.js.)
+
+    // Wire the AudioManager observer once; it listens on EventBus for the rest
+    // of the game's life (this.sound is Phaser's shared, game-wide sound manager).
+    AudioManager.init(this.sound);
 
     // brief bar settle then go to menu
     this.cameras.main.fadeOut(DUR.fade, 0, 0, 0);

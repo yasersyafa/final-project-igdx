@@ -6,6 +6,8 @@ import Phaser from 'phaser';
 import { EASE, DUR } from '../anim/motion.js';
 import { DEBUG } from '../config/debug.js';
 import { FONTS } from '../config/fonts.js';
+import { bus } from '../core/EventBus.js';
+import { EVENTS } from '../config/events.js';
 
 export function makeButton(scene, opts) {
   const {
@@ -33,6 +35,7 @@ export function makeButton(scene, opts) {
   c.on('pointerout', () => fade(0));
   c.on('pointerdown', (p, lx, ly, e) => {
     if (stopPropagation && e && e.stopPropagation) e.stopPropagation();
+    bus.emit(EVENTS.UI_BUTTON_CLICK);
     scene.tweens.add({ targets: hi, alpha: 0.32, ease: EASE.out, duration: DUR.press, yoyo: true,
       onComplete: () => { hi.setAlpha(0); if (onClick) onClick(); } });
   });
