@@ -12,23 +12,6 @@ export function playFlash(scene, frameBounds, onComplete) {
   shutterFlash(flash, { onComplete: () => { flash.destroy(); onComplete && onComplete(); } });
 }
 
-// Soft "click" placeholder sound — synthesized so no asset is required.
-export function playClick(scene) {
-  try {
-    const ctx = scene.sound && scene.sound.context;
-    if (!ctx) return;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = 'square';
-    o.frequency.setValueAtTime(880, ctx.currentTime);
-    o.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.05);
-    g.gain.setValueAtTime(0.08, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
-    o.connect(g); g.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + 0.09);
-  } catch { /* audio optional */ }
-}
-
 // Gentle miss cue on the reticle. No penalty, no harsh shake (APPEAL).
 export function playMiss(scene, reticle) {
   missPulse(reticle);
@@ -45,4 +28,4 @@ export function pulseVignette(scene, vignetteParts) {
   });
 }
 
-export default { playFlash, playClick, playMiss, pulseVignette };
+export default { playFlash, playMiss, pulseVignette };

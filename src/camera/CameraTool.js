@@ -11,7 +11,7 @@ import { CONFIG, WORLD } from '../config/gameConfig.js';
 import { createStateMachine } from '../core/stateMachine.js';
 import { FONTS } from '../config/fonts.js';
 import { EASE, DUR } from '../anim/motion.js';
-import { playFlash, playClick, playMiss } from './CaptureFeedback.js';
+import { playFlash, playMiss } from './CaptureFeedback.js';
 import { t } from '../core/i18n.js';
 
 const STATES = ['INTRO', 'IDLE', 'AIMING'];
@@ -205,7 +205,7 @@ export class CameraTool {
     this.rollCount++; // reserve the slot now so rapid clicks can't overshoot the cap
 
     const fb = this.frameBounds;
-    playClick(this.scene);
+    this.bus.emit(EVENTS.SHUTTER_CLICK);
     // Snapshot the CLEAN strip first, then flash + announce in the callback so the
     // photo doesn't capture the white flash.
     const id = `photo_${++this._photoCount}_${Date.now()}`;

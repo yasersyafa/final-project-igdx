@@ -6,6 +6,7 @@ export const EVENTS = {
   CAMERA_RAISED:   'camera:raised',    // player raised camera -> zoomed AIMING, hide HUD
   CAMERA_LOWERED:  'camera:lowered',   // player lowered camera -> IDLE, show HUD
 
+  SHUTTER_CLICK:   'camera:shutter',   // shoot pressed (before capture resolves) -> AudioManager plays sfx
   PHOTO_TAKEN:     'photo:taken',      // a shot fired -> { id, frameBounds, thumbKey, captured }
   PHOTO_DELETED:   'photo:deleted',    // player removed a photo from the roll -> { id }
   SHOT_RATED:      'photo:rated',      // successful mission shot -> { key, label, color }
