@@ -21,6 +21,7 @@ const LISTENERS = [
   // Both fire off the same SHUTTER_CLICK signal, so shutter + capture cue overlap.
   [EVENTS.SHUTTER_CLICK, () => play('sfx_shutter_click', { volume: 0.6 })],
   [EVENTS.SHUTTER_CLICK, () => play('sfx_camera_captured', { volume: 0.6 })],
+  [EVENTS.SHOT_RATED, (tier) => { if (tier && tier.key === 'perfect') play('sfx_perfect_captured', { volume: 0.6 }); }],
 ];
 
 export function init(sound) {
