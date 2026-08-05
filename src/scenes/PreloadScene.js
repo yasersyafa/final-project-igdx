@@ -42,7 +42,7 @@ export class PreloadScene extends Phaser.Scene {
     // Object atlases: this.load.atlas('cat', 'assets/cat.png', 'assets/cat.json');
     // Audio:          this.load.audio('shutter', 'assets/sfx/shutter.mp3');
     this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.wav');
-    this.load.audio('sfx_button_hover', 'src/sounds/sfx/button-hovered.mp3');
+    this.load.audio('sfx_button_hover', 'src/sounds/sfx/button-hovered.wav');
     this.load.audio('sfx_shutter_click', 'src/sounds/sfx/shutter-clicked.mp3');
     this.load.audio('sfx_camera_captured', 'src/sounds/sfx/camera-captured.mp3');
     this.load.audio('sfx_perfect_captured', 'src/sounds/sfx/perfect-captured.mp3');
@@ -60,11 +60,33 @@ export class PreloadScene extends Phaser.Scene {
     // of the game's life (this.sound is Phaser's shared, game-wide sound manager).
     AudioManager.init(this.sound);
 
-    // brief bar settle then go to menu
-    this.cameras.main.fadeOut(DUR.fade, 0, 0, 0);
-    this.cameras.main.once("camerafadeoutcomplete", () =>
-      this.scene.start("MainMenuScene"),
-    );
+    this._showTapToStart();
+  }
+
+  // Browsers block AudioContext until a real user gesture (click/tap/key —
+  // mouse move does NOT count). Shown after loading so the bar isn't gated on
+  // it; resumes the audio context inside the same gesture handler.
+  _showTapToStart() {
+    const { width: W, height: H } = this.cameras.main;
+
+    const dim = this.add.rectangle(0, 0, W, H, 0x0a0a12, 1).setOrigin(0, 0).setDepth(3000);
+    const label = this.add.text(W / 2, H / 2, t("boot.tapstart"), {
+      fontFamily: FONTS.display, fontSize: "28px", color: "#fff5e6",
+    }).setOrigin(0.5).setDepth(3001);
+    this.tweens.add({ targets: label, alpha: 0.4, ease: EASE.inOut, duration: 700, yoyo: true, repeat: -1 });
+
+    dim.setInteractive();
+    const start = () => {
+      dim.disableInteractive();
+      this.input.keyboard && this.input.keyboard.off("keydown", start);
+      if (this.sound && this.sound.context && this.sound.context.state === "suspended") {
+        this.sound.context.resume().catch(() => {});
+      }
+      this.cameras.main.fadeOut(DUR.fade, 0, 0, 0);
+      this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("MainMenuScene"));
+    };
+    dim.once("pointerdown", start);
+    this.input.keyboard && this.input.keyboard.once("keydown", start);
   }
 
   _blankURI() {
