@@ -6,6 +6,8 @@ import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
 import { t } from '../core/i18n.js';
 
+const CHAR_DELAY = 28; // ms between characters during the typewriter reveal
+
 export class DialogBox {
   constructor(scene, bus, levelData, depth = 1500) {
     this.scene = scene;
@@ -48,6 +50,7 @@ export class DialogBox {
       bus.off(EVENTS.DIALOG_SHOW, this._onShow);
       scene.input.off('pointerdown', this._advance);
       this.spaceKey.off('down', this._advance);
+      this._stopTyping();
     });
   }
 
@@ -69,13 +72,45 @@ export class DialogBox {
     });
   }
 
+  // Typewriter reveal: fade the body in, then append one character at a time.
+  // next() during typing skips straight to the full line (standard advance-to-complete UX).
   _renderLine(delay = 0) {
-    this.body.setText(this.lines[this.index] || '');
+    this._stopTyping();
+    const chars = [...(this.lines[this.index] || '')]; // spread handles multi-byte chars correctly
+    this.body.setText('');
     this.body.setAlpha(0);
     this.scene.tweens.add({ targets: this.body, alpha: 1, ease: EASE.out, duration: DUR.quick, delay });
+
+    this._typing = true;
+    this.scene.time.delayedCall(delay, () => {
+      if (!this._typing) return; // line already skipped before the fade-in delay elapsed
+      let shown = 0;
+      this._charTimer = this.scene.time.addEvent({
+        delay: CHAR_DELAY,
+        repeat: chars.length - 1,
+        callback: () => {
+          shown++;
+          this.body.setText(chars.slice(0, shown).join(''));
+          if (shown >= chars.length) this._stopTyping();
+        },
+      });
+    });
+  }
+
+  _stopTyping() {
+    if (this._charTimer) {
+      this._charTimer.remove();
+      this._charTimer = null;
+    }
+    this._typing = false;
   }
 
   next() {
+    if (this._typing) {
+      this._stopTyping();
+      this.body.setText(this.lines[this.index] || '');
+      return;
+    }
     if (this.index < this.lines.length - 1) {
       this.index++;
       this._renderLine();
@@ -85,6 +120,7 @@ export class DialogBox {
   }
 
   close() {
+    this._stopTyping();
     this.open = false;
     this.scene.tweens.add({ targets: this.dim, fillAlpha: 0, ease: EASE.in, duration: DUR.base });
     popOut(this.panel, {
