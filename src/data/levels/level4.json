@@ -9,19 +9,18 @@
     { "en": "The new year is close. Go and find what this land beats its drums and lights its fires for.", "id": "Tahun baru sudah dekat. Pergilah dan temukan apa yang membuat tanah ini menabuh gendang dan menyalakan apinya." }
   ],
   "decor": [
-    { "id": "dec_coconut_l", "name": "Coconut Palm", "sprite": "coconut_palm", "idleAnim": "sway", "x": 130, "y": 340, "bbox": { "x": 100, "y": 240, "w": 60, "h": 200 } },
-    { "id": "dec_coconut_r", "name": "Coconut Palm", "sprite": "coconut_palm", "idleAnim": "sway", "x": 1160, "y": 340, "bbox": { "x": 1130, "y": 240, "w": 60, "h": 200 } },
-    { "id": "dec_cengkih", "name": "Clove Tree", "sprite": "clove_tree", "idleAnim": "breathe", "x": 500, "y": 560, "bbox": { "x": 430, "y": 530, "w": 140, "h": 60 } },
-    { "id": "dec_lentera", "name": "Street Lantern", "sprite": "lantern_manado", "idleAnim": "sway", "x": 1080, "y": 300, "bbox": { "x": 1065, "y": 220, "w": 30, "h": 170 } }
+    { "id": "dec_baby", "name": "Village Kid", "sprite": "decor_baby", "noShadow": true, "x": 980, "y": 507, "bbox": { "x": 940, "y": 455, "w": 80, "h": 105 } },
+    { "id": "dec_corgi", "name": "Corgi", "sprite": "decor_corgi", "noShadow": true, "x": 1040, "y": 573, "bbox": { "x": 998, "y": 533, "w": 84, "h": 80 } }
   ],
   "objects": [
     {
       "id": "obj_tulude",
       "name": "Tulude",
-      "sprite": "tulude",
-      "idleAnim": "sway",
-      "x": 220, "y": 430,
-      "bbox": { "x": 150, "y": 350, "w": 140, "h": 160 },
+      "sprite": "tulude_1",
+      "spriteAnim": "anim_tulude",
+      "noShadow": true,
+      "x": 237, "y": 341,
+      "bbox": { "x": 31, "y": 163, "w": 413, "h": 357 },
       "mission": {
         "en": "Frame the year end thanksgiving procession carrying a towering cone of woven rice cakes through the street",
         "id": "Bidik arak-arakan syukur akhir tahun yang mengarak kerucut kue beras raksasa di sepanjang jalan"
@@ -39,10 +38,11 @@
     {
       "id": "obj_tagonggong",
       "name": "Tagonggong",
-      "sprite": "tagonggong",
-      "idleAnim": "bob",
-      "x": 430, "y": 460,
-      "bbox": { "x": 380, "y": 400, "w": 100, "h": 120 },
+      "sprite": "tagonggong_1",
+      "spriteAnim": "anim_tagonggong",
+      "noShadow": true,
+      "x": 467, "y": 340,
+      "bbox": { "x": 407, "y": 277, "w": 120, "h": 126 },
       "mission": {
         "en": "Find the drum that beats out the rhythm calling everyone into the Tulude dance",
         "id": "Temukan gendang yang menabuh irama untuk mengajak semua orang menari dalam Tulude"
@@ -55,7 +55,7 @@
       "sprite": "cakalang_fufu",
       "noShadow": true,
       "x": 620, "y": 280,
-      "bbox": { "x": 470, "y": 120, "w": 300, "h": 320 },
+      "bbox": { "x": 490, "y": 141, "w": 261, "h": 278 },
       "mission": {
         "en": "Capture the smoked skipjack tuna hanging golden and fragrant over its coconut husk fire",
         "id": "Abadikan ikan cakalang asap yang tergantung keemasan dan harum di atas api sabut kelapa"
@@ -65,10 +65,11 @@
     {
       "id": "obj_kolintang",
       "name": "Kolintang",
-      "sprite": "kolintang",
-      "idleAnim": "sway",
-      "x": 870, "y": 450,
-      "bbox": { "x": 810, "y": 390, "w": 130, "h": 110 },
+      "sprite": "kolintang_1",
+      "spriteAnim": "anim_kolintang",
+      "noShadow": true,
+      "x": 594, "y": 544,
+      "bbox": { "x": 467, "y": 434, "w": 253, "h": 220 },
       "mission": {
         "en": "Frame the wooden xylophone whose rows of tuned bars ring out warm island melodies",
         "id": "Bidik alat musik kayu yang deretan bilahnya melantunkan melodi hangat khas kepulauan"
@@ -80,8 +81,8 @@
       "name": "Rumah Wale",
       "sprite": "rumah_wale",
       "noShadow": true,
-      "x": 940, "y": 360,
-      "bbox": { "x": 720, "y": 198, "w": 440, "h": 325 },
+      "x": 980, "y": 300,
+      "bbox": { "x": 760, "y": 138, "w": 440, "h": 325 },
       "mission": {
         "en": "Find the stilt house standing tall on its wooden legs above the ground",
         "id": "Temukan rumah panggung yang berdiri tegak di atas kaki-kaki kayunya"

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "bun build src/main.js --outdir dist --target browser",
-    "dev": "bun build src/main.js --outdir dist --target browser && bun run serve.js",
+    "dev": "bun run dev-server.js",
     "watch": "bun build src/main.js --outdir dist --target browser --watch",
     "serve": "bun run serve.js",
     "test": "bun test"

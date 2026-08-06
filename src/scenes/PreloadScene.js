@@ -47,14 +47,46 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('bg_manado', 'src/arts/level-2/background.png');
     this.load.image('cakalang_fufu', 'src/arts/level-2/cakalang-2.png');
     this.load.image('rumah_wale', 'src/arts/level-2/wale.png');
+    this.load.image('kolintang_1', 'src/arts/level-2/Kolintang_1.png');
+    this.load.image('kolintang_2', 'src/arts/level-2/Kolintang_2.png');
+    this.load.image('kolintang_3', 'src/arts/level-2/Kolintang_3.png');
+    this.load.image('kolintang_4', 'src/arts/level-2/Kolintang_4.png');
+    this.load.image('tulude_1', 'src/arts/level-2/Tulude_1.png');
+    this.load.image('tulude_2', 'src/arts/level-2/Tulude_2.png');
+    this.load.image('tagonggong_1', 'src/arts/level-2/Tagonggong_1.png');
+    this.load.image('tagonggong_2', 'src/arts/level-2/Tagonggong_2.png');
+    this.load.image('decor_baby', 'src/arts/level-2/decor-1.png');
+    this.load.image('decor_corgi', 'src/arts/level-2/decor-2.png');
     // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }
 
   create() {
     // --- REGISTER idleAnim ANIMATIONS HERE when real spritesheets exist ----
-    // this.anims.create({ key: 'cat_breathe', frames: ..., repeat: -1 });
     // (Idle motion is procedural for now — see src/anim/motion.js.)
+    this.anims.create({
+      key: 'anim_kolintang',
+      frames: [
+        { key: 'kolintang_1' },
+        { key: 'kolintang_2' },
+        { key: 'kolintang_3' },
+        { key: 'kolintang_4' },
+      ],
+      frameRate: 6,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'anim_tulude',
+      frames: [{ key: 'tulude_1' }, { key: 'tulude_2' }],
+      frameRate: 2,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'anim_tagonggong',
+      frames: [{ key: 'tagonggong_1' }, { key: 'tagonggong_2' }],
+      frameRate: 4,
+      repeat: -1,
+    });
 
     // Wire the AudioManager observer once; it listens on EventBus for the rest
     // of the game's life (this.sound is Phaser's shared, game-wide sound manager).

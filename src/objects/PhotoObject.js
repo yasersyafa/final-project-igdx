@@ -31,7 +31,11 @@ export class PhotoObject extends Phaser.GameObjects.Container {
 
     // Real sprite if its texture is loaded, otherwise a placeholder rect + label.
     this.hasSprite = scene.textures.exists(data.sprite);
-    if (this.hasSprite) {
+    if (data.spriteAnim && scene.anims.exists(data.spriteAnim)) {
+      this.hasSprite = true;
+      this.body_ = scene.add.sprite(0, 0, data.sprite).setDisplaySize(w, h);
+      this.body_.play(data.spriteAnim);
+    } else if (this.hasSprite) {
       this.body_ = scene.add.image(0, 0, data.sprite).setDisplaySize(w, h);
     } else {
       this.body_ = scene.add.rectangle(0, 0, w, h, hashColor(data.id));
