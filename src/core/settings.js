@@ -3,6 +3,8 @@
 // localized UI). Mirrors core/gallery.js: all storage access is try/catch-guarded
 // so the game still runs where localStorage is unavailable (private mode, tests).
 import { LANGUAGES, DEFAULT_LANG } from "../config/languages.js";
+import { bus } from "./EventBus.js";
+import { EVENTS } from "../config/events.js";
 
 const KEY = "photowalk.settings";
 
@@ -50,7 +52,9 @@ export function setLang(code) {
   if (!LANGUAGES.some((l) => l.code === code)) return false;
   const data = loadSettings();
   data.lang = code;
-  return saveSettings(data);
+  const ok = saveSettings(data);
+  if (ok) bus.emit(EVENTS.LANG_CHANGED, code);
+  return ok;
 }
 
 export default { loadSettings, getLang, setLang };

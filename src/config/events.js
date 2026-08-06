@@ -21,6 +21,8 @@ export const EVENTS = {
 
   UI_BUTTON_CLICK: 'ui:buttonClick',   // any makeButton() pointerdown -> AudioManager plays sfx
   UI_BUTTON_HOVER: 'ui:buttonHover',   // any makeButton() pointerover -> AudioManager plays sfx (random pitch)
+
+  LANG_CHANGED:    'settings:langChanged', // setLang() persisted a new language -> live scenes re-run t()
 };
 
 // PHOTO_TAKEN.id = stable unique id for the photo (deletable even if thumbKey is null).

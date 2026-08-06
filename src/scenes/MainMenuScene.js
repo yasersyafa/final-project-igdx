@@ -4,6 +4,8 @@ import { makeButton } from "../ui/Button.js";
 import { SettingsDialog } from "../ui/SettingsDialog.js";
 import { FONTS } from "../config/fonts.js";
 import { t } from "../core/i18n.js";
+import { bus } from "../core/EventBus.js";
+import { EVENTS } from "../config/events.js";
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -26,7 +28,7 @@ export class MainMenuScene extends Phaser.Scene {
     popIn(title);
     idleBob(title, { amount: 6, duration: DUR.idleBreathe });
 
-    this.add
+    this.subtitle = this.add
       .text(W / 2, H * 0.28 + 56, t("menu.subtitle"), {
         fontFamily: FONTS.body,
         fontSize: "20px",
@@ -76,6 +78,19 @@ export class MainMenuScene extends Phaser.Scene {
       onClick: () => this._settings.open(),
     });
     popIn(settings, { delay: 280 });
+
+    // Live re-localize so a language change in SettingsDialog updates this
+    // scene's text immediately, without needing a scene restart.
+    this._onLangChanged = () => {
+      this.subtitle.setText(t("menu.subtitle"));
+      play.label.setText(t("btn.play"));
+      album.label.setText(t("btn.album"));
+      settings.label.setText(t("btn.settings"));
+    };
+    bus.on(EVENTS.LANG_CHANGED, this._onLangChanged);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      bus.off(EVENTS.LANG_CHANGED, this._onLangChanged);
+    });
   }
 }
 export default MainMenuScene;
