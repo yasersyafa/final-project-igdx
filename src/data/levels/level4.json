@@ -53,9 +53,9 @@
       "id": "obj_cakalangfufu",
       "name": "Cakalang Fufu",
       "sprite": "cakalang_fufu",
-      "idleAnim": "breathe",
-      "x": 650, "y": 470,
-      "bbox": { "x": 600, "y": 420, "w": 100, "h": 90 },
+      "noShadow": true,
+      "x": 620, "y": 280,
+      "bbox": { "x": 470, "y": 120, "w": 300, "h": 320 },
       "mission": {
         "en": "Capture the smoked skipjack tuna hanging golden and fragrant over its coconut husk fire",
         "id": "Abadikan ikan cakalang asap yang tergantung keemasan dan harum di atas api sabut kelapa"
@@ -79,9 +79,9 @@
       "id": "obj_rumahwale",
       "name": "Rumah Wale",
       "sprite": "rumah_wale",
-      "idleAnim": "breathe",
-      "x": 1090, "y": 410,
-      "bbox": { "x": 1010, "y": 330, "w": 160, "h": 150 },
+      "noShadow": true,
+      "x": 940, "y": 360,
+      "bbox": { "x": 720, "y": 198, "w": 440, "h": 325 },
       "mission": {
         "en": "Find the stilt house standing tall on its wooden legs above the ground",
         "id": "Temukan rumah panggung yang berdiri tegak di atas kaki-kaki kayunya"

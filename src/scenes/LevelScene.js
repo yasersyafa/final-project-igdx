@@ -31,14 +31,16 @@ export class LevelScene extends Phaser.Scene {
     // World layer — everything here is zoomed by the camera tool. Screen-space UI
     // (HUD, overlay, rail, dialog) lives outside it and is never scaled.
     this.world = this.add.container(0, 0);
-    const bg = this.add.rectangle(
-      W / 2,
-      H / 2,
-      W,
-      H,
-      Phaser.Display.Color.HexStringToColor(level.bgColor || "#3a3a44").color,
-      1,
-    );
+    const bg = this.textures.exists(level.background)
+      ? this.add.image(W / 2, H / 2, level.background).setDisplaySize(W, H)
+      : this.add.rectangle(
+          W / 2,
+          H / 2,
+          W,
+          H,
+          Phaser.Display.Color.HexStringToColor(level.bgColor || "#3a3a44").color,
+          1,
+        );
     const ground = this.add.rectangle(
       W / 2,
       H * 0.86,

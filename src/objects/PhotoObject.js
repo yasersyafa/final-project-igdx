@@ -2,7 +2,7 @@
 // Thin Phaser wrapper. Origin (0.5,0.5) so swapping in a same-bounds sprite needs
 // no motion edits. Idle motion + capture highlight come from src/anim/motion.js.
 import Phaser from 'phaser';
-import { idleByName, checkPop, EASE, DUR } from '../anim/motion.js';
+import { idleByName, DUR } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
 
 // Stable color per id so placeholder shapes are distinguishable.
@@ -24,13 +24,20 @@ export class PhotoObject extends Phaser.GameObjects.Container {
     const h = data.bbox.h;
 
     // SECONDARY ACTION target: soft shadow ellipse under the object.
-    this.shadow = scene.add.ellipse(0, h * 0.5, w * 0.8, h * 0.22, 0x000000, 0.25);
-    this.shadow.setOrigin(0.5, 0.5);
+    if (!data.noShadow) {
+      this.shadow = scene.add.ellipse(0, h * 0.5, w * 0.8, h * 0.22, 0x000000, 0.25);
+      this.shadow.setOrigin(0.5, 0.5);
+    }
 
-    // Placeholder body — a rounded rect. Origin centered.
-    this.body_ = scene.add.rectangle(0, 0, w, h, hashColor(data.id));
-    this.body_.setOrigin(0.5, 0.5);
-    this.body_.setStrokeStyle(2, 0xffffff, 0.35);
+    // Real sprite if its texture is loaded, otherwise a placeholder rect + label.
+    this.hasSprite = scene.textures.exists(data.sprite);
+    if (this.hasSprite) {
+      this.body_ = scene.add.image(0, 0, data.sprite).setDisplaySize(w, h);
+    } else {
+      this.body_ = scene.add.rectangle(0, 0, w, h, hashColor(data.id));
+      this.body_.setOrigin(0.5, 0.5);
+      this.body_.setStrokeStyle(2, 0xffffff, 0.35);
+    }
 
     this.label = scene.add.text(0, 0, data.name, {
       fontFamily: FONTS.body,
@@ -39,6 +46,7 @@ export class PhotoObject extends Phaser.GameObjects.Container {
       align: 'center',
       wordWrap: { width: w - 8 },
     }).setOrigin(0.5, 0.5);
+    if (this.hasSprite) this.label.setVisible(false);
 
     // if (data.challenge == "after") { // Invisible for first spawn
     //   this.body_.setVisible(false); 
@@ -46,7 +54,7 @@ export class PhotoObject extends Phaser.GameObjects.Container {
     //   this.shadow.setVisible(false);
     // }
 
-    if (data.isSpecial) {
+    if (data.isSpecial && this.body_.setStrokeStyle) {
       this.body_.setStrokeStyle(3, 0xffe08a, 0.9); // gentle highlight for the special one
     }
 
@@ -56,7 +64,7 @@ export class PhotoObject extends Phaser.GameObjects.Container {
       this.label.setColor('#e8e2d6').setAlpha(0.6);
     }
 
-    this.add([this.shadow, this.body_, this.label]);
+    this.add([this.shadow, this.body_, this.label].filter(Boolean));
     scene.add.existing(this);
 
     this.captured = false;
@@ -70,22 +78,14 @@ export class PhotoObject extends Phaser.GameObjects.Container {
     }
   }
 
-  // STAGING + EXAGGERATION + FOLLOW-THROUGH: pop above siblings, brighten, settle.
+  // STAGING: brief highlight above siblings, no scale animation.
   flashHighlight() {
     if (this.captured) return;
     this.captured = true;
     const prevDepth = this.depth;
     this.setDepth(1000); // STAGING: briefly above siblings
-    this.body_.setStrokeStyle(4, 0xfff3c4, 1);
-    checkPop(this.body_, {
-      onComplete: () => {
-        this.scene.tweens.add({
-          targets: this.body_, scaleX: 1, scaleY: 1,
-          ease: EASE.inOut, duration: DUR.quick,
-        });
-        this.setDepth(prevDepth);
-      },
-    });
+    if (this.body_.setStrokeStyle) this.body_.setStrokeStyle(4, 0xfff3c4, 1);
+    this.scene.time.delayedCall(DUR.quick, () => this.setDepth(prevDepth));
   }
 }
 
