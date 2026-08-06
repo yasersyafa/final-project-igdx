@@ -34,5 +34,25 @@
   "obj_wayangkulit": {
     "en": "Wayang Kulit is Javanese shadow-puppet theatre. Flat leather puppets are moved behind a lit screen by a single dalang, who voices every character and carries an entire story of love and war that can last from dusk until dawn.",
     "id": "Wayang Kulit adalah teater boneka bayangan dari Jawa. Boneka kulit pipih digerakkan di balik layar bercahaya oleh seorang dalang, yang menyuarakan setiap tokoh dan membawakan seluruh kisah cinta dan perang yang bisa berlangsung dari senja hingga fajar."
+  },
+  "obj_tulude": {
+    "en": "Tulude is the year end thanksgiving of the Sangihe and Talaud people of North Sulawesi, held once the new year draws near. Its centerpiece is a towering cone shaped cake called kue tamo, cut open by an elder while the village gathers to give thanks for the year just passed and pray for the one ahead.",
+    "id": "Tulude adalah perayaan syukur akhir tahun masyarakat Sangihe dan Talaud di Sulawesi Utara, digelar menjelang pergantian tahun. Pusat acaranya adalah kue kerucut raksasa bernama kue tamo, yang dipotong oleh seorang sesepuh sementara warga desa berkumpul untuk bersyukur atas tahun yang telah lewat dan berdoa untuk tahun yang akan datang."
+  },
+  "obj_tagonggong": {
+    "en": "Tagonggong is a hand drum from the Sangihe Talaud islands that drives the Tulude ceremony forward. Its fast, rolling beat calls people out of their houses and keeps the dancers moving late into the celebration.",
+    "id": "Tagonggong adalah gendang tangan dari kepulauan Sangihe Talaud yang menghidupkan jalannya upacara Tulude. Tabuhannya yang cepat dan bergulir memanggil warga keluar rumah dan menjaga para penari terus bergerak hingga larut dalam perayaan."
+  },
+  "obj_cakalangfufu": {
+    "en": "Cakalang fufu is skipjack tuna split open, clamped onto bamboo, and smoked slowly over a coconut husk fire until it turns deep golden brown. The smoking keeps the fish good for weeks and gives Minahasan cooking its smoky signature flavor.",
+    "id": "Cakalang fufu adalah ikan cakalang yang dibelah, dijepit dengan bambu, dan diasap perlahan di atas bara sabut kelapa hingga berwarna cokelat keemasan. Proses pengasapan ini membuat ikan tahan berminggu-minggu dan memberi masakan Minahasa cita rasa asapnya yang khas."
+  },
+  "obj_kolintang": {
+    "en": "Kolintang is a traditional Minahasan instrument made of wooden bars laid across a frame and struck with mallets, much like a wooden xylophone. Its name is said to come from the sounds it makes, tong, ting, tang, an invitation locals still use today, ayo kita tong ting tang, meaning let us play music together.",
+    "id": "Kolintang adalah alat musik tradisional Minahasa berupa deretan bilah kayu di atas rangka yang dipukul dengan pemukul, mirip gambang kayu. Namanya konon berasal dari bunyi yang dihasilkannya, tong, ting, tang, sebuah ajakan yang masih dipakai warga setempat hingga kini, ayo kita tong ting tang, yang berarti mari kita bermain musik bersama."
+  },
+  "obj_rumahwale": {
+    "en": "Rumah Wale is the traditional stilt house of the Minahasan people, raised on sturdy wooden posts above the ground. Older wale were built with interlocking wooden joints and no nails at all, and the house often doubled as a gathering place for the community's spirit of mapalus, or mutual help.",
+    "id": "Rumah Wale adalah rumah panggung tradisional masyarakat Minahasa yang berdiri di atas tiang-tiang kayu kokoh. Wale zaman dahulu dibangun dengan sambungan kayu yang saling mengunci tanpa satu paku pun, dan rumah ini kerap menjadi tempat berkumpul yang menghidupkan semangat mapalus, atau gotong royong warga."
   }
 }
