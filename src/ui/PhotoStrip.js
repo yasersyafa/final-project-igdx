@@ -12,17 +12,44 @@ import { FONTS } from '../config/fonts.js';
 import { t } from '../core/i18n.js';
 
 const MAX = CONFIG.MAX_PHOTOS;
-const TW = 80, TH = 60;              // photo size (4:3)
+const TW = 90, TH = 68;              // photo size (4:3-ish)
 const BW = TW + 8, BH = TH + 16;     // film border size
 const PHOTO_DY = -6;                 // photo image y-offset within the card
 const XB_R = 12;                     // ✕ button radius
 const XB_DX = BW / 2 - 6, XB_DY = -BH / 2 + 6; // ✕ position (card top-right)
+const DASH = 6, GAP = 4; // placeholder dashed-border rhythm
+
+// Dashes one straight segment (local coords) at the current lineStyle.
+function dashSegment(g, x1, y1, x2, y2) {
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  if (len <= 0) return;
+  const dx = (x2 - x1) / len, dy = (y2 - y1) / len;
+  for (let pos = 0; pos < len; pos += DASH + GAP) {
+    const end = Math.min(pos + DASH, len);
+    g.lineBetween(x1 + dx * pos, y1 + dy * pos, x1 + dx * end, y1 + dy * end);
+  }
+}
+
+// An empty-slot placeholder: a dashed rectangle outline, centered on its own
+// position like the photo cards, so it drops straight into a grid slot.
+function makeDashedPlaceholder(scene, w, h, depth) {
+  const g = scene.add.graphics().setDepth(depth);
+  g.lineStyle(2, 0xfff5e6, 0.3);
+  const hw = w / 2, hh = h / 2;
+  dashSegment(g, -hw, -hh, hw, -hh);
+  dashSegment(g, hw, -hh, hw, hh);
+  dashSegment(g, hw, hh, -hw, hh);
+  dashSegment(g, -hw, hh, -hw, -hh);
+  return g;
+}
 
 export class PhotoStrip {
-  // opts: { layer, originX, top, step, headerGap, flyStart } — originX/top/step are
-  // LOCAL coordinates (relative to `layer`, e.g. a sidebar panel origin). headerGap
-  // is the vertical offset from the first slot's center up to the header (must clear
-  // the slot's half-height, ~38px, or the header sits under the first photo card).
+  // opts: { layer, originX, top, step, headerGap, cols, colGap, flyStart } —
+  // originX/top/step are LOCAL coordinates (relative to `layer`, e.g. a sidebar
+  // panel origin). With cols > 1, slots fill left-to-right then wrap to the next
+  // row (`step` becomes the row height); originX is the grid's horizontal center.
+  // headerGap is the vertical offset from the first row's center up to the header
+  // (must clear the slot's half-height, or the header sits under the first card).
   // flyStart() is called per-photo to get the local start point for the "develop"
   // fly-in, since the visual screen-center may not map to a fixed local point when
   // the layer slides.
@@ -36,11 +63,13 @@ export class PhotoStrip {
 
     const {
       layer = null, originX = 1280 - 60, top = 140, step = 80, headerGap = 32,
-      flyStart = () => ({ x: 640, y: 360 }),
+      cols = 1, colGap = 10, flyStart = () => ({ x: 640, y: 360 }),
     } = opts;
     this.originX = originX;
     this.slotTop = top;
     this.slotStep = step;
+    this.cols = cols;
+    this.colGap = colGap;
     this.flyStart = flyStart;
 
     this.header = scene.add.text(this.originX, this.slotTop - headerGap, t('hud.roll', { n: 0, max: MAX }), {
@@ -48,6 +77,15 @@ export class PhotoStrip {
     }).setOrigin(0.5, 0.5).setDepth(depth);
     if (layer) layer.add(this.header);
     this.layer = layer;
+
+    // Empty-slot placeholders for all MAX slots, drawn once. Photos land on top
+    // of them slot-by-slot (later-added = higher z), so a placeholder is only
+    // ever visible where no photo currently sits — no manual show/hide needed.
+    for (let i = 0; i < MAX; i++) {
+      const { x, y } = this._slotPos(i);
+      const ph = makeDashedPlaceholder(scene, BW, BH, depth).setPosition(x, y);
+      if (layer) layer.add(ph);
+    }
 
     this._onPhoto = (p) => this.addPhoto(p);
     this._onRaised = () => { this.enabled = false; this.items.forEach((it) => it.xBtn.setVisible(false)); };
@@ -140,17 +178,25 @@ export class PhotoStrip {
     this.header.setColor(n >= MAX ? '#ffcaca' : '#fff5e6');
   }
 
+  // Slot i's grid position: fills left-to-right, wraps to the next row.
+  _slotPos(i) {
+    const col = i % this.cols;
+    const row = Math.floor(i / this.cols);
+    const colOffset = (col - (this.cols - 1) / 2) * (BW + this.colGap);
+    return { x: this.originX + colOffset, y: this.slotTop + row * this.slotStep };
+  }
+
   // Fly the newest into its slot; settle existing into theirs.
   _relayout(newest) {
     const s = this.scene;
     this.items.forEach((it, i) => {
-      const y = this.slotTop + i * this.slotStep;
+      const { x, y } = this._slotPos(i);
       if (it.c === newest) {
         // SLOW-IN/OUT travel + "develop": fade up and shrink to slot with overshoot.
-        s.tweens.add({ targets: it.c, x: this.originX, y, ease: EASE.cubicOut, duration: DUR.base });
+        s.tweens.add({ targets: it.c, x, y, ease: EASE.cubicOut, duration: DUR.base });
         s.tweens.add({ targets: it.c, scaleX: 1, scaleY: 1, alpha: 1, ease: EASE.backOut, duration: DUR.base });
       } else {
-        s.tweens.add({ targets: it.c, x: this.originX, y, ease: EASE.inOut, duration: DUR.quick });
+        s.tweens.add({ targets: it.c, x, y, ease: EASE.inOut, duration: DUR.quick });
       }
     });
   }

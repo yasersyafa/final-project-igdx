@@ -50,7 +50,7 @@ export class Sidebar {
 
     this.rollGroup = scene.add.container(0, 0);
     this.strip = new PhotoStrip(scene, bus, levelData, depth, {
-      layer: this.rollGroup, originX: PANEL_W / 2, top: 126, step: 80, headerGap: 50,
+      layer: this.rollGroup, originX: PANEL_W / 2, top: 146, step: 92, headerGap: 74, cols: 2, colGap: 10,
       flyStart: () => ({ x: W / 2 - this.panel.x, y: H / 2 }),
     });
     this.panel.add(this.rollGroup);
