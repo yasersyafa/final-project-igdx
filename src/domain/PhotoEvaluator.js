@@ -36,17 +36,27 @@ export function evaluateSession(photos, objects, config) {
   return { total, max, breakdown, missionResults };
 }
 
-// capturedMissionIds — pure. Which mission objects are captured in a roll: any object
-// with a `mission` covered >= CAPTURE_THRESHOLD in at least one photo. Used for live
-// shot-list reconciliation (e.g. after a photo is deleted). Returns a Set of ids.
+// capturedMissionIds — pure. Which mission objects are captured in a roll, used for
+// live shot-list reconciliation (e.g. after a photo is deleted). Mirrors evaluate()'s
+// per-photo "best overlapping candidate wins" rule: a single photo can only ever
+// credit the ONE object it best frames, not every object whose bbox happens to be
+// covered enough. (Checking each object independently against every photo would let
+// one broad/loose shot credit several missions at once — inconsistent with the live
+// per-shot tick, which only ever fires for the best match.) Returns a Set of ids.
 export function capturedMissionIds(photos, objects, config) {
   const threshold = config.CAPTURE_THRESHOLD;
+  const scoring = config.SCORING;
   const ids = new Set();
-  for (const o of objects) {
-    if (!o.mission) continue;
-    for (const p of photos) {
-      if (coverage(o.bbox, p.frameBounds) >= threshold) { ids.add(o.id); break; }
+  for (const p of photos) {
+    const covered = objects.filter((o) => coverage(o.bbox, p.frameBounds) >= threshold);
+    if (covered.length === 0) continue;
+    let best = covered[0];
+    let bestScore = framingScore(best.bbox, p.frameBounds, scoring);
+    for (let i = 1; i < covered.length; i++) {
+      const s = framingScore(covered[i].bbox, p.frameBounds, scoring);
+      if (s > bestScore) { best = covered[i]; bestScore = s; }
     }
+    if (best.mission) ids.add(best.id);
   }
   return ids;
 }

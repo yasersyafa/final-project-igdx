@@ -1,5 +1,5 @@
-// PhotoStrip — right-side "film roll". Each shot's real snapshot flies in here with
-// an instant-film "develop" animation. Capped at CONFIG.MAX_PHOTOS; the roll is shown
+// PhotoStrip — the "film roll". Each shot's real snapshot flies in here with an
+// instant-film "develop" animation. Capped at CONFIG.MAX_PHOTOS; the roll is shown
 // in full (no silent eviction). While the camera is lowered, hovering a thumbnail
 // reveals an ✕ — clicking it opens a confirm dialog to delete the photo, freeing a slot.
 import Phaser from 'phaser';
@@ -15,13 +15,18 @@ const MAX = CONFIG.MAX_PHOTOS;
 const TW = 80, TH = 60;              // photo size (4:3)
 const BW = TW + 8, BH = TH + 16;     // film border size
 const PHOTO_DY = -6;                 // photo image y-offset within the card
-const SLOT_X = 1280 - 60;            // right rail center x
-const SLOT_TOP = 140, SLOT_STEP = 80;
 const XB_R = 12;                     // ✕ button radius
 const XB_DX = BW / 2 - 6, XB_DY = -BH / 2 + 6; // ✕ position (card top-right)
 
 export class PhotoStrip {
-  constructor(scene, bus, levelData, depth = 1000) {
+  // opts: { layer, originX, top, step, headerGap, flyStart } — originX/top/step are
+  // LOCAL coordinates (relative to `layer`, e.g. a sidebar panel origin). headerGap
+  // is the vertical offset from the first slot's center up to the header (must clear
+  // the slot's half-height, ~38px, or the header sits under the first photo card).
+  // flyStart() is called per-photo to get the local start point for the "develop"
+  // fly-in, since the visual screen-center may not map to a fixed local point when
+  // the layer slides.
+  constructor(scene, bus, levelData, depth = 1000, opts = {}) {
     this.scene = scene;
     this.bus = bus;
     this.depth = depth;
@@ -29,9 +34,20 @@ export class PhotoStrip {
     this.enabled = false;  // delete interactions only while camera lowered (IDLE)
     this.confirm = new ConfirmDialog(scene);
 
-    this.header = scene.add.text(SLOT_X, 108, t('hud.roll', { n: 0, max: MAX }), {
+    const {
+      layer = null, originX = 1280 - 60, top = 140, step = 80, headerGap = 32,
+      flyStart = () => ({ x: 640, y: 360 }),
+    } = opts;
+    this.originX = originX;
+    this.slotTop = top;
+    this.slotStep = step;
+    this.flyStart = flyStart;
+
+    this.header = scene.add.text(this.originX, this.slotTop - headerGap, t('hud.roll', { n: 0, max: MAX }), {
       fontFamily: FONTS.body, fontSize: '16px', color: '#fff5e6', fontStyle: 'bold',
     }).setOrigin(0.5, 0.5).setDepth(depth);
+    if (layer) layer.add(this.header);
+    this.layer = layer;
 
     this._onPhoto = (p) => this.addPhoto(p);
     this._onRaised = () => { this.enabled = false; this.items.forEach((it) => it.xBtn.setVisible(false)); };
@@ -48,8 +64,9 @@ export class PhotoStrip {
 
   addPhoto({ id, thumbKey }) {
     const s = this.scene;
-    // Container starts big at the frame center, then flies to its slot and shrinks.
-    const c = s.add.container(640, 360).setDepth(this.depth);
+    // Container starts big at the fly-in point, then flies to its slot and shrinks.
+    const start = this.flyStart();
+    const c = s.add.container(start.x, start.y).setDepth(this.depth);
     const border = s.add.rectangle(0, 0, BW, BH, 0xf7f3ea, 1).setOrigin(0.5).setStrokeStyle(2, 0x000000, 0.15);
     let photo;
     if (thumbKey && s.textures.exists(thumbKey)) {
@@ -65,6 +82,7 @@ export class PhotoStrip {
 
     c.add([border, photo, xBtn]);
     c.setScale(2.4).setAlpha(0.0); // start large, undeveloped
+    if (this.layer) this.layer.add(c);
 
     const item = { c, id, key: thumbKey, xBtn };
     this.items.push(item);
@@ -126,13 +144,13 @@ export class PhotoStrip {
   _relayout(newest) {
     const s = this.scene;
     this.items.forEach((it, i) => {
-      const y = SLOT_TOP + i * SLOT_STEP;
+      const y = this.slotTop + i * this.slotStep;
       if (it.c === newest) {
         // SLOW-IN/OUT travel + "develop": fade up and shrink to slot with overshoot.
-        s.tweens.add({ targets: it.c, x: SLOT_X, y, ease: EASE.cubicOut, duration: DUR.base });
+        s.tweens.add({ targets: it.c, x: this.originX, y, ease: EASE.cubicOut, duration: DUR.base });
         s.tweens.add({ targets: it.c, scaleX: 1, scaleY: 1, alpha: 1, ease: EASE.backOut, duration: DUR.base });
       } else {
-        s.tweens.add({ targets: it.c, x: SLOT_X, y, ease: EASE.inOut, duration: DUR.quick });
+        s.tweens.add({ targets: it.c, x: this.originX, y, ease: EASE.inOut, duration: DUR.quick });
       }
     });
   }

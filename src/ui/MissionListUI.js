@@ -1,7 +1,8 @@
-// MissionListUI — calm checklist of the level's missions, shown while the camera
-// is lowered (IDLE). Hidden on CAMERA_RAISED. A row ticks off LIVE the moment its
-// object is photographed well enough (MISSION_CAPTURED), so the player always knows
-// what's left. Ticked rows stay ticked across raise/lower.
+// MissionListUI — calm checklist of the level's missions. Renders rows and tracks
+// ticks; visibility is owned by the host (Sidebar) via show()/hide(), not by camera
+// state directly. A row ticks off LIVE the moment its object is photographed well
+// enough (MISSION_CAPTURED), so the player always knows what's left. Ticked rows
+// stay ticked across show/hide.
 import { EVENTS } from '../config/events.js';
 import { popIn, popOut, checkPop } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
@@ -10,19 +11,22 @@ import { t, L } from '../core/i18n.js';
 const DONE_GREEN = 0x9be07a;
 
 export class MissionListUI {
-  constructor(scene, bus, levelData, depth = 1000) {
+  // opts: { layer } — a Phaser Container to parent every top-level object into
+  // (positions stay local-coordinate, e.g. relative to a sidebar panel origin).
+  constructor(scene, bus, levelData, depth = 1000, opts = {}) {
     this.scene = scene;
     this.bus = bus;
     this.rows = [];      // { objectId, box, check, text, done }
     this.done = new Set();
 
+    const { layer = null, x = 24, y: startY = 24, wrapWidth = 300 } = opts;
     const objs = levelData.objects.filter((o) => o.mission);
-    const x = 24;
-    let y = 24;
+    let y = startY;
 
     this.title = scene.add.text(x, y, t('hud.shotlist'), {
       fontFamily: FONTS.body, fontSize: '20px', color: '#fff5e6', fontStyle: 'bold',
     }).setDepth(depth);
+    if (layer) layer.add(this.title);
     y += 34;
 
     this.containers = [];
@@ -34,9 +38,10 @@ export class MissionListUI {
       }).setOrigin(0.5).setVisible(false);
       const text = scene.add.text(26, 0, L(o.mission), {
         fontFamily: FONTS.body, fontSize: '16px', color: '#ffffff',
-        wordWrap: { width: 300 },
+        wordWrap: { width: wrapWidth },
       }).setOrigin(0, 0);
       row.add([box, check, text]);
+      if (layer) layer.add(row);
       this.containers.push(row);
       this.rows.push({ objectId: o.id, box, check, text, done: false });
       y += Math.max(30, text.height + 12);
@@ -45,17 +50,11 @@ export class MissionListUI {
     this.group = [this.title, ...this.containers];
     this.group.forEach((g) => g.setVisible(false).setScale(0));
 
-    this._onRaised = () => this.hide();
-    this._onLowered = () => this.show();
     this._onCaptured = ({ objectId }) => this._markDone(objectId);
     this._onSync = ({ capturedIds }) => this._syncDone(capturedIds || []);
-    bus.on(EVENTS.CAMERA_RAISED, this._onRaised);
-    bus.on(EVENTS.CAMERA_LOWERED, this._onLowered);
     bus.on(EVENTS.MISSION_CAPTURED, this._onCaptured);
     bus.on(EVENTS.MISSIONS_SYNC, this._onSync);
     scene.events.once('shutdown', () => {
-      bus.off(EVENTS.CAMERA_RAISED, this._onRaised);
-      bus.off(EVENTS.CAMERA_LOWERED, this._onLowered);
       bus.off(EVENTS.MISSION_CAPTURED, this._onCaptured);
       bus.off(EVENTS.MISSIONS_SYNC, this._onSync);
     });

@@ -30,6 +30,7 @@
   "btn.finishanyway": "Finish Anyway",
   "btn.keepshooting": "Keep Shooting",
   "hud.shotlist": "Shot list",
+  "hud.rolltab": "Roll",
   "hud.roll": "Roll  {n} / {max}",
   "hud.score": "Score {n} / {max}",
   "hud.controltip": "Press SPACE to raise your camera. When you are happy with your roll, press Confirm to finish.",

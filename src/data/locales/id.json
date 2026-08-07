@@ -30,6 +30,7 @@
   "btn.finishanyway": "Selesaikan Saja",
   "btn.keepshooting": "Lanjut Memotret",
   "hud.shotlist": "Daftar bidikan",
+  "hud.rolltab": "Rol",
   "hud.roll": "Rol  {n} / {max}",
   "hud.score": "Skor {n} / {max}",
   "hud.controltip": "Tekan SPASI untuk mengangkat kameramu. Kalau sudah puas dengan rolmu, tekan Selesai untuk mengakhiri.",
