@@ -11,6 +11,7 @@ import { AlbumScene } from './scenes/AlbumScene.js';
 import { CutsceneScene } from './scenes/CutsceneScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
 import { ResultScene } from './scenes/ResultScene.js';
+import { TutorialScene } from './scenes/TutorialScene.js';
 
 // Accessibility: respect OS reduced-motion preference (also see setReducedMotion()).
 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -27,7 +28,7 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene],
+  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene, TutorialScene],
 };
 
 // Wait for the web fonts (Baloo 2 / Nunito) before starting so canvas text renders

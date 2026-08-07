@@ -1,0 +1,99 @@
+{
+  "id": "tutorial",
+  "name": { "en": "How to Play", "id": "Cara Main" },
+  "background": "bg_tutorial",
+  "bgColor": "#4a5a7a",
+  "objects": [
+    {
+      "id": "obj_practice",
+      "name": "Practice Target",
+      "sprite": "practice_subject",
+      "idleAnim": "breathe",
+      "x": 640, "y": 420,
+      "bbox": { "x": 540, "y": 320, "w": 200, "h": 200 }
+    }
+  ],
+  "steps": [
+    {
+      "phase": "idle",
+      "highlight": null,
+      "waitFor": null,
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Hey there! Before your real walk, let's get comfortable with the camera.", "id": "Halo! Sebelum jalan-jalan sungguhan, yuk kenalan dulu sama kameramu." },
+          { "en": "This won't take long — just a few things to try, no scoring, no pressure.", "id": "Gak lama kok — cuma beberapa hal buat dicoba, gak ada skor, gak ada tekanan." }
+        ]
+      }
+    },
+    {
+      "phase": "idle",
+      "highlight": "sidebarHandle",
+      "waitFor": "UI_BUTTON_CLICK",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "See that handle on the right edge? It opens a drawer with two tabs.", "id": "Lihat gagang di tepi kanan itu? Itu buka panel yang punya dua tab." },
+          { "en": "Shot list shows your mission checklist, and Roll shows every photo you've taken.", "id": "Daftar bidikan nunjukin checklist misimu, dan Rol nunjukin semua foto yang udah kamu ambil." },
+          { "en": "Give it a click to open it up.", "id": "Coba klik buat buka panelnya." }
+        ]
+      },
+      "text": { "en": "Click the handle to open the drawer.", "id": "Klik gagangnya buat buka panelnya." }
+    },
+    {
+      "phase": "idle",
+      "highlight": "hint",
+      "waitFor": "CAMERA_RAISED",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Now: press SPACE to raise your camera and start aiming.", "id": "Sekarang: tekan SPASI buat angkat kameramu dan mulai membidik." }
+        ]
+      },
+      "text": { "en": "Press SPACE to raise your camera.", "id": "Tekan SPASI buat angkat kameramu." }
+    },
+    {
+      "phase": "aiming",
+      "highlight": "hint",
+      "waitFor": "PHOTO_TAKEN",
+      "text": {
+        "en": "Move your mouse to aim, then left-click to snap a photo.",
+        "id": "Gerakkan mouse buat arahin bidikanmu, lalu klik kiri buat jepret."
+      }
+    },
+    {
+      "phase": "aiming",
+      "highlight": "zoomIndicators",
+      "waitFor": "CAMERA_LOWERED",
+      "text": {
+        "en": "Nice shot! Try W / S to change zoom (0.5x / 1x / 2x), then press SPACE to lower the camera.",
+        "id": "Jepretan bagus! Coba tekan W / S buat ganti zoom (0.5x / 1x / 2x), lalu tekan SPASI buat turunin kamera."
+      }
+    },
+    {
+      "phase": "idle",
+      "highlight": "confirm",
+      "waitFor": "SUBMIT_REQUESTED",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Whenever you're happy with your roll, click Confirm to finish a level.", "id": "Kalau sudah puas dengan rolmu, klik Selesai buat mengakhiri sebuah level." },
+          { "en": "Let's try it now — go ahead and press Confirm.", "id": "Yuk coba sekarang — silakan tekan tombol Selesai." }
+        ]
+      },
+      "text": { "en": "Click Confirm to finish.", "id": "Klik Selesai buat mengakhiri." }
+    },
+    {
+      "phase": "idle",
+      "highlight": null,
+      "waitFor": null,
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "That's it! SPACE to raise, click to shoot, W/S to zoom, sidebar for your roll, Confirm to finish.", "id": "Nah, itu dia! SPASI buat angkat, klik buat jepret, W/S buat zoom, sidebar buat lihat rolmu, Selesai buat mengakhiri." },
+          { "en": "Have a lovely walk out there!", "id": "Selamat jalan-jalan!" }
+        ]
+      }
+    }
+  ]
+}

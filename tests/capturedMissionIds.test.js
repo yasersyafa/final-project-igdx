@@ -1,7 +1,7 @@
 import { test, expect } from 'bun:test';
 import { capturedMissionIds } from '../src/domain/PhotoEvaluator.js';
 
-const CONFIG = { CAPTURE_THRESHOLD: 0.55 };
+const CONFIG = { CAPTURE_THRESHOLD: 0.55, SCORING: { base: 100, wCenter: 0.5, wCoverage: 0.5 } };
 
 // frame 360x270 centered at (500,400) -> top-left (320,265)
 const frameA = { x: 320, y: 265, w: 360, h: 270 };

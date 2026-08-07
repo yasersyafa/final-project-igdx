@@ -51,9 +51,24 @@ export class MainMenuScene extends Phaser.Scene {
     });
     popIn(play, { delay: 120 });
 
-    const album = makeButton(this, {
+    const tutorial = makeButton(this, {
       x: W / 2,
       y: H * 0.58 + 88,
+      w: 240,
+      h: 56,
+      label: t("btn.tutorial"),
+      color: 0x5c8a52,
+      fontSize: 20,
+      onClick: () =>
+        fadeScene(this, "out", {
+          onComplete: () => this.scene.start("TutorialScene"),
+        }),
+    });
+    popIn(tutorial, { delay: 200 });
+
+    const album = makeButton(this, {
+      x: W / 2,
+      y: H * 0.58 + 88 + 72,
       w: 240,
       h: 56,
       label: t("btn.album"),
@@ -64,12 +79,12 @@ export class MainMenuScene extends Phaser.Scene {
           onComplete: () => this.scene.start("AlbumScene"),
         }),
     });
-    popIn(album, { delay: 200 });
+    popIn(album, { delay: 280 });
 
     this._settings = new SettingsDialog(this);
     const settings = makeButton(this, {
       x: W / 2,
-      y: H * 0.58 + 88 + 72,
+      y: H * 0.58 + 88 + 72 + 72,
       w: 240,
       h: 56,
       label: t("btn.settings"),
@@ -77,13 +92,14 @@ export class MainMenuScene extends Phaser.Scene {
       fontSize: 22,
       onClick: () => this._settings.open(),
     });
-    popIn(settings, { delay: 280 });
+    popIn(settings, { delay: 360 });
 
     // Live re-localize so a language change in SettingsDialog updates this
     // scene's text immediately, without needing a scene restart.
     this._onLangChanged = () => {
       this.subtitle.setText(t("menu.subtitle"));
       play.label.setText(t("btn.play"));
+      tutorial.label.setText(t("btn.tutorial"));
       album.label.setText(t("btn.album"));
       settings.label.setText(t("btn.settings"));
     };

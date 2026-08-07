@@ -4,6 +4,7 @@
   "btn.play": "Play",
   "btn.album": "📖 Album",
   "btn.settings": "⚙ Settings",
+  "btn.tutorial": "❔ How to Play",
   "btn.back": "← Back",
   "btn.close": "Close",
   "btn.delete": "Delete",
@@ -45,5 +46,8 @@
   "result.pts": "{score} pts",
   "feedback.perfect": "Perfect!",
   "feedback.great": "Great!",
-  "feedback.good": "Good"
+  "feedback.good": "Good",
+  "tutorial.skip": "Skip Tutorial",
+  "tutorial.skipconfirm": "Skip the rest of the tutorial?",
+  "tutorial.callouthint": "keep going ▸"
 }

@@ -57,4 +57,18 @@ export function setLang(code) {
   return ok;
 }
 
-export default { loadSettings, getLang, setLang };
+// hasSeenTutorial / markTutorialSeen -> tracks whether the player has been
+// through TutorialScene at least once. Not currently used to gate anything
+// (the tutorial is reachable anytime from the Main Menu); kept for a future
+// "first run" prompt.
+export function hasSeenTutorial() {
+  return !!loadSettings().tutorialSeen;
+}
+
+export function markTutorialSeen() {
+  const data = loadSettings();
+  data.tutorialSeen = true;
+  return saveSettings(data);
+}
+
+export default { loadSettings, getLang, setLang, hasSeenTutorial, markTutorialSeen };

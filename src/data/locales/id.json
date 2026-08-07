@@ -4,6 +4,7 @@
   "btn.play": "Main",
   "btn.album": "📖 Album",
   "btn.settings": "⚙ Pengaturan",
+  "btn.tutorial": "❔ Cara Main",
   "btn.back": "← Kembali",
   "btn.close": "Tutup",
   "btn.delete": "Hapus",
@@ -45,5 +46,8 @@
   "result.pts": "{score} poin",
   "feedback.perfect": "Sempurna!",
   "feedback.great": "Hebat!",
-  "feedback.good": "Bagus"
+  "feedback.good": "Bagus",
+  "tutorial.skip": "Lewati Tutorial",
+  "tutorial.skipconfirm": "Lewati sisa tutorialnya?",
+  "tutorial.callouthint": "lanjutkan ▸"
 }
