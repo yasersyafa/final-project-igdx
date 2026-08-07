@@ -22,7 +22,7 @@
         "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
           { "en": "Hey there! Before your real walk, let's get comfortable with the camera.", "id": "Halo! Sebelum jalan-jalan sungguhan, yuk kenalan dulu sama kameramu." },
-          { "en": "This won't take long — just a few things to try, no scoring, no pressure.", "id": "Gak lama kok — cuma beberapa hal buat dicoba, gak ada skor, gak ada tekanan." }
+          { "en": "This won't take long, just a few things to try. No scoring, no pressure.", "id": "Gak lama kok, cuma beberapa hal buat dicoba. Gak ada skor, gak ada tekanan." }
         ]
       }
     },
@@ -78,7 +78,7 @@
         "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
           { "en": "Whenever you're happy with your roll, click Confirm to finish a level.", "id": "Kalau sudah puas dengan rolmu, klik Selesai buat mengakhiri sebuah level." },
-          { "en": "Let's try it now — go ahead and press Confirm.", "id": "Yuk coba sekarang — silakan tekan tombol Selesai." }
+          { "en": "Let's try it now, go ahead and press Confirm.", "id": "Yuk coba sekarang, silakan tekan tombol Selesai." }
         ]
       },
       "text": { "en": "Click Confirm to finish.", "id": "Klik Selesai buat mengakhiri." }
