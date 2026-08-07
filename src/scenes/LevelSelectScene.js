@@ -1,5 +1,5 @@
-// LevelSelectScene — the level hub. Shows the city cards (Padang / Bandung /
-// Yogyakarta) with saved star progress. Reached from the main menu's Play button and
+// LevelSelectScene — the level hub. Shows the city cards (Padang / Sulawesi Utara)
+// with saved star progress. Reached from the main menu's Play button and
 // from the Result screen. Picking a city continues into its cutscene.
 import Phaser from 'phaser';
 import { LEVELS } from './levels.js';
@@ -32,7 +32,7 @@ export class LevelSelectScene extends Phaser.Scene {
 
     const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
-      const bx = W / 2 + (i - 1) * 220;
+      const bx = W / 2 + (i - (LEVELS.length - 1) / 2) * 220;
       // Sequential unlock: level 0 is always open; later levels need the previous one finished.
       const unlocked = i === 0 || Boolean(progress[i - 1]);
       const card = makeButton(this, {
