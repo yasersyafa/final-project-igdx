@@ -1,12 +1,13 @@
 // SettingsDialog — modal opened from the main menu's Settings button. Holds the
 // global language choice (English / Bahasa Indonesia), the single source of truth
-// the Album reads for its field notes. Persisted via core/settings.js.
+// the Album reads for its field notes, plus which edge the in-level sidebar
+// drawer docks to. Persisted via core/settings.js.
 // Modeled on ui/LevelInfoDialog.js — the scene owns one instance and calls open().
 import { popIn, popOut, EASE, DUR } from "../anim/motion.js";
 import { makeButton } from "./Button.js";
 import { FONTS } from "../config/fonts.js";
 import { LANGUAGES } from "../config/languages.js";
-import { getLang, setLang } from "../core/settings.js";
+import { getLang, setLang, getSidebarSide, setSidebarSide } from "../core/settings.js";
 import { t } from "../core/i18n.js";
 
 const OPT_W = 300,
@@ -14,6 +15,10 @@ const OPT_W = 300,
   OPT_GAP = 12;
 const ON = 0x7bbf6a,
   OFF = 0x3a4353;
+const SIDES = [
+  { code: "left", key: "settings.sideleft" },
+  { code: "right", key: "settings.sideright" },
+];
 
 export class SettingsDialog {
   constructor(scene, depth = 1600) {
@@ -40,7 +45,9 @@ export class SettingsDialog {
     const optsH = LANGUAGES.length * OPT_H + (LANGUAGES.length - 1) * OPT_GAP;
     const pw = 420;
     const ph =
-      PAD + TITLE_H + LABEL_H + GAP_LABEL + optsH + GAP_CLOSE + CLOSE_H + PAD;
+      PAD + TITLE_H + LABEL_H + GAP_LABEL + optsH
+      + GAP_LABEL + LABEL_H + GAP_LABEL + OPT_H // sidebar-position section
+      + GAP_CLOSE + CLOSE_H + PAD;
 
     this.panel = scene.add
       .container(W / 2, H / 2)
@@ -90,7 +97,40 @@ export class SettingsDialog {
       this.panel.add([rect, txt]);
       return { code: l.code, rect };
     });
-    y += optsH + GAP_CLOSE;
+    y += optsH + GAP_LABEL;
+
+    // Sidebar drawer position — Left/Right side by side (only 2 options, so a
+    // single row reads better than LANGUAGES' vertical list).
+    this.sideLabel = scene.add
+      .text(0, y + LABEL_H / 2, t("settings.sidebarposition"), {
+        fontFamily: FONTS.body,
+        fontSize: "18px",
+        color: "#c9c2b6",
+      })
+      .setOrigin(0.5);
+    y += LABEL_H + GAP_LABEL;
+    this.panel.add(this.sideLabel);
+
+    const sideOptW = (OPT_W - OPT_GAP) / 2;
+    const sideOptY = y + OPT_H / 2;
+    this._sideOpts = SIDES.map((s, i) => {
+      const ox = (-OPT_W / 2 + sideOptW / 2) + i * (sideOptW + OPT_GAP);
+      const rect = scene.add
+        .rectangle(ox, sideOptY, sideOptW, OPT_H, OFF, 1)
+        .setStrokeStyle(2, 0xffffff, 0.4)
+        .setInteractive({ useHandCursor: true });
+      const txt = scene.add
+        .text(ox, sideOptY, t(s.key), {
+          fontFamily: FONTS.display,
+          fontSize: "18px",
+          color: "#ffffff",
+        })
+        .setOrigin(0.5);
+      rect.on("pointerdown", () => this._selectSide(s.code));
+      this.panel.add([rect, txt]);
+      return { code: s.code, rect, txt, key: s.key };
+    });
+    y += OPT_H + GAP_CLOSE;
 
     this.closeBtn = makeButton(scene, {
       x: 0,
@@ -112,13 +152,24 @@ export class SettingsDialog {
     this._refresh();
   }
 
-  // Highlight the option matching the persisted language, and refresh the
+  _selectSide(code) {
+    setSidebarSide(code);
+    this._refresh();
+  }
+
+  // Highlight the options matching the persisted settings, and refresh the
   // dialog's own localized labels so they switch immediately on change.
   _refresh() {
     const cur = getLang();
     this._opts.forEach((o) => o.rect.setFillStyle(o.code === cur ? ON : OFF, 1));
+    const curSide = getSidebarSide();
+    this._sideOpts.forEach((o) => {
+      o.rect.setFillStyle(o.code === curSide ? ON : OFF, 1);
+      o.txt.setText(t(o.key));
+    });
     this.title.setText(t("settings.title"));
     this.langLabel.setText(t("settings.language"));
+    this.sideLabel.setText(t("settings.sidebarposition"));
     this.closeBtn.label.setText(t("btn.close"));
   }
 

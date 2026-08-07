@@ -58,9 +58,8 @@ export function setLang(code) {
 }
 
 // hasSeenTutorial / markTutorialSeen -> tracks whether the player has been
-// through TutorialScene at least once. Not currently used to gate anything
-// (the tutorial is reachable anytime from the Main Menu); kept for a future
-// "first run" prompt.
+// through TutorialScene at least once. Gates the Main Menu's Play button
+// (see src/scenes/MainMenuScene.js) until it's true.
 export function hasSeenTutorial() {
   return !!loadSettings().tutorialSeen;
 }
@@ -71,4 +70,26 @@ export function markTutorialSeen() {
   return saveSettings(data);
 }
 
-export default { loadSettings, getLang, setLang, hasSeenTutorial, markTutorialSeen };
+const SIDES = ['left', 'right'];
+const DEFAULT_SIDE = 'right';
+
+// getSidebarSide / setSidebarSide -> which screen edge the shot-list/roll
+// drawer docks to (src/ui/Sidebar.js), read once per scene at construction —
+// there's no live-update path since Settings is only reachable from the Main
+// Menu, never mid-level. Falls back to the default for a missing/bad value.
+export function getSidebarSide() {
+  const side = loadSettings().sidebarSide;
+  return SIDES.includes(side) ? side : DEFAULT_SIDE;
+}
+
+export function setSidebarSide(side) {
+  if (!SIDES.includes(side)) return false;
+  const data = loadSettings();
+  data.sidebarSide = side;
+  return saveSettings(data);
+}
+
+export default {
+  loadSettings, getLang, setLang, hasSeenTutorial, markTutorialSeen,
+  getSidebarSide, setSidebarSide,
+};

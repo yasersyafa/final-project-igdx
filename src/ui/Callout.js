@@ -8,12 +8,14 @@
 // constants elsewhere in the HUD (kept in sync by hand if that layout changes):
 //   confirm         -> ControlBar confirm button  (src/ui/ControlBar.js:24)
 //   hint            -> camera hint text           (src/camera/CameraTool.js:106)
-//   sidebarHandle   -> Sidebar closed-state handle (src/ui/Sidebar.js:63-66)
+//   sidebarHandle   -> Sidebar closed-state handle (src/ui/Sidebar.js), mirrored
+//                      left/right per core/settings.js getSidebarSide()
 //   zoomIndicators  -> CameraTool zoom level chips (src/camera/CameraTool.js:119-138)
 import Phaser from 'phaser';
 import { EASE, DUR, popIn, popOut } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
 import { t } from '../core/i18n.js';
+import { getSidebarSide } from '../core/settings.js';
 
 const BUBBLE_W = 360, BUBBLE_H = 92;
 
@@ -26,7 +28,9 @@ export function calloutTargets(W, H) {
     // camera hint text it mirrors only renders while AIMING) — a pulsing outline
     // there would point at empty space. The bubble alone still anchors up here.
     hint: { x: 10, y: 8, w: 260, h: 30, border: false },
-    sidebarHandle: { x: W - 32, y: H / 2 - 32, w: 32, h: 64 },
+    sidebarHandle: getSidebarSide() === 'left'
+      ? { x: 0, y: H / 2 - 32, w: 32, h: 64 }
+      : { x: W - 32, y: H / 2 - 32, w: 32, h: 64 },
     zoomIndicators: { x: W / 2 - 72, y: H - 34 - 13, w: 144, h: 26 },
   };
 }

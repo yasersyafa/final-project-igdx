@@ -1,10 +1,11 @@
-// Sidebar — a single right-edge drawer housing the shot list (missions) and the
-// photo roll behind two tabs. An edge handle toggles it open/closed and rides
-// along the panel's left edge (so it sits just left of the open panel, not stuck
-// at the screen edge); the whole drawer hides on CAMERA_RAISED (aiming) and
-// restores its last open/closed state on CAMERA_LOWERED, matching the existing
-// HUD convention (MissionListUI/ControlBar) of hiding while aiming. Rendered above
-// the rest of the HUD (ControlBar's tip/confirm) so nothing else draws over it.
+// Sidebar — a single drawer (right or left edge, per settings) housing the shot
+// list (missions) and the photo roll behind two tabs. An edge handle toggles it
+// open/closed and rides along the panel's inner edge (so it sits just inside the
+// open panel, not stuck at the screen edge); the whole drawer hides on
+// CAMERA_RAISED (aiming) and restores its last open/closed state on
+// CAMERA_LOWERED, matching the existing HUD convention (MissionListUI/ControlBar)
+// of hiding while aiming. Rendered above the rest of the HUD (ControlBar's
+// tip/confirm) so nothing else draws over it.
 import { EVENTS } from '../config/events.js';
 import { EASE, DUR, popIn, popOut } from '../anim/motion.js';
 import { makeButton } from './Button.js';
@@ -12,6 +13,7 @@ import { MissionListUI } from './MissionListUI.js';
 import { PhotoStrip } from './PhotoStrip.js';
 import { FONTS } from '../config/fonts.js';
 import { t } from '../core/i18n.js';
+import { getSidebarSide } from '../core/settings.js';
 
 const PANEL_W = 300;
 const HANDLE_W = 32;
@@ -25,10 +27,16 @@ export class Sidebar {
     this.tab = 'shots';    // 'shots' | 'roll'
     this.open = false;     // user's drawer toggle, persists across camera raise/lower
     this.camVisible = false;
+    this.side = getSidebarSide(); // 'left' | 'right', read once (Settings is Main-Menu-only)
 
     const W = scene.cameras.main.width, H = scene.cameras.main.height;
-    this.openX = W - PANEL_W;
-    this.closedX = W;
+    if (this.side === 'left') {
+      this.openX = 0;
+      this.closedX = -PANEL_W;
+    } else {
+      this.openX = W - PANEL_W;
+      this.closedX = W;
+    }
 
     // ---- sliding panel body -------------------------------------------------
     this.panel = scene.add.container(this.closedX, 0).setDepth(depth);
@@ -58,12 +66,14 @@ export class Sidebar {
     this.rollGroup.setVisible(false);
     this._setTabHighlight();
 
-    // ---- handle: rides the panel's left edge, so it's left-of-panel when open
-    // and peeking at the screen edge when closed (panel.x === closedX === W). -----
+    // ---- handle: rides the panel's inner edge (the one facing screen center),
+    // so it's just inside the panel when open and peeking at the screen edge
+    // when closed. -----
     this.handle = makeButton(scene, {
-      x: this._handleX(this.closedX), y: H / 2, w: HANDLE_W, h: 64, label: '▸', color: 0x4a5a7a, fontSize: 20,
+      x: this._handleX(this.closedX), y: H / 2, w: HANDLE_W, h: 64, label: '', color: 0x4a5a7a, fontSize: 20,
       depth, onClick: () => this.toggle(),
     });
+    this._updateHandleArrow();
     this.handle.setVisible(false).setScale(0);
 
     this._onRaised = () => this._setCameraVisible(false);
@@ -121,17 +131,27 @@ export class Sidebar {
     }
   }
 
-  // Tweens the panel and rides the handle along its left edge, in lockstep — same
-  // ease/duration on both keeps the handle's offset from the panel constant at
-  // every frame, so it visually stays glued to the panel while it slides.
+  // Tweens the panel and rides the handle along its inner edge, in lockstep —
+  // same ease/duration on both keeps the handle's offset from the panel constant
+  // at every frame, so it visually stays glued to the panel while it slides.
   _slidePanel(targetX) {
     this.scene.tweens.add({ targets: this.panel, x: targetX, ease: EASE.cubicOut, duration: DUR.base });
     this.scene.tweens.add({ targets: this.handle, x: this._handleX(targetX), ease: EASE.cubicOut, duration: DUR.base });
   }
 
-  _handleX(panelX) { return panelX - HANDLE_W / 2; }
+  _handleX(panelX) {
+    return this.side === 'left'
+      ? panelX + PANEL_W + HANDLE_W / 2
+      : panelX - HANDLE_W / 2;
+  }
 
-  _updateHandleArrow() { this.handle.label.setText(this.open ? '◂' : '▸'); }
+  // Arrows mirror by side so they still read as "points toward where the
+  // panel will appear from" (closed) / "points back to collapse" (open).
+  _updateHandleArrow() {
+    const closedArrow = this.side === 'left' ? '◂' : '▸';
+    const openArrow = this.side === 'left' ? '▸' : '◂';
+    this.handle.label.setText(this.open ? openArrow : closedArrow);
+  }
 
   _setTabHighlight() {
     this.tabShots.list[0].setFillStyle(this.tab === 'shots' ? TAB_ACTIVE : TAB_INACTIVE, 1);
