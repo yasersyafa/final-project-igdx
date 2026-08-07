@@ -49,5 +49,7 @@
   "feedback.good": "Good",
   "tutorial.skip": "Skip Tutorial",
   "tutorial.skipconfirm": "Skip the rest of the tutorial?",
-  "tutorial.callouthint": "keep going ▸"
+  "tutorial.callouthint": "keep going ▸",
+  "menu.playlocked": "🔒 Play",
+  "menu.playlockedhint": "Finish the tutorial first!"
 }

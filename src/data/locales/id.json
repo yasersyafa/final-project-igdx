@@ -49,5 +49,7 @@
   "feedback.good": "Bagus",
   "tutorial.skip": "Lewati Tutorial",
   "tutorial.skipconfirm": "Lewati sisa tutorialnya?",
-  "tutorial.callouthint": "lanjutkan ▸"
+  "tutorial.callouthint": "lanjutkan ▸",
+  "menu.playlocked": "🔒 Main",
+  "menu.playlockedhint": "Selesaikan tutorial dulu ya!"
 }

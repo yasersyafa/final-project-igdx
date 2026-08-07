@@ -6,6 +6,7 @@ import { FONTS } from "../config/fonts.js";
 import { t } from "../core/i18n.js";
 import { bus } from "../core/EventBus.js";
 import { EVENTS } from "../config/events.js";
+import { hasSeenTutorial } from "../core/settings.js";
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -36,20 +37,39 @@ export class MainMenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    // Play stays locked until the player has been through the tutorial at
+    // least once (src/core/settings.js markTutorialSeen(), set by
+    // TutorialScene on both a natural finish and Skip).
+    const tutorialDone = hasSeenTutorial();
+
+    this._playHint = this.add
+      .text(W / 2, H * 0.58 - 55, t("menu.playlockedhint"), {
+        fontFamily: FONTS.body,
+        fontSize: "16px",
+        color: "#ff9a6b",
+      })
+      .setOrigin(0.5)
+      .setAlpha(0);
+
     const play = makeButton(this, {
       x: W / 2,
       y: H * 0.58,
       w: 240,
       h: 66,
-      label: t("btn.play"),
-      color: 0x7bbf6a,
+      label: tutorialDone ? t("btn.play") : t("menu.playlocked"),
+      color: tutorialDone ? 0x7bbf6a : 0x3a3f4a,
       fontSize: 26,
-      onClick: () =>
+      onClick: () => {
+        if (!hasSeenTutorial()) { this._denyPlay(play); return; }
         fadeScene(this, "out", {
           onComplete: () => this.scene.start("LevelSelectScene"),
-        }),
+        });
+      },
     });
-    popIn(play, { delay: 120 });
+    popIn(play, {
+      delay: 120,
+      onComplete: () => { if (!tutorialDone) play.setAlpha(0.55); },
+    });
 
     const tutorial = makeButton(this, {
       x: W / 2,
@@ -98,7 +118,8 @@ export class MainMenuScene extends Phaser.Scene {
     // scene's text immediately, without needing a scene restart.
     this._onLangChanged = () => {
       this.subtitle.setText(t("menu.subtitle"));
-      play.label.setText(t("btn.play"));
+      play.label.setText(tutorialDone ? t("btn.play") : t("menu.playlocked"));
+      this._playHint.setText(t("menu.playlockedhint"));
       tutorial.label.setText(t("btn.tutorial"));
       album.label.setText(t("btn.album"));
       settings.label.setText(t("btn.settings"));
@@ -106,6 +127,23 @@ export class MainMenuScene extends Phaser.Scene {
     bus.on(EVENTS.LANG_CHANGED, this._onLangChanged);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       bus.off(EVENTS.LANG_CHANGED, this._onLangChanged);
+    });
+  }
+
+  // Locked-Play feedback: shake the button + flash the hint, mirroring
+  // LevelSelectScene's _denied() for a locked level card.
+  _denyPlay(btn) {
+    const homeX = btn.x;
+    this.tweens.killTweensOf(btn);
+    this.tweens.add({
+      targets: btn, x: homeX + 8, duration: 50, ease: "Sine.inOut",
+      yoyo: true, repeat: 3, onComplete: () => { btn.x = homeX; },
+    });
+    this.tweens.killTweensOf(this._playHint);
+    this._playHint.setAlpha(0);
+    this.tweens.add({
+      targets: this._playHint, alpha: 1, duration: 120, ease: "Sine.out",
+      hold: 1200, yoyo: true,
     });
   }
 }
