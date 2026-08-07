@@ -13,14 +13,16 @@ import { FONTS } from '../config/fonts.js';
 import { EASE, DUR } from '../anim/motion.js';
 import { playFlash, playMiss } from './CaptureFeedback.js';
 import { t } from '../core/i18n.js';
+import { DEBUG } from '../config/debug.js';
 
 const STATES = ['INTRO', 'IDLE', 'AIMING'];
 
 export class CameraTool {
-  constructor(scene, bus) {
+  constructor(scene, bus, levelData) {
     this.scene = scene;
     this.bus = bus;
     this.world = scene.world; // zoomable container holding bg + PhotoObjects
+    this.objects = (levelData && levelData.objects) || []; // for the debug gizmo's per-object centroid dots
     this.fw = CONFIG.FRAME_SIZE.width;
     this.fh = CONFIG.FRAME_SIZE.height;
 
@@ -30,13 +32,17 @@ export class CameraTool {
     this.barW = (WORLD.width - this.stripW) / 2; // 160 each side
     this.screenC = { x: WORLD.width / 2, y: WORLD.height / 2 };
 
+    // Optical zoom multiplier (buttons: 0.5x/1x/2x). Always resets to 1x on raise().
+    // The screen strip size never changes; the multiplier changes how much of the
+    // WORLD that fixed strip shows (effZ = this.Z * zoomMult), i.e. real camera zoom.
+    this.zoomLevels = [0.5, 1, 2];
+    this.zoomMult = 1;
+    this.zAnim = this.Z; // animated effZ actually applied to the world each frame
+
     // aim point (world coords), clamped so the frame stays inside the world.
     this.aim = { x: WORLD.width / 2, y: WORLD.height / 2 };
     this.aimTarget = { ...this.aim };
-    this.aimRange = {
-      minX: this.fw / 2, maxX: WORLD.width - this.fw / 2,
-      minY: this.fh / 2, maxY: WORLD.height - this.fh / 2,
-    };
+    this._recomputeAimRange();
 
     this.sm = createStateMachine('INTRO', STATES);
     this._photoCount = 0;
@@ -44,9 +50,38 @@ export class CameraTool {
     this._hintDefault = t('camera.hint');
 
     this._buildOverlay();
+    this._buildDebugGizmo();
     this._wireInput();
     this._wireBus();
     this._wireStates();
+  }
+
+  // DEBUG.frameGizmo — draws frameBounds (the exact rect fed into evaluate()) and the
+  // aim point in WORLD space. Child of `this.world`, so it pans/scales with the world
+  // for free and always lines up with what's actually being captured.
+  _buildDebugGizmo() {
+    if (!DEBUG.frameGizmo) return;
+    this.gizmo = this.scene.add.graphics();
+    this.world.add(this.gizmo);
+  }
+
+  _drawDebugGizmo() {
+    if (!this.gizmo) return;
+    const g = this.gizmo;
+    g.clear();
+    if (!this.sm.is('AIMING')) return;
+
+    // Per-object "perfect" point — the bbox centroid that centering() in
+    // FramingScorer.js measures distance from. Yellow = mission target, gray = other.
+    this.objects.forEach((o) => {
+      const cx = o.bbox.x + o.bbox.w / 2, cy = o.bbox.y + o.bbox.h / 2;
+      g.fillStyle(o.mission ? 0xffff00 : 0x999999, 1).fillCircle(cx, cy, o.mission ? 5 : 4);
+      g.lineStyle(1, 0x000000, 0.6).strokeCircle(cx, cy, o.mission ? 5 : 4);
+    });
+
+    const fb = this.frameBounds;
+    g.lineStyle(2, 0xff00ff, 1).strokeRect(fb.x, fb.y, fb.w, fb.h);
+    g.fillStyle(0x00ff00, 1).fillCircle(this.aim.x, this.aim.y, 4);
   }
 
   // ---- overlay (screen-space; never scaled by the world zoom) ---------------
@@ -72,8 +107,84 @@ export class CameraTool {
       fontFamily: FONTS.body, fontSize: '14px', color: '#ffffff',
     }).setDepth(801).setAlpha(0.8);
 
-    this.overlay = [this.barL, this.barR, this.frame, this.corners, this.grid, this.dot, this.hint];
+    this._buildZoomIndicators(); // pushes into this.overlay, so it fades with the rest
+
+    this.overlay = [this.barL, this.barR, this.frame, this.corners, this.grid, this.dot, this.hint, ...this.zoomIndicators];
     this._setOverlayAlpha(0); // hidden until AIMING
+  }
+
+  // Zoom level indicator (0.5x/1x/2x), screen-space, bottom-center of the frame.
+  // Visual only — no input, changed with W/S. Hidden for the instant of a snapshot
+  // so it never gets baked into the captured photo (see _shoot()).
+  _buildZoomIndicators() {
+    const s = this.scene;
+    const BW = 44, BH = 26, GAP = 6;
+    const n = this.zoomLevels.length;
+    const totalW = n * BW + (n - 1) * GAP;
+    const startX = WORLD.width / 2 - totalW / 2 + BW / 2;
+    const y = WORLD.height - 34;
+    this.zoomIndicators = this.zoomLevels.map((z, i) => {
+      const c = s.add.container(startX + i * (BW + GAP), y).setDepth(802);
+      const bg = s.add.rectangle(0, 0, BW, BH, 0x2b2f38, 0.7).setStrokeStyle(1, 0xffffff, 0.5);
+      const txt = s.add.text(0, 0, `${z}x`, {
+        fontFamily: FONTS.body, fontSize: '13px', color: '#ffffff',
+      }).setOrigin(0.5);
+      c.add([bg, txt]);
+      c.zoomValue = z;
+      c.bg = bg;
+      return c;
+    });
+    this._highlightZoomIndicator();
+  }
+
+  _highlightZoomIndicator() {
+    this.zoomIndicators.forEach((c) => {
+      c.bg.setFillStyle(c.zoomValue === this.zoomMult ? 0x5c8a52 : 0x2b2f38, 0.7);
+    });
+  }
+
+  _setZoomIndicatorsVisible(v) {
+    this.zoomIndicators.forEach((c) => c.setVisible(v));
+  }
+
+  // Frame stays fully inside the world (never shows background past a world edge).
+  _recomputeAimRange() {
+    const efw = this.fw / this.zoomMult, efh = this.fh / this.zoomMult;
+    this.aimRange = {
+      minX: efw / 2, maxX: WORLD.width - efw / 2,
+      minY: efh / 2, maxY: WORLD.height - efh / 2,
+    };
+  }
+
+  get effZ() { return this.Z * this.zoomMult; }
+
+  // Change zoom level (0.5x/1x/2x). Re-clamps aim to the new effective frame size,
+  // and tweens the world scale (zAnim) to the new effZ instead of snapping —
+  // _update() applies zAnim every frame, so this animates smoothly mid-AIMING.
+  setZoom(mult) {
+    if (this.zoomMult === mult) return;
+    this.zoomMult = mult;
+    this._recomputeAimRange();
+    this._highlightZoomIndicator();
+    this.aimTarget.x = Phaser.Math.Clamp(this.aimTarget.x, this.aimRange.minX, this.aimRange.maxX);
+    this.aimTarget.y = Phaser.Math.Clamp(this.aimTarget.y, this.aimRange.minY, this.aimRange.maxY);
+    this.aim.x = Phaser.Math.Clamp(this.aim.x, this.aimRange.minX, this.aimRange.maxX);
+    this.aim.y = Phaser.Math.Clamp(this.aim.y, this.aimRange.minY, this.aimRange.maxY);
+    if (this.sm.is('AIMING')) {
+      if (this._zoomTween) this._zoomTween.stop();
+      this._zoomTween = this.scene.tweens.add({
+        targets: this, zAnim: this.effZ, ease: EASE.inOut, duration: DUR.base,
+      });
+    } else {
+      this.zAnim = this.effZ;
+    }
+  }
+
+  // W = zoom in one level, S = zoom out one level, stepping through zoomLevels.
+  _stepZoom(dir) {
+    const idx = this.zoomLevels.indexOf(this.zoomMult);
+    const next = Phaser.Math.Clamp(idx + dir, 0, this.zoomLevels.length - 1);
+    this.setZoom(this.zoomLevels[next]);
   }
 
   _drawCorners() {
@@ -107,13 +218,23 @@ export class CameraTool {
   _wireInput() {
     const s = this.scene;
 
+    // Pointer-locked RELATIVE movement (not absolute position) — the real cursor is
+    // captured by the browser and can never wander off the canvas, so aiming can't
+    // get "stuck" the way absolute cursor-position mapping used to (see raise()/lower()).
     s.input.on('pointermove', (p) => {
       if (!this.sm.is('AIMING')) return;
-      const fx = Phaser.Math.Clamp(p.x / WORLD.width, 0, 1);
-      const fy = Phaser.Math.Clamp(p.y / WORLD.height, 0, 1);
-      this.aimTarget.x = this.aimRange.minX + fx * (this.aimRange.maxX - this.aimRange.minX);
-      this.aimTarget.y = this.aimRange.minY + fy * (this.aimRange.maxY - this.aimRange.minY);
+      const scale = s.scale.displayScale; // device px -> game px, so pan speed is resolution-independent
+      this.aimTarget.x = Phaser.Math.Clamp(this.aimTarget.x + p.movementX * scale.x, this.aimRange.minX, this.aimRange.maxX);
+      this.aimTarget.y = Phaser.Math.Clamp(this.aimTarget.y + p.movementY * scale.y, this.aimRange.minY, this.aimRange.maxY);
     });
+
+    // If the browser drops pointer lock on its own (native ESC, alt-tab, etc.) while
+    // still AIMING, follow suit — otherwise movementX/Y goes dead and aiming freezes.
+    this._onPointerLockChange = (event, locked) => {
+      if (!locked && this.sm.is('AIMING')) this.lower();
+    };
+    s.sys.game.input.events.on('pointerlockchange', this._onPointerLockChange);
+    s.events.once('shutdown', () => s.sys.game.input.events.off('pointerlockchange', this._onPointerLockChange));
 
     s.input.on('pointerdown', (p) => {
       if (this.sm.is('AIMING')) {
@@ -125,8 +246,12 @@ export class CameraTool {
 
     this.keySpace = s.input.keyboard.addKey('SPACE');
     this.keyEsc = s.input.keyboard.addKey('ESC');
+    this.keyW = s.input.keyboard.addKey('W');
+    this.keyS = s.input.keyboard.addKey('S');
     this.keySpace.on('down', () => this.toggle());
     this.keyEsc.on('down', () => { if (this.sm.is('AIMING')) this.lower(); });
+    this.keyW.on('down', () => { if (this.sm.is('AIMING')) this._stepZoom(1); });
+    this.keyS.on('down', () => { if (this.sm.is('AIMING')) this._stepZoom(-1); });
 
     s.events.on('update', this._update, this);
     s.events.once('shutdown', () => s.events.off('update', this._update, this));
@@ -137,7 +262,8 @@ export class CameraTool {
     // OVERLAPPING ACTION: aim lags the pointer slightly (lerp), giving weight.
     this.aim.x = Phaser.Math.Linear(this.aim.x, this.aimTarget.x, 0.2);
     this.aim.y = Phaser.Math.Linear(this.aim.y, this.aimTarget.y, 0.2);
-    this._applyWorldTransform(this.Z);
+    this._applyWorldTransform(this.zAnim);
+    this._drawDebugGizmo();
   }
 
   // Position+scale the world layer so `aim` sits at screen center at scale z.
@@ -148,7 +274,8 @@ export class CameraTool {
   }
 
   get frameBounds() {
-    return { x: this.aim.x - this.fw / 2, y: this.aim.y - this.fh / 2, w: this.fw, h: this.fh };
+    const efw = this.fw / this.zoomMult, efh = this.fh / this.zoomMult;
+    return { x: this.aim.x - efw / 2, y: this.aim.y - efh / 2, w: efw, h: efh };
   }
 
   // ---- raise / lower --------------------------------------------------------
@@ -161,16 +288,25 @@ export class CameraTool {
   raise() {
     if (!this.sm.is('IDLE') || this.dialogOpen) return;
     this.sm.transition('AIMING');
+    // Zoom always resets to 1x on raise.
+    if (this._zoomTween) { this._zoomTween.stop(); this._zoomTween = null; }
+    this.zoomMult = 1;
+    this.zAnim = this.Z; // matches effZ at mult=1; raise's own tween below animates it in
+    this._recomputeAimRange();
+    this._highlightZoomIndicator();
+    this.aimTarget.x = Phaser.Math.Clamp(this.aimTarget.x, this.aimRange.minX, this.aimRange.maxX);
+    this.aimTarget.y = Phaser.Math.Clamp(this.aimTarget.y, this.aimRange.minY, this.aimRange.maxY);
     this.aim = { ...this.aimTarget };
     this.transitioning = true; // freeze _update until the zoom-in settles
     this.scene.input.setDefaultCursor('none');
+    if (this.scene.input.mouse) this.scene.input.mouse.requestPointerLock();
     this.bus.emit(EVENTS.CAMERA_RAISED);
     // ARC + FOLLOW-THROUGH: zoom in to center on aim with a Back overshoot.
     this.scene.tweens.add({
       targets: this.world,
-      scaleX: this.Z, scaleY: this.Z,
-      x: this.screenC.x - this.aim.x * this.Z,
-      y: this.screenC.y - this.aim.y * this.Z,
+      scaleX: this.effZ, scaleY: this.effZ,
+      x: this.screenC.x - this.aim.x * this.effZ,
+      y: this.screenC.y - this.aim.y * this.effZ,
       ease: EASE.backOut, duration: DUR.base,
       onComplete: () => { this.transitioning = false; },
     });
@@ -182,8 +318,11 @@ export class CameraTool {
   lower() {
     if (!this.sm.is('AIMING')) return;
     this.sm.transition('IDLE');
+    if (this._zoomTween) { this._zoomTween.stop(); this._zoomTween = null; }
     this.transitioning = true;
     this.scene.input.setDefaultCursor('default');
+    if (this.scene.input.mouse) this.scene.input.mouse.releasePointerLock();
+    if (this.gizmo) this.gizmo.clear();
     this.bus.emit(EVENTS.CAMERA_LOWERED);
     // Zoom back out to identity (world fills the screen 1:1).
     this.scene.tweens.add({
@@ -207,9 +346,11 @@ export class CameraTool {
     const fb = this.frameBounds;
     this.bus.emit(EVENTS.SHUTTER_CLICK);
     // Snapshot the CLEAN strip first, then flash + announce in the callback so the
-    // photo doesn't capture the white flash.
+    // photo doesn't capture the white flash (or the zoom indicator).
+    this._setZoomIndicatorsVisible(false);
     const id = `photo_${++this._photoCount}_${Date.now()}`;
     this._snapshotStrip(id, (ok) => {
+      this._setZoomIndicatorsVisible(true);
       // EXAGGERATION: flash slightly larger than the frame strip.
       playFlash(this.scene, { x: this.barW, y: 0, w: this.stripW, h: WORLD.height });
       // SECONDARY ACTION: frame border pulses once.

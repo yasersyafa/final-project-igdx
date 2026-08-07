@@ -19,8 +19,8 @@
       "sprite": "tulude_1",
       "spriteAnim": "anim_tulude",
       "noShadow": true,
-      "x": 237, "y": 341,
-      "bbox": { "x": 31, "y": 163, "w": 413, "h": 357 },
+      "x": 282, "y": 391,
+      "bbox": { "x": 76, "y": 213, "w": 413, "h": 357 },
       "mission": {
         "en": "Frame the year end thanksgiving procession carrying a towering cone of woven rice cakes through the street",
         "id": "Bidik arak-arakan syukur akhir tahun yang mengarak kerucut kue beras raksasa di sepanjang jalan"
