@@ -31,14 +31,14 @@ const config = {
   scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene, TutorialScene],
 };
 
-// Wait for the web fonts (Baloo 2 / Nunito) before starting so canvas text renders
-// in the right face instead of a fallback. Falls back gracefully if fonts/API fail.
+// Wait for the web fonts (Knewave / Darumadrop One) before starting so canvas text
+// renders in the right face instead of a fallback. Falls back gracefully if fonts/API fail.
 function startGame() {
   // eslint-disable-next-line no-new
   new Phaser.Game(config);
 }
 
-const fontsToLoad = ['600 1em "Baloo 2"', '700 1em "Baloo 2"', '400 1em "Nunito"', '600 1em "Nunito"'];
+const fontsToLoad = ['400 1em "Knewave"', '400 1em "Darumadrop One"'];
 if (document.fonts && document.fonts.load) {
   Promise.all(fontsToLoad.map((f) => document.fonts.load(f)))
     .then(() => document.fonts.ready)
