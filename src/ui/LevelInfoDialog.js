@@ -5,6 +5,7 @@
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { FONTS } from '../config/fonts.js';
+import { THEME } from '../config/theme.js';
 import { t } from '../core/i18n.js';
 
 export class LevelInfoDialog {
@@ -19,12 +20,12 @@ export class LevelInfoDialog {
 
     const pw = 480, ph = 260;
     this.panel = scene.add.container(W / 2, H / 2).setDepth(depth + 1).setVisible(false);
-    const bg = scene.add.rectangle(0, 0, pw, ph, 0x2b2230, 0.98).setOrigin(0.5).setStrokeStyle(3, 0xffe08a, 0.8);
+    const bg = scene.add.rectangle(0, 0, pw, ph, 0xfef2c4, 0.98).setOrigin(0.5).setStrokeStyle(3, THEME.panelBorder, 0.9);
     this.title = scene.add.text(0, -92, '', {
-      fontFamily: FONTS.display, fontSize: '30px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '30px', color: THEME.ink, fontStyle: 'bold',
     }).setOrigin(0.5);
     this.desc = scene.add.text(0, -30, '', {
-      fontFamily: FONTS.body, fontSize: '18px', color: '#c9c2b6',
+      fontFamily: FONTS.body, fontSize: '18px', color: THEME.muted,
       align: 'center', wordWrap: { width: pw - 60 },
     }).setOrigin(0.5);
     this.panel.add([bg, this.title, this.desc]);
@@ -48,11 +49,11 @@ export class LevelInfoDialog {
       stopPropagation: true, clickSfx, onClick: () => { this.close(); if (cb) cb(); },
     });
     if (hasGallery) {
-      this.playBtn = mk(-96, t('btn.main'), 0x7bbf6a, onPlay, 'sfx_level_enter');
-      this.galleryBtn = mk(96, t('btn.album'), 0x4a5a7a, onGallery);
+      this.playBtn = mk(-96, t('btn.main'), THEME.play, onPlay, 'sfx_level_enter');
+      this.galleryBtn = mk(96, t('btn.album'), THEME.album, onGallery);
       this.panel.add([this.playBtn, this.galleryBtn]);
     } else {
-      this.playBtn = mk(0, t('btn.main'), 0x7bbf6a, onPlay, 'sfx_level_enter');
+      this.playBtn = mk(0, t('btn.main'), THEME.play, onPlay, 'sfx_level_enter');
       this.panel.add(this.playBtn);
     }
 

@@ -9,7 +9,7 @@ const KEY = 'photowalk.progress';
 // gradeForFrac — shared grade + color from a score fraction (0..1).
 export function gradeForFrac(frac) {
   if (frac >= CONFIG.GRADE.gold)   return { grade: 'Gold',   color: '#ffd24a' };
-  if (frac >= CONFIG.GRADE.silver) return { grade: 'Silver', color: '#cfd6dc' };
+  if (frac >= CONFIG.GRADE.silver) return { grade: 'Silver', color: '#93a3ad' };
   return { grade: 'Bronze', color: '#cd7f32' };
 }
 

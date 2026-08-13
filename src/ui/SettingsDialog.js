@@ -7,6 +7,7 @@ import { popIn, popOut, EASE, DUR } from "../anim/motion.js";
 import { makeButton } from "./Button.js";
 import { ConfirmDialog } from "./ConfirmDialog.js";
 import { FONTS } from "../config/fonts.js";
+import { THEME } from "../config/theme.js";
 import { LANGUAGES } from "../config/languages.js";
 import { getLang, setLang, getSidebarSide, setSidebarSide } from "../core/settings.js";
 import { resetProgress } from "../core/progress.js";
@@ -15,8 +16,8 @@ import { t } from "../core/i18n.js";
 const OPT_W = 300,
   OPT_H = 48,
   OPT_GAP = 12;
-const ON = 0x7bbf6a,
-  OFF = 0x3a4353;
+const ON = THEME.play,
+  OFF = 0xf7c3ce;
 const SIDES = [
   { code: "left", key: "settings.sideleft" },
   { code: "right", key: "settings.sideright" },
@@ -57,16 +58,16 @@ export class SettingsDialog {
       .setDepth(depth + 1)
       .setVisible(false);
     const bg = scene.add
-      .rectangle(0, 0, pw, ph, 0x2b2230, 0.98)
+      .rectangle(0, 0, pw, ph, 0xfef2c4, 0.98)
       .setOrigin(0.5)
-      .setStrokeStyle(3, 0xffe08a, 0.8);
+      .setStrokeStyle(3, THEME.panelBorder, 0.9);
 
     let y = -ph / 2 + PAD; // running top edge cursor
     this.title = scene.add
       .text(0, y + TITLE_H / 2, t("settings.title"), {
         fontFamily: FONTS.display,
         fontSize: "30px",
-        color: "#fff5e6",
+        color: THEME.ink,
         fontStyle: "bold",
       })
       .setOrigin(0.5);
@@ -75,7 +76,7 @@ export class SettingsDialog {
       .text(0, y + LABEL_H / 2, t("settings.language"), {
         fontFamily: FONTS.body,
         fontSize: "18px",
-        color: "#c9c2b6",
+        color: THEME.muted,
       })
       .setOrigin(0.5);
     y += LABEL_H + GAP_LABEL;
@@ -87,13 +88,13 @@ export class SettingsDialog {
       const oy = firstY + i * (OPT_H + OPT_GAP);
       const rect = scene.add
         .rectangle(0, oy, OPT_W, OPT_H, OFF, 1)
-        .setStrokeStyle(2, 0xffffff, 0.4)
+        .setStrokeStyle(2, THEME.panelBorder, 0.6)
         .setInteractive({ useHandCursor: true });
       const txt = scene.add
         .text(0, oy, l.label, {
           fontFamily: FONTS.display,
           fontSize: "20px",
-          color: "#ffffff",
+          color: THEME.ink,
         })
         .setOrigin(0.5);
       rect.on("pointerdown", () => this._select(l.code));
@@ -108,7 +109,7 @@ export class SettingsDialog {
       .text(0, y + LABEL_H / 2, t("settings.sidebarposition"), {
         fontFamily: FONTS.body,
         fontSize: "18px",
-        color: "#c9c2b6",
+        color: THEME.muted,
       })
       .setOrigin(0.5);
     y += LABEL_H + GAP_LABEL;
@@ -120,13 +121,13 @@ export class SettingsDialog {
       const ox = (-OPT_W / 2 + sideOptW / 2) + i * (sideOptW + OPT_GAP);
       const rect = scene.add
         .rectangle(ox, sideOptY, sideOptW, OPT_H, OFF, 1)
-        .setStrokeStyle(2, 0xffffff, 0.4)
+        .setStrokeStyle(2, THEME.panelBorder, 0.6)
         .setInteractive({ useHandCursor: true });
       const txt = scene.add
         .text(ox, sideOptY, t(s.key), {
           fontFamily: FONTS.display,
           fontSize: "18px",
-          color: "#ffffff",
+          color: THEME.ink,
         })
         .setOrigin(0.5);
       rect.on("pointerdown", () => this._selectSide(s.code));
@@ -144,7 +145,7 @@ export class SettingsDialog {
       w: OPT_W,
       h: OPT_H,
       label: t("settings.resetprogress"),
-      color: 0xc06060,
+      color: THEME.danger,
       fontSize: 18,
       depth: depth + 2,
       stopPropagation: true,
@@ -159,7 +160,7 @@ export class SettingsDialog {
       w: 160,
       h: CLOSE_H,
       label: t("btn.close"),
-      color: 0x4a5a7a,
+      color: THEME.album,
       fontSize: 20,
       depth: depth + 2,
       stopPropagation: true,

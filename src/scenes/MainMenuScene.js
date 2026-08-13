@@ -3,6 +3,7 @@ import { popIn, fadeScene, DUR, idleBob } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { SettingsDialog } from "../ui/SettingsDialog.js";
 import { FONTS } from "../config/fonts.js";
+import { THEME as PALETTE } from "../config/theme.js";
 import { t } from "../core/i18n.js";
 import { bus } from "../core/EventBus.js";
 import { EVENTS } from "../config/events.js";
@@ -15,14 +16,14 @@ export class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width: W, height: H } = this.cameras.main;
-    this.cameras.main.setBackgroundColor("#20242f");
+    this.cameras.main.setBackgroundColor(PALETTE.bg);
     fadeScene(this, "in");
 
     const title = this.add
       .text(W / 2, H * 0.28, "Photo Walk", {
         fontFamily: FONTS.display,
         fontSize: "64px",
-        color: "#fff5e6",
+        color: PALETTE.ink,
         fontStyle: "bold",
       })
       .setOrigin(0.5);
@@ -33,7 +34,7 @@ export class MainMenuScene extends Phaser.Scene {
       .text(W / 2, H * 0.28 + 56, t("menu.subtitle"), {
         fontFamily: FONTS.body,
         fontSize: "20px",
-        color: "#c9c2b6",
+        color: PALETTE.muted,
       })
       .setOrigin(0.5);
 
@@ -57,7 +58,7 @@ export class MainMenuScene extends Phaser.Scene {
       w: 240,
       h: 66,
       label: tutorialDone ? t("btn.play") : t("menu.playlocked"),
-      color: tutorialDone ? 0x7bbf6a : 0x3a3f4a,
+      color: tutorialDone ? PALETTE.play : PALETTE.playLocked,
       fontSize: 26,
       onClick: () => {
         if (!hasSeenTutorial()) { this._denyPlay(play); return; }
@@ -66,6 +67,7 @@ export class MainMenuScene extends Phaser.Scene {
         });
       },
     });
+    if (!tutorialDone) play.label.setColor(PALETTE.ink);
     popIn(play, {
       delay: 120,
       onComplete: () => { if (!tutorialDone) play.setAlpha(0.55); },
@@ -77,13 +79,14 @@ export class MainMenuScene extends Phaser.Scene {
       w: 240,
       h: 56,
       label: t("btn.tutorial"),
-      color: 0x5c8a52,
+      color: PALETTE.tutorial,
       fontSize: 20,
       onClick: () =>
         fadeScene(this, "out", {
           onComplete: () => this.scene.start("TutorialScene"),
         }),
     });
+    tutorial.label.setColor(PALETTE.ink);
     popIn(tutorial, { delay: 200 });
 
     const album = makeButton(this, {
@@ -92,7 +95,7 @@ export class MainMenuScene extends Phaser.Scene {
       w: 240,
       h: 56,
       label: t("btn.album"),
-      color: 0x4a5a7a,
+      color: PALETTE.album,
       fontSize: 22,
       onClick: () =>
         fadeScene(this, "out", {
@@ -108,10 +111,11 @@ export class MainMenuScene extends Phaser.Scene {
       w: 240,
       h: 56,
       label: t("btn.settings"),
-      color: 0x3a4353,
+      color: PALETTE.settings,
       fontSize: 22,
       onClick: () => this._settings.open(),
     });
+    settings.label.setColor(PALETTE.ink);
     popIn(settings, { delay: 360 });
 
     // Live re-localize so a language change in SettingsDialog updates this
