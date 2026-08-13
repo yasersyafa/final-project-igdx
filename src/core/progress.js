@@ -70,4 +70,12 @@ export function recordResult(levelIndex, { frac, total, completed }) {
   return { improved: false, entry: prev };
 }
 
-export default { gradeForFrac, starsForFrac, loadProgress, recordResult };
+// resetProgress — wipe all stored level results (unlocks, best scores, stars).
+export function resetProgress() {
+  const s = storage();
+  if (!s) return false;
+  try { s.removeItem(KEY); return true; }
+  catch { return false; }
+}
+
+export default { gradeForFrac, starsForFrac, loadProgress, recordResult, resetProgress };

@@ -5,9 +5,11 @@
 // Modeled on ui/LevelInfoDialog.js — the scene owns one instance and calls open().
 import { popIn, popOut, EASE, DUR } from "../anim/motion.js";
 import { makeButton } from "./Button.js";
+import { ConfirmDialog } from "./ConfirmDialog.js";
 import { FONTS } from "../config/fonts.js";
 import { LANGUAGES } from "../config/languages.js";
 import { getLang, setLang, getSidebarSide, setSidebarSide } from "../core/settings.js";
+import { resetProgress } from "../core/progress.js";
 import { t } from "../core/i18n.js";
 
 const OPT_W = 300,
@@ -47,6 +49,7 @@ export class SettingsDialog {
     const ph =
       PAD + TITLE_H + LABEL_H + GAP_LABEL + optsH
       + GAP_LABEL + LABEL_H + GAP_LABEL + OPT_H // sidebar-position section
+      + GAP_LABEL + OPT_H // reset-progress section
       + GAP_CLOSE + CLOSE_H + PAD;
 
     this.panel = scene.add
@@ -130,6 +133,24 @@ export class SettingsDialog {
       this.panel.add([rect, txt]);
       return { code: s.code, rect, txt, key: s.key };
     });
+    y += OPT_H + GAP_LABEL;
+
+    // Reset progress — a destructive action, so it opens a confirm dialog rather
+    // than firing straight away. Own ConfirmDialog instance, layered above this panel.
+    this.resetConfirm = new ConfirmDialog(scene, depth + 50);
+    this.resetBtn = makeButton(scene, {
+      x: 0,
+      y: y + OPT_H / 2,
+      w: OPT_W,
+      h: OPT_H,
+      label: t("settings.resetprogress"),
+      color: 0xc06060,
+      fontSize: 18,
+      depth: depth + 2,
+      stopPropagation: true,
+      onClick: () => this._confirmReset(),
+    });
+    this.panel.add(this.resetBtn);
     y += OPT_H + GAP_CLOSE;
 
     this.closeBtn = makeButton(scene, {
@@ -157,6 +178,15 @@ export class SettingsDialog {
     this._refresh();
   }
 
+  _confirmReset() {
+    this.resetConfirm.open({
+      message: t("confirm.resetprogress"),
+      confirmLabel: t("btn.reset"),
+      cancelLabel: t("btn.cancel"),
+      onConfirm: () => resetProgress(),
+    });
+  }
+
   // Highlight the options matching the persisted settings, and refresh the
   // dialog's own localized labels so they switch immediately on change.
   _refresh() {
@@ -170,6 +200,7 @@ export class SettingsDialog {
     this.title.setText(t("settings.title"));
     this.langLabel.setText(t("settings.language"));
     this.sideLabel.setText(t("settings.sidebarposition"));
+    this.resetBtn.label.setText(t("settings.resetprogress"));
     this.closeBtn.label.setText(t("btn.close"));
   }
 
