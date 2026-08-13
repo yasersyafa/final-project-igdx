@@ -29,8 +29,12 @@ export class ResultScene extends Phaser.Scene {
 
     const { grade, color } = gradeForFrac(frac);
     const stars = starsForFrac(frac);
+    // Level counts as "completed" (unlocks the next one) only when every mission
+    // on the shot list is ticked — not just whenever the player hits Selesai.
+    const doneCount = results.filter((r) => r.done).length;
+    const completed = results.length > 0 && doneCount === results.length;
     // Persist best result; celebrate if this run beat the stored best.
-    const { improved } = recordResult(levelIndex, { frac, total });
+    const { improved } = recordResult(levelIndex, { frac, total, completed });
 
     const head = this.add
       .text(W / 2, 70, this.payload.levelName || t("result.title"), {
@@ -43,7 +47,6 @@ export class ResultScene extends Phaser.Scene {
     popIn(head);
 
     // Mission breakdown list (staggered reveal).
-    const doneCount = results.filter((r) => r.done).length;
     const listX = W / 2 - 280;
     let y = 150;
     results.forEach((r, i) => {

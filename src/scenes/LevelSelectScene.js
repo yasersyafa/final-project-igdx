@@ -33,8 +33,9 @@ export class LevelSelectScene extends Phaser.Scene {
     const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
       const bx = W / 2 + (i - (LEVELS.length - 1) / 2) * 220;
-      // Sequential unlock: level 0 is always open; later levels need the previous one finished.
-      const unlocked = i === 0 || Boolean(progress[i - 1]);
+      // Sequential unlock: level 0 is always open; later levels need the previous
+      // one actually completed (all missions ticked), not just attempted.
+      const unlocked = i === 0 || Boolean(progress[i - 1] && progress[i - 1].completed);
       const card = makeButton(this, {
         x: bx, y: H * 0.5, w: 190, h: 64,
         label: unlocked ? lv.name : `🔒 ${lv.name}`,
