@@ -28,6 +28,15 @@ export class LevelScene extends Phaser.Scene {
     this.cameras.main.setBackgroundColor(level.bgColor || "#3a3a44");
     fadeScene(this, "in");
 
+    // Optional per-level ambient BGM — quiet loop, stops when the scene ends
+    // (level finished, or the player bails back out) so it never bleeds into
+    // Result/LevelSelect.
+    if (level.bgm && this.cache.audio.exists(level.bgm)) {
+      const bgm = this.sound.add(level.bgm, { loop: true, volume: 0.18 });
+      bgm.play();
+      this.events.once("shutdown", () => bgm.stop());
+    }
+
     // World layer — everything here is zoomed by the camera tool. Screen-space UI
     // (HUD, overlay, rail, dialog) lives outside it and is never scaled.
     this.world = this.add.container(0, 0);

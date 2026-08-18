@@ -8,6 +8,7 @@ Each level file lives in `src/data/levels/levelN.json`.
   "name": "Morning in the Park", // display name
   "background": "bg_park",   // texture key loaded in PreloadScene (placeholder for now)
   "bgColor": "#8fae6b",      // flat fallback color drawn until real bg art exists
+  "bgm": "bgm_park",         // optional: audio key loaded in PreloadScene, looped quietly (LevelScene) for the level's duration
   "cutscene": [              // optional: cinematic intro cards (CutsceneScene), one string per card
     "Morning settles over the park.",
     "Find the small moments before the dew lifts."

@@ -53,6 +53,7 @@ export class PreloadScene extends Phaser.Scene {
       "sfx_level_enter",
       "src/sounds/sfx/level-enter-clicked.wav",
     );
+    this.load.audio("bgm_sulut", "src/sounds/soundtrack/Sulut_BGM.mp3");
     this.load.image("bg_maluku", "src/arts/level-1/background.png");
     this.load.image("honai_1", "src/arts/level-1/karowari.png");
     this.load.image("bakar_batu_1", "src/arts/level-1/bakar-batu.png");

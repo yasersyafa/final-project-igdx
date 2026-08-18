@@ -3,6 +3,7 @@
   "name": "Sulawesi Utara",
   "background": "bg_manado",
   "bgColor": "#2f7a94",
+  "bgm": "bgm_sulut",
   "cutscene": [
     { "en": "The plane banks east over glittering water, and down below Sulawesi curls out like a hibiscus flower.", "id": "Pesawat berbelok ke timur di atas air yang berkilau, di bawah sana Sulawesi melengkung bagai bunga kembang sepatu." },
     { "en": "This is Sulawesi Utara, where Manado's bay meets the hills of Minahasa, and drums are never far from a feast.", "id": "Inilah Sulawesi Utara, tempat teluk Manado bertemu perbukitan Minahasa, dan tabuhan gendang tak pernah jauh dari pesta." },
