@@ -3,7 +3,7 @@
 // Confirm can be pressed at any time in IDLE — that finalizes the level (the risk).
 // Raising the camera is done with the SPACE key (see CameraTool), not a button.
 import { EVENTS } from '../config/events.js';
-import { popIn, popOut } from '../anim/motion.js';
+import { popIn, popOut, missPulse } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
 import { FONTS } from '../config/fonts.js';
@@ -19,6 +19,10 @@ export class ControlBar {
     // the same events MissionListUI listens to. Drives the "objectives left" warning.
     this._missionTotal = levelData.objects.filter((o) => o.mission).length;
     this._captured = new Set();
+    // Stays locked while the level HAS missions but nothing is ticked yet.
+    // Mission-less levels (e.g. the tutorial's practice target) have nothing to
+    // tick, so the lock never applies to them.
+    this._locked = this._missionTotal > 0;
     this.warnDialog = new ConfirmDialog(scene);
 
     this.confirmBtn = this._button(W / 2, H - 64, t('btn.confirm'), 0x7bbf6a,
@@ -33,8 +37,8 @@ export class ControlBar {
 
     this._onRaised = () => this.hide();
     this._onLowered = () => this.show();
-    this._onCaptured = ({ objectId }) => this._captured.add(objectId);
-    this._onSync = ({ capturedIds }) => { this._captured = new Set(capturedIds || []); };
+    this._onCaptured = ({ objectId }) => { this._captured.add(objectId); this._updateLock(); };
+    this._onSync = ({ capturedIds }) => { this._captured = new Set(capturedIds || []); this._updateLock(); };
     bus.on(EVENTS.CAMERA_RAISED, this._onRaised);
     bus.on(EVENTS.CAMERA_LOWERED, this._onLowered);
     bus.on(EVENTS.MISSION_CAPTURED, this._onCaptured);
@@ -47,9 +51,20 @@ export class ControlBar {
     });
   }
 
-  // Confirm pressed. If missions remain, warn first and only finalize on the
-  // player's explicit "finish anyway". All missions done -> finalize straight away.
+  // Locked while the level has missions but the shot list has zero ticks.
+  _updateLock() {
+    this._locked = this._missionTotal > 0 && this._captured.size === 0;
+    if (this.confirmBtn.visible) this.confirmBtn.setAlpha(this._locked ? 0.5 : 1);
+  }
+
+  // Confirm pressed. Locked (0 ticked) -> ignored. If missions remain, warn first
+  // and only finalize on the player's explicit "finish anyway". All missions done
+  // -> finalize straight away.
   _onConfirm() {
+    if (this._locked) {
+      missPulse(this.confirmBtn);
+      return;
+    }
     const remaining = this._missionTotal - this._captured.size;
     if (remaining > 0) {
       this.warnDialog.open({
@@ -64,7 +79,14 @@ export class ControlBar {
   }
 
   show() {
-    this.group.forEach((g, i) => { g.setVisible(true); popIn(g, { delay: i * 50, keepAlpha: false }); });
+    this.group.forEach((g, i) => {
+      g.setVisible(true);
+      popIn(g, {
+        delay: i * 50,
+        keepAlpha: false,
+        onComplete: () => { if (g === this.confirmBtn) this._updateLock(); },
+      });
+    });
   }
 
   hide() {

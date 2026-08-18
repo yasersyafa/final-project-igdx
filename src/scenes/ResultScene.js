@@ -6,6 +6,7 @@ import { gradeForFrac, starsForFrac, recordResult } from "../core/progress.js";
 import { popIn, gradeReveal, checkPop, fadeScene } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { FONTS } from "../config/fonts.js";
+import { THEME } from "../config/theme.js";
 import { t, L } from "../core/i18n.js";
 
 export class ResultScene extends Phaser.Scene {
@@ -18,7 +19,7 @@ export class ResultScene extends Phaser.Scene {
 
   create() {
     const { width: W, height: H } = this.cameras.main;
-    this.cameras.main.setBackgroundColor("#20242f");
+    this.cameras.main.setBackgroundColor(THEME.bg);
     fadeScene(this, "in");
 
     const total = Math.round(this.payload.total ?? 0);
@@ -29,21 +30,24 @@ export class ResultScene extends Phaser.Scene {
 
     const { grade, color } = gradeForFrac(frac);
     const stars = starsForFrac(frac);
+    // Level counts as "completed" (unlocks the next one) only when every mission
+    // on the shot list is ticked — not just whenever the player hits Selesai.
+    const doneCount = results.filter((r) => r.done).length;
+    const completed = results.length > 0 && doneCount === results.length;
     // Persist best result; celebrate if this run beat the stored best.
-    const { improved } = recordResult(levelIndex, { frac, total });
+    const { improved } = recordResult(levelIndex, { frac, total, completed });
 
     const head = this.add
       .text(W / 2, 70, this.payload.levelName || t("result.title"), {
         fontFamily: FONTS.display,
         fontSize: "32px",
-        color: "#fff5e6",
+        color: THEME.ink,
         fontStyle: "bold",
       })
       .setOrigin(0.5);
     popIn(head);
 
     // Mission breakdown list (staggered reveal).
-    const doneCount = results.filter((r) => r.done).length;
     const listX = W / 2 - 280;
     let y = 150;
     results.forEach((r, i) => {
@@ -52,7 +56,7 @@ export class ResultScene extends Phaser.Scene {
         .text(0, 0, r.done ? "✓" : "✗", {
           fontFamily: FONTS.body,
           fontSize: "24px",
-          color: r.done ? "#9be07a" : "#d98a8a",
+          color: r.done ? "#4f9e5e" : "#c25a5a",
           fontStyle: "bold",
         })
         .setOrigin(0.5)
@@ -61,7 +65,7 @@ export class ResultScene extends Phaser.Scene {
         .text(28, -12, `${r.name}${r.isSpecial ? "  ★" : ""}`, {
           fontFamily: FONTS.body,
           fontSize: "18px",
-          color: r.done ? "#ffffff" : "#9b958a",
+          color: r.done ? THEME.ink : THEME.muted,
         })
         .setOrigin(0, 0);
       const sub = this.add
@@ -74,7 +78,7 @@ export class ResultScene extends Phaser.Scene {
           {
             fontFamily: FONTS.body,
             fontSize: "13px",
-            color: "#a39d92",
+            color: THEME.muted,
           },
         )
         .setOrigin(0, 0);
@@ -96,7 +100,7 @@ export class ResultScene extends Phaser.Scene {
         {
           fontFamily: FONTS.body,
           fontSize: "22px",
-          color: "#fff5e6",
+          color: THEME.ink,
         },
       )
       .setOrigin(0.5);
@@ -121,7 +125,7 @@ export class ResultScene extends Phaser.Scene {
         .text(W / 2 + (i - 1) * gap, starY, "★", {
           fontFamily: FONTS.body,
           fontSize: "36px",
-          color: filled ? "#ffd24a" : "#4a4f5c",
+          color: filled ? "#e0a530" : "#e6d4cd",
           fontStyle: "bold",
         })
         .setOrigin(0.5);
@@ -133,7 +137,7 @@ export class ResultScene extends Phaser.Scene {
         .text(W / 2, starY + 42, t("result.newbest"), {
           fontFamily: FONTS.body,
           fontSize: "20px",
-          color: "#9be07a",
+          color: "#4f9e5e",
           fontStyle: "bold",
         })
         .setOrigin(0.5);
@@ -143,7 +147,7 @@ export class ResultScene extends Phaser.Scene {
     const hasNext = levelIndex < LEVELS.length - 1;
     const by = H - 60;
     if (hasNext) {
-      const next = this._button(W / 2 - 130, by, t("btn.nextlevel"), 0x7bbf6a, () =>
+      const next = this._button(W / 2 - 130, by, t("btn.nextlevel"), THEME.play, () =>
         this._go("CutsceneScene", { levelIndex: levelIndex + 1 }),
       );
       popIn(next, { delay: 500 });
@@ -152,7 +156,7 @@ export class ResultScene extends Phaser.Scene {
       W / 2 + (hasNext ? 130 : 0),
       by,
       t("btn.levels"),
-      0x4a5a7a,
+      THEME.album,
       () => this._go("LevelSelectScene"),
     );
     popIn(menu, { delay: 560 });

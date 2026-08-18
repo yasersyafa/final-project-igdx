@@ -8,6 +8,7 @@ import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
 import { LevelInfoDialog } from '../ui/LevelInfoDialog.js';
 import { FONTS } from '../config/fonts.js';
+import { THEME } from '../config/theme.js';
 import { t, L } from '../core/i18n.js';
 
 export class LevelSelectScene extends Phaser.Scene {
@@ -15,11 +16,11 @@ export class LevelSelectScene extends Phaser.Scene {
 
   create() {
     const { width: W, height: H } = this.cameras.main;
-    this.cameras.main.setBackgroundColor('#20242f');
+    this.cameras.main.setBackgroundColor(THEME.bg);
     fadeScene(this, 'in');
 
     const head = this.add.text(W / 2, H * 0.22, t('levelselect.title'), {
-      fontFamily: FONTS.display, fontSize: '40px', color: '#fff5e6', fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '40px', color: THEME.ink, fontStyle: 'bold',
     }).setOrigin(0.5);
     popIn(head);
 
@@ -33,32 +34,35 @@ export class LevelSelectScene extends Phaser.Scene {
     const progress = loadProgress();
     LEVELS.forEach((lv, i) => {
       const bx = W / 2 + (i - (LEVELS.length - 1) / 2) * 220;
-      // Sequential unlock: level 0 is always open; later levels need the previous one finished.
-      const unlocked = i === 0 || Boolean(progress[i - 1]);
+      // Sequential unlock: level 0 is always open; later levels need the previous
+      // one actually completed (all missions ticked), not just attempted.
+      const unlocked = i === 0 || Boolean(progress[i - 1] && progress[i - 1].completed);
       const card = makeButton(this, {
         x: bx, y: H * 0.5, w: 190, h: 64,
         label: unlocked ? lv.name : `🔒 ${lv.name}`,
-        color: unlocked ? 0x4a5a7a : 0x3a3f4a, fontSize: 20,
+        color: unlocked ? THEME.album : THEME.playLocked, fontSize: 20,
         onClick: () => (unlocked ? this._openInfo(i) : this._denied(card)),
       });
+      card.label.setColor(unlocked ? '#ffffff' : THEME.ink);
       if (!unlocked) card.setAlpha(0.55);
       popIn(card, { delay: 150 + i * 80 });
 
       // Saved best: filled/empty stars, "locked", or a gentle "not played yet".
       const entry = progress[i];
       let label, color;
-      if (!unlocked) { label = t('levelselect.locked'); color = '#6b6459'; }
-      else if (entry) { label = '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars); color = '#ffd24a'; }
-      else { label = t('levelselect.notplayed'); color = '#6b6459'; }
+      if (!unlocked) { label = t('levelselect.locked'); color = THEME.muted; }
+      else if (entry) { label = '★★★☆☆☆'.slice(3 - entry.stars, 6 - entry.stars); color = '#e0a530'; }
+      else { label = t('levelselect.notplayed'); color = THEME.muted; }
       this.add.text(bx, H * 0.5 + 52, label, {
         fontFamily: FONTS.body, fontSize: '18px', color,
       }).setOrigin(0.5);
     });
 
     const back = makeButton(this, {
-      x: W / 2, y: H - 70, w: 160, h: 50, label: t('btn.back'), color: 0x3a4353, fontSize: 18,
+      x: W / 2, y: H - 70, w: 160, h: 50, label: t('btn.back'), color: THEME.settings, fontSize: 18,
       onClick: () => fadeScene(this, 'out', { onComplete: () => this.scene.start('MainMenuScene') }),
     });
+    back.label.setColor(THEME.ink);
     popIn(back, { delay: 420 });
   }
 

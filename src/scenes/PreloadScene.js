@@ -57,6 +57,8 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('tagonggong_2', 'src/arts/level-2/Tagonggong_2.png');
     this.load.image('decor_baby', 'src/arts/level-2/decor-1.png');
     this.load.image('decor_corgi', 'src/arts/level-2/decor-2.png');
+    this.load.image('ui_dialogue_box', 'src/arts/ui/dialogue-box.png');
+    this.load.image('ui_dialogue_name', 'src/arts/ui/dialogue-name.png');
     // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }

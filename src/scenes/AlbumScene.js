@@ -16,6 +16,7 @@ import { popIn, fadeScene } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { ConfirmDialog } from "../ui/ConfirmDialog.js";
 import { FONTS } from "../config/fonts.js";
+import { THEME } from "../config/theme.js";
 import { t, L } from "../core/i18n.js";
 import EDU from "../data/education.json";
 
@@ -44,7 +45,7 @@ export class AlbumScene extends Phaser.Scene {
 
   create() {
     const { width: W, height: H } = this.cameras.main;
-    this.cameras.main.setBackgroundColor("#20242f");
+    this.cameras.main.setBackgroundColor(THEME.bg);
     fadeScene(this, "in");
 
     this.confirm = new ConfirmDialog(this);
@@ -59,7 +60,7 @@ export class AlbumScene extends Phaser.Scene {
       .text(W / 2, H * 0.08, t("album.title"), {
         fontFamily: FONTS.display,
         fontSize: "40px",
-        color: "#fff5e6",
+        color: THEME.ink,
         fontStyle: "bold",
       })
       .setOrigin(0.5);
@@ -93,13 +94,14 @@ export class AlbumScene extends Phaser.Scene {
       w: 160,
       h: 46,
       label: t("btn.back"),
-      color: 0x3a4353,
+      color: THEME.settings,
       fontSize: 18,
       onClick: () =>
         fadeScene(this, "out", {
           onComplete: () => this.scene.start("MainMenuScene"),
         }),
     });
+    back.label.setColor(THEME.ink);
     popIn(back, { delay: 300 });
 
     this._loadAndRender();

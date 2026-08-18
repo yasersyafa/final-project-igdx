@@ -1,24 +1,43 @@
 // Pure evaluator. No Phaser. Returns the CAPTURE_RESULT contract shape.
 import { coverage, framingScore } from './FramingScorer.js';
 
+// bestPerPhotoCredits — shared "one photo credits only its single best-matched
+// mission object" rule (mirrors evaluate()'s "best overlapping candidate wins").
+// Checking each object independently against every photo would let one broad/loose
+// shot credit several missions at once — inconsistent with the live per-shot tick,
+// which only ever fires for the best match. Returns a Map<objectId, bestFramingScore>.
+function bestPerPhotoCredits(photos, objects, config) {
+  const threshold = config.CAPTURE_THRESHOLD;
+  const scoring = config.SCORING;
+  const scores = new Map();
+  for (const p of photos) {
+    const covered = objects.filter((o) => coverage(o.bbox, p.frameBounds) >= threshold);
+    if (covered.length === 0) continue;
+    let best = covered[0];
+    let bestScore = framingScore(best.bbox, p.frameBounds, scoring);
+    for (let i = 1; i < covered.length; i++) {
+      const s = framingScore(covered[i].bbox, p.frameBounds, scoring);
+      if (s > bestScore) { best = covered[i]; bestScore = s; }
+    }
+    if (!best.mission) continue;
+    const prev = scores.get(best.id) || 0;
+    if (bestScore > prev) scores.set(best.id, bestScore);
+  }
+  return scores;
+}
+
 // evaluateSession — finalize a whole roll of photos against the level's missions.
-// Cozy & forgiving: every mission object that is covered >= threshold in ANY photo
-// counts, scored by the BEST framing across the roll. (No "best candidate" contest.)
+// Uses the same best-per-photo credit rule as the live shot-list ticks, so the
+// Result screen can never disagree with what the player saw tick off mid-level.
 // photos = [{ frameBounds }], objects = full level objects.
 // -> { total, max, breakdown, missionResults }
 export function evaluateSession(photos, objects, config) {
-  const threshold = config.CAPTURE_THRESHOLD;
   const scoring = config.SCORING;
   const missionObjs = objects.filter((o) => o.mission);
+  const credits = bestPerPhotoCredits(photos, objects, config);
 
   const missionResults = missionObjs.map((o) => {
-    let best = 0;
-    for (const p of photos) {
-      if (coverage(o.bbox, p.frameBounds) >= threshold) {
-        best = Math.max(best, framingScore(o.bbox, p.frameBounds, scoring));
-      }
-    }
-    const score = Math.round(best);
+    const score = Math.round(credits.get(o.id) || 0);
     return {
       objectId: o.id,
       name: o.name,
@@ -37,28 +56,9 @@ export function evaluateSession(photos, objects, config) {
 }
 
 // capturedMissionIds — pure. Which mission objects are captured in a roll, used for
-// live shot-list reconciliation (e.g. after a photo is deleted). Mirrors evaluate()'s
-// per-photo "best overlapping candidate wins" rule: a single photo can only ever
-// credit the ONE object it best frames, not every object whose bbox happens to be
-// covered enough. (Checking each object independently against every photo would let
-// one broad/loose shot credit several missions at once — inconsistent with the live
-// per-shot tick, which only ever fires for the best match.) Returns a Set of ids.
+// live shot-list reconciliation (e.g. after a photo is deleted). Returns a Set of ids.
 export function capturedMissionIds(photos, objects, config) {
-  const threshold = config.CAPTURE_THRESHOLD;
-  const scoring = config.SCORING;
-  const ids = new Set();
-  for (const p of photos) {
-    const covered = objects.filter((o) => coverage(o.bbox, p.frameBounds) >= threshold);
-    if (covered.length === 0) continue;
-    let best = covered[0];
-    let bestScore = framingScore(best.bbox, p.frameBounds, scoring);
-    for (let i = 1; i < covered.length; i++) {
-      const s = framingScore(covered[i].bbox, p.frameBounds, scoring);
-      if (s > bestScore) { best = covered[i]; bestScore = s; }
-    }
-    if (best.mission) ids.add(best.id);
-  }
-  return ids;
+  return new Set(bestPerPhotoCredits(photos, objects, config).keys());
 }
 
 const EMPTY = {

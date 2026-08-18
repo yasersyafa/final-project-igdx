@@ -9,7 +9,7 @@ const KEY = 'photowalk.progress';
 // gradeForFrac — shared grade + color from a score fraction (0..1).
 export function gradeForFrac(frac) {
   if (frac >= CONFIG.GRADE.gold)   return { grade: 'Gold',   color: '#ffd24a' };
-  if (frac >= CONFIG.GRADE.silver) return { grade: 'Silver', color: '#cfd6dc' };
+  if (frac >= CONFIG.GRADE.silver) return { grade: 'Silver', color: '#93a3ad' };
   return { grade: 'Bronze', color: '#cd7f32' };
 }
 
@@ -46,20 +46,36 @@ function saveProgress(data) {
 }
 
 // recordResult — persist a level result if it beats the stored best (by frac).
+// `completed` (all missions ticked on this run) sticks once true, even if a later
+// replay scores lower — it drives the next level's unlock, not the score record.
 // Returns { improved, entry } where entry is the best-known record for the level.
-export function recordResult(levelIndex, { frac, total }) {
+export function recordResult(levelIndex, { frac, total, completed }) {
   const data = loadProgress();
   const prev = data[levelIndex];
   const { grade } = gradeForFrac(frac);
   const stars = starsForFrac(frac);
   const improved = !prev || frac > prev.bestFrac;
+  const everCompleted = Boolean(completed) || Boolean(prev && prev.completed);
 
   if (improved) {
-    data[levelIndex] = { bestScore: Math.round(total ?? 0), bestFrac: frac, grade, stars };
+    data[levelIndex] = { bestScore: Math.round(total ?? 0), bestFrac: frac, grade, stars, completed: everCompleted };
     saveProgress(data);
     return { improved: true, entry: data[levelIndex] };
+  }
+  if (everCompleted && !(prev && prev.completed)) {
+    data[levelIndex] = { ...prev, completed: true };
+    saveProgress(data);
+    return { improved: false, entry: data[levelIndex] };
   }
   return { improved: false, entry: prev };
 }
 
-export default { gradeForFrac, starsForFrac, loadProgress, recordResult };
+// resetProgress — wipe all stored level results (unlocks, best scores, stars).
+export function resetProgress() {
+  const s = storage();
+  if (!s) return false;
+  try { s.removeItem(KEY); return true; }
+  catch { return false; }
+}
+
+export default { gradeForFrac, starsForFrac, loadProgress, recordResult, resetProgress };

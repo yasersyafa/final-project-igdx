@@ -23,20 +23,27 @@ export class DialogBox {
     // STAGING: dim overlay behind the panel.
     this.dim = scene.add.rectangle(0, 0, W, H, 0x000000, 0).setOrigin(0, 0).setDepth(depth);
 
-    const pw = 760, ph = 180;
+    // Panel + name tag sized off the source art's own aspect ratio (1106x345 and
+    // 371x154) so setDisplaySize never stretches them off-model.
+    const pw = 720, ph = Math.round(pw * (345 / 1106));
+    const nameW = 190, nameH = Math.round(nameW * (154 / 371));
     this.panel = scene.add.container(W / 2, H - 140).setDepth(depth + 1).setVisible(false);
-    const bg = scene.add.rectangle(0, 0, pw, ph, 0x2b2230, 0.96).setOrigin(0.5).setStrokeStyle(3, 0xffe08a, 0.8);
-    this.speaker = scene.add.text(-pw / 2 + 28, -ph / 2 + 18, '', {
-      fontFamily: FONTS.body, fontSize: '20px', color: '#ffe08a', fontStyle: 'bold',
-    }).setOrigin(0, 0);
-    this.body = scene.add.text(-pw / 2 + 28, -ph / 2 + 54, '', {
-      fontFamily: FONTS.body, fontSize: '20px', color: '#ffffff',
-      wordWrap: { width: pw - 56 }, lineSpacing: 6,
+    const bg = scene.add.image(0, 0, 'ui_dialogue_box').setDisplaySize(pw, ph);
+    // Name tag hangs off the box's top edge, tail overlapping into the panel.
+    const tagOverlap = 40;
+    const tagX = -pw / 2 + 110, tagY = -ph / 2 - nameH / 2 + tagOverlap;
+    const nameTag = scene.add.image(tagX, tagY, 'ui_dialogue_name').setDisplaySize(nameW, nameH);
+    this.speaker = scene.add.text(tagX, tagY - 6, '', {
+      fontFamily: FONTS.body, fontSize: '18px', color: '#BA9075', fontStyle: 'bold',
+    }).setOrigin(0.5);
+    this.body = scene.add.text(-pw / 2 + 32, -ph / 2 + tagOverlap + 24, '', {
+      fontFamily: FONTS.body, fontSize: '20px', color: '#65463D',
+      wordWrap: { width: pw - 64 }, lineSpacing: 6,
     }).setOrigin(0, 0);
     this.hint = scene.add.text(pw / 2 - 24, ph / 2 - 26, t('dialog.hint'), {
-      fontFamily: FONTS.body, fontSize: '14px', color: '#bbbbbb',
+      fontFamily: FONTS.body, fontSize: '14px', color: '#8a7a6a',
     }).setOrigin(1, 0);
-    this.panel.add([bg, this.speaker, this.body, this.hint]);
+    this.panel.add([bg, nameTag, this.speaker, this.body, this.hint]);
 
     this._onShow = (d) => this.show(d);
     bus.on(EVENTS.DIALOG_SHOW, this._onShow);
