@@ -11,6 +11,7 @@ import { THEME } from "../config/theme.js";
 import { LANGUAGES } from "../config/languages.js";
 import { getLang, setLang, getSidebarSide, setSidebarSide } from "../core/settings.js";
 import { resetProgress } from "../core/progress.js";
+import { resetGallery } from "../core/gallery.js";
 import { t } from "../core/i18n.js";
 
 const OPT_W = 300,
@@ -184,7 +185,7 @@ export class SettingsDialog {
       message: t("confirm.resetprogress"),
       confirmLabel: t("btn.reset"),
       cancelLabel: t("btn.cancel"),
-      onConfirm: () => resetProgress(),
+      onConfirm: () => { resetProgress(); resetGallery(); },
     });
   }
 

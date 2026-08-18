@@ -95,4 +95,12 @@ export function textureToDataURL(scene, key, maxW = 240) {
   } catch { return null; }
 }
 
-export default { loadGallery, photosFor, hasPhotos, addPhoto, removePhoto, textureToDataURL };
+// resetGallery — wipe all stored photos across every level.
+export function resetGallery() {
+  const s = storage();
+  if (!s) return false;
+  try { s.removeItem(KEY); return true; }
+  catch { return false; }
+}
+
+export default { loadGallery, photosFor, hasPhotos, addPhoto, removePhoto, textureToDataURL, resetGallery };
