@@ -4,12 +4,29 @@
   "background": "bg_maluku",
   "bgColor": "#e8935f",
   "cutscene": [
-    { "en": "The job is a simple one. Go out there and photograph the culture that is still living and breathing.", "id": "Tugasnya cukup sederhana. Pergilah ke sana dan potretlah budaya yang masih hidup dan bernapas." },
-    { "en": "Our first stop is Maluku, the old Spice Islands, where the sea sits close to every doorstep and the sky turns warm at dusk.", "id": "Perhentian pertama kita adalah Maluku, gugusan Kepulauan Rempah, tempat laut selalu dekat dengan setiap pintu rumah dan langit menghangat saat senja." },
-    { "en": "Your camera is loaded and ready. Let us go and see what the people of Maluku have held close to their hearts.", "id": "Kameramu sudah terisi dan siap. Mari kita lihat apa yang masih dijaga erat oleh masyarakat Maluku." }
+    {
+      "en": "The job is a simple one. Go out there and photograph the culture that is still living and breathing.",
+      "id": "Tugasnya cukup sederhana. Pergilah ke sana dan potretlah budaya yang masih hidup dan bernapas."
+    },
+    {
+      "en": "Our first stop is Maluku, the old Spice Islands, where the sea sits close to every doorstep and the sky turns warm at dusk.",
+      "id": "Perhentian pertama kita adalah Maluku, gugusan Kepulauan Rempah, tempat laut selalu dekat dengan setiap pintu rumah dan langit menghangat saat senja."
+    },
+    {
+      "en": "Your camera is loaded and ready. Let us go and see what the people of Maluku have held close to their hearts.",
+      "id": "Kameramu sudah terisi dan siap. Mari kita lihat apa yang masih dijaga erat oleh masyarakat Maluku."
+    }
   ],
   "decor": [
-    { "id": "dec_bakarbatu", "name": "Bakar Batu", "sprite": "bakar_batu_1", "noShadow": true, "x": 563, "y": 450, "bbox": { "x": 448, "y": 408, "w": 230, "h": 84 } }
+    {
+      "id": "dec_bakarbatu",
+      "name": "Bakar Batu",
+      "sprite": "bakar_batu_1",
+      "noShadow": true,
+      "x": 563,
+      "y": 450,
+      "bbox": { "x": 448, "y": 408, "w": 230, "h": 84 }
+    }
   ],
   "objects": [
     {
@@ -17,7 +34,8 @@
       "name": "Rumah Honai",
       "sprite": "honai_1",
       "noShadow": true,
-      "x": 958, "y": 268,
+      "x": 958,
+      "y": 268,
       "bbox": { "x": 768, "y": 110, "w": 380, "h": 316 },
       "mission": {
         "en": "Frame the round, thatch-roofed house standing at the heart of the village",
@@ -28,18 +46,28 @@
       "dialog": {
         "speaker": { "en": "Village Elder", "id": "Kepala Suku" },
         "lines": [
-          { "en": "Welcome, traveler. This honai has kept my family warm through more seasons than I can count.", "id": "Selamat datang, pengelana. Honai ini sudah menghangatkan keluargaku lebih banyak musim daripada yang bisa kuhitung." },
-          { "en": "Its round walls and thick thatch keep the cold mountain air outside where it belongs.", "id": "Dinding bundar dan atap jerami tebalnya menahan udara pegunungan yang dingin tetap di luar." },
-          { "en": "Stay a while, and let your camera see what still gathers us together.", "id": "Tinggallah sejenak, dan biarkan kameramu melihat apa yang masih menyatukan kami." }
+          {
+            "en": "Welcome, traveler. This honai has kept my family warm through more seasons than I can count.",
+            "id": "Selamat datang, pengelana. Honai ini sudah menghangatkan keluargaku lebih banyak musim daripada yang bisa kuhitung."
+          },
+          {
+            "en": "Its round walls and thick thatch keep the cold mountain air outside where it belongs.",
+            "id": "Dinding bundar dan atap jerami tebalnya menahan udara pegunungan yang dingin tetap di luar."
+          },
+          {
+            "en": "Stay a while, and let your camera see what still gathers us together.",
+            "id": "Tinggallah sejenak, dan biarkan kameramu melihat apa yang masih menyatukan kami."
+          }
         ]
       }
     },
     {
       "id": "obj_papeda",
-      "name": "Papeda & Sagu Lempeng",
-      "sprite": "papeda_1",
+      "name": "Sagu Lempeng",
+      "sprite": "sagu_1",
       "noShadow": true,
-      "x": 941, "y": 554,
+      "x": 941,
+      "y": 554,
       "bbox": { "x": 783, "y": 441, "w": 315, "h": 225 },
       "mission": {
         "en": "Capture the sago being pounded into papeda beside its crisp lempeng cousins",
@@ -54,7 +82,8 @@
       "sprite": "tahuri_1",
       "noShadow": true,
       "musicNote": true,
-      "x": 401, "y": 531,
+      "x": 401,
+      "y": 531,
       "bbox": { "x": 329, "y": 443, "w": 144, "h": 175 },
       "mission": {
         "en": "Find the conch shell blown like a horn to call the village together",
@@ -69,7 +98,8 @@
       "sprite": "tifa_1",
       "noShadow": true,
       "musicNote": true,
-      "x": 604, "y": 303,
+      "x": 604,
+      "y": 303,
       "bbox": { "x": 542, "y": 220, "w": 124, "h": 166 },
       "mission": {
         "en": "Frame the hand drum whose beat keeps every dancer moving together",
@@ -84,7 +114,8 @@
       "sprite": "rumba_1",
       "noShadow": true,
       "musicNote": true,
-      "x": 163, "y": 381,
+      "x": 163,
+      "y": 381,
       "bbox": { "x": 87, "y": 301, "w": 152, "h": 159 },
       "mission": {
         "en": "Photograph the pair of flower shakers rattling in time with the dance",

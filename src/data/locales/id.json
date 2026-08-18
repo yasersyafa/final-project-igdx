@@ -34,6 +34,7 @@
   "btn.reset": "Reset",
   "confirm.deletephoto": "Yakin ingin menghapus foto ini?",
   "confirm.incomplete": "Masih ada {n} foto yang belum kamu ambil. Yakin ingin menyelesaikannya sekarang?",
+  "confirm.empty": "Daftar bidikanmu masih kosong. Ambil setidaknya satu foto dulu sebelum menyelesaikannya.",
   "btn.finishanyway": "Selesaikan Saja",
   "btn.keepshooting": "Lanjut Memotret",
   "hud.shotlist": "Daftar bidikan",

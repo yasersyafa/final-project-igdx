@@ -3,7 +3,7 @@
 // Confirm can be pressed at any time in IDLE — that finalizes the level (the risk).
 // Raising the camera is done with the SPACE key (see CameraTool), not a button.
 import { EVENTS } from '../config/events.js';
-import { popIn, popOut, missPulse } from '../anim/motion.js';
+import { popIn, popOut } from '../anim/motion.js';
 import { makeButton } from './Button.js';
 import { ConfirmDialog } from './ConfirmDialog.js';
 import { FONTS } from '../config/fonts.js';
@@ -57,12 +57,12 @@ export class ControlBar {
     if (this.confirmBtn.visible) this.confirmBtn.setAlpha(this._locked ? 0.5 : 1);
   }
 
-  // Confirm pressed. Locked (0 ticked) -> ignored. If missions remain, warn first
-  // and only finalize on the player's explicit "finish anyway". All missions done
-  // -> finalize straight away.
+  // Confirm pressed. Locked (0 ticked) -> narrative dialogue nudging the player
+  // to take a photo first. If missions remain, warn first and only finalize on
+  // the player's explicit "finish anyway". All missions done -> finalize straight away.
   _onConfirm() {
     if (this._locked) {
-      missPulse(this.confirmBtn);
+      this.bus.emit(EVENTS.DIALOG_SHOW, { lines: [t('confirm.empty')] });
       return;
     }
     const remaining = this._missionTotal - this._captured.size;
