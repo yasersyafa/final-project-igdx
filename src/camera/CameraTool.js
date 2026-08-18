@@ -147,6 +147,14 @@ export class CameraTool {
     this.zoomIndicators.forEach((c) => c.setVisible(v));
   }
 
+  // Viewfinder chrome (corners, rule-of-thirds grid, center dot, hint text) sits
+  // inside the captured rect at full alpha throughout AIMING, so it must be
+  // hidden for the instant of a snapshot too, same reasoning as the zoom
+  // indicators above.
+  _setViewfinderChromeVisible(v) {
+    [this.corners, this.grid, this.dot, this.hint].forEach((o) => o.setVisible(v));
+  }
+
   // Frame stays fully inside the world (never shows background past a world edge).
   _recomputeAimRange() {
     const efw = this.fw / this.zoomMult, efh = this.fh / this.zoomMult;
@@ -339,6 +347,10 @@ export class CameraTool {
 
   // ---- shooting -------------------------------------------------------------
   _shoot() {
+    // Mid raise/lower tween: world zoom, overlay fade, and the sidebar's own
+    // slide-shut are all still animating, so the sidebar (and a half-faded
+    // overlay) can still be on screen. Block the shot until it settles.
+    if (this.transitioning) return;
     // Roll capacity: block when full (cozy — gentle cue, no penalty). Delete to free a slot.
     if (this.rollCount >= CONFIG.MAX_PHOTOS) { this._rollFullCue(); return; }
     this.rollCount++; // reserve the slot now so rapid clicks can't overshoot the cap
@@ -346,11 +358,14 @@ export class CameraTool {
     const fb = this.frameBounds;
     this.bus.emit(EVENTS.SHUTTER_CLICK);
     // Snapshot the CLEAN strip first, then flash + announce in the callback so the
-    // photo doesn't capture the white flash (or the zoom indicator).
+    // photo doesn't capture the white flash, the zoom indicator, or the
+    // viewfinder chrome (grid/corners/dot/hint).
     this._setZoomIndicatorsVisible(false);
+    this._setViewfinderChromeVisible(false);
     const id = `photo_${++this._photoCount}_${Date.now()}`;
     this._snapshotStrip(id, (ok) => {
       this._setZoomIndicatorsVisible(true);
+      this._setViewfinderChromeVisible(true);
       // EXAGGERATION: flash slightly larger than the frame strip.
       playFlash(this.scene, { x: this.barW, y: 0, w: this.stripW, h: WORLD.height });
       // SECONDARY ACTION: frame border pulses once.
