@@ -1,4 +1,24 @@
 {
+  "obj_honai": {
+    "en": "The honai is a round, thatch-roofed house traditionally built by highland communities in eastern Indonesia. Its low door and thick walls trap warmth against the cold mountain air, and its single round room keeps a family close around the hearth.",
+    "id": "Honai adalah rumah beratap jerami berbentuk bundar yang secara tradisional dibangun masyarakat dataran tinggi di Indonesia timur. Pintunya yang rendah dan dindingnya yang tebal menahan hawa dingin pegunungan, sementara satu ruang bundarnya menjaga keluarga tetap dekat di sekitar tungku."
+  },
+  "obj_papeda": {
+    "en": "Papeda is a sticky porridge made by stirring sago starch with hot water, a staple across Maluku and Papua eaten with yellow fish soup. Sagu lempeng, its crisp baked cousin, is the same sago flour pressed into flat cakes and toasted until golden.",
+    "id": "Papeda adalah bubur kental yang dibuat dengan mengaduk sagu bersama air panas, makanan pokok di Maluku dan Papua yang biasa disantap dengan kuah ikan kuning. Sagu lempeng, saudaranya yang renyah, adalah tepung sagu yang sama namun dicetak pipih dan dipanggang hingga keemasan."
+  },
+  "obj_tahuri": {
+    "en": "The tahuri is a large sea shell, usually a triton or conch, blown through a hole cut near its tip to sound a deep, carrying note. In many Maluku villages it once summoned people to gather, much like a horn or a bell.",
+    "id": "Tahuri adalah kulit kerang besar, biasanya triton atau kerang bia, yang ditiup lewat lubang di dekat ujungnya hingga menghasilkan bunyi dalam yang menggema jauh. Di banyak kampung Maluku, bunyi ini dulu dipakai untuk memanggil warga berkumpul, seperti terompet atau lonceng."
+  },
+  "obj_tifa": {
+    "en": "The tifa is a hand drum found across Maluku and Papua, its body carved from a single log and topped with stretched animal skin. Played by hand rather than a stick, it drives the rhythm behind nearly every traditional dance.",
+    "id": "Tifa adalah gendang tangan yang ditemukan di Maluku dan Papua, badannya diukir dari satu batang kayu dan dilapisi kulit hewan yang direntangkan. Dimainkan dengan tangan, bukan tongkat, tifa menghidupkan irama di balik hampir setiap tarian tradisional."
+  },
+  "obj_rumba": {
+    "en": "Rumba are a pair of hand-held shakers, often shaped like bright flowers, filled with seeds or beads that rattle when shaken. Dancers twirl one in each hand, using the sound to punctuate their steps in time with the tifa.",
+    "id": "Rumba adalah sepasang kerincingan genggam, sering berbentuk bunga berwarna cerah, berisi biji-bijian atau manik yang berbunyi saat digoyang. Penari memutar satu di tiap tangan, memakai bunyinya untuk menegaskan setiap langkah seirama dengan tifa."
+  },
   "obj_rumahgadang": {
     "en": "The Rumah Gadang is the traditional home of the Minangkabau people of West Sumatra. Its roof sweeps up into sharp points like a pair of buffalo horns, a quiet nod to the legendary buffalo duel that gave the people their name ('minang kabau' means 'the victorious buffalo').",
     "id": "Rumah Gadang adalah rumah adat suku Minangkabau di Sumatra Barat. Atapnya melengkung meruncing seperti sepasang tanduk kerbau, sebuah penghormatan pada legenda adu kerbau yang memberi nama suku ini ('minang kabau' berarti 'kerbau yang menang')."

@@ -44,6 +44,13 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio('sfx_camera_captured', 'src/sounds/sfx/camera-captured.mp3');
     this.load.audio('sfx_perfect_captured', 'src/sounds/sfx/perfect-captured.mp3');
     this.load.audio('sfx_level_enter', 'src/sounds/sfx/level-enter-clicked.wav');
+    this.load.image('bg_maluku', 'src/arts/level-1/background.png');
+    this.load.image('honai_1', 'src/arts/level-1/karowari.png');
+    this.load.image('bakar_batu_1', 'src/arts/level-1/bakar-batu.png');
+    this.load.image('papeda_1', 'src/arts/level-1/papeda.png');
+    this.load.image('tahuri_1', 'src/arts/level-1/music-1.png');
+    this.load.image('rumba_1', 'src/arts/level-1/music-2.png');
+    this.load.image('tifa_1', 'src/arts/level-1/music-3.png');
     this.load.image('bg_manado', 'src/arts/level-2/background.png');
     this.load.image('cakalang_fufu', 'src/arts/level-2/cakalang-2.png');
     this.load.image('rumah_wale', 'src/arts/level-2/wale.png');

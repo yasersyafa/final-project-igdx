@@ -1,69 +1,97 @@
 {
   "id": "level1",
-  "name": "Padang",
-  "background": "bg_padang",
-  "bgColor": "#d9a066",
+  "name": "Maluku",
+  "background": "bg_maluku",
+  "bgColor": "#e8935f",
   "cutscene": [
     { "en": "The job is a simple one. Go out there and photograph the culture that is still living and breathing.", "id": "Tugasnya cukup sederhana. Pergilah ke sana dan potretlah budaya yang masih hidup dan bernapas." },
-    { "en": "Our first stop is Padang, a warm coastal town where the rooftops curve upward like the horns of a buffalo.", "id": "Perhentian pertama kita adalah Padang, kota pesisir yang hangat, tempat atap-atap rumahnya melengkung ke atas seperti tanduk kerbau." },
-    { "en": "Your camera is loaded and ready. Let us go and see what the Minangkabau people have held close to their hearts.", "id": "Kameramu sudah terisi dan siap. Mari kita lihat apa yang masih dijaga erat oleh orang Minangkabau." }
+    { "en": "Our first stop is Maluku, the old Spice Islands, where the sea sits close to every doorstep and the sky turns warm at dusk.", "id": "Perhentian pertama kita adalah Maluku, gugusan Kepulauan Rempah, tempat laut selalu dekat dengan setiap pintu rumah dan langit menghangat saat senja." },
+    { "en": "Your camera is loaded and ready. Let us go and see what the people of Maluku have held close to their hearts.", "id": "Kameramu sudah terisi dan siap. Mari kita lihat apa yang masih dijaga erat oleh masyarakat Maluku." }
   ],
   "decor": [
-    { "id": "dec_palm_l", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 120, "y": 360, "bbox": { "x": 90, "y": 250, "w": 60, "h": 220 } },
-    { "id": "dec_palm_r", "name": "Palm Tree", "sprite": "palm", "idleAnim": "sway", "x": 1170, "y": 360, "bbox": { "x": 1140, "y": 250, "w": 60, "h": 220 } },
-    { "id": "dec_marawa", "name": "Marawa Flag", "sprite": "marawa", "idleAnim": "sway", "x": 500, "y": 300, "bbox": { "x": 480, "y": 240, "w": 40, "h": 140 } },
-    { "id": "dec_surau", "name": "Surau", "sprite": "surau", "idleAnim": "breathe", "x": 1050, "y": 250, "bbox": { "x": 980, "y": 190, "w": 140, "h": 120 } }
+    { "id": "dec_bakarbatu", "name": "Bakar Batu", "sprite": "bakar_batu_1", "noShadow": true, "x": 563, "y": 450, "bbox": { "x": 448, "y": 408, "w": 230, "h": 84 } }
   ],
   "objects": [
     {
-      "id": "obj_rumahgadang",
-      "name": "Rumah Gadang",
-      "sprite": "rumah_gadang",
-      "idleAnim": "breathe",
-      "x": 340, "y": 420,
-      "bbox": { "x": 255, "y": 360, "w": 170, "h": 120 },
+      "id": "obj_honai",
+      "name": "Rumah Honai",
+      "sprite": "honai_1",
+      "noShadow": true,
+      "x": 958, "y": 268,
+      "bbox": { "x": 768, "y": 110, "w": 380, "h": 316 },
       "mission": {
-        "en": "Frame the grand house whose roof curves up like a pair of buffalo horns",
-        "id": "Bidik rumah megah yang atapnya melengkung seperti sepasang tanduk kerbau"
-      },
-      "isSpecial": false,
-      "challenge" : "none"
-    },
-    {
-      "id": "obj_nasipadang",
-      "name": "Nasi Padang Display",
-      "sprite": "nasi_padang",
-      "idleAnim": "breathe",
-      "x": 960, "y": 450,
-      "bbox": { "x": 895, "y": 402, "w": 130, "h": 95 },
-      "mission": {
-        "en": "Capture the restaurant window stacked high with a dozen little plates",
-        "id": "Abadikan etalase rumah makan yang penuh tumpukan belasan piring kecil"
-      },
-      "isSpecial": false,
-      "challenge" : "none"
-    },
-    {
-      "id": "obj_taripiring",
-      "name": "Tari Piring Dancer",
-      "sprite": "tari_piring",
-      "idleAnim": "sway",
-      "x": 650, "y": 440,
-      "bbox": { "x": 610, "y": 365, "w": 80, "h": 150 },
-      "mission": {
-        "en": "Find the dancer spinning porcelain plates on her open palms",
-        "id": "Temukan penari yang memutar piring porselen di telapak tangannya yang terbuka"
+        "en": "Frame the round, thatch-roofed house standing at the heart of the village",
+        "id": "Bidik rumah beratap jerami yang berdiri bundar di tengah kampung"
       },
       "isSpecial": true,
-      "challenge" : "none",
+      "challenge": "none",
       "dialog": {
-        "speaker": { "en": "Local Dancer", "id": "Penari Setempat" },
+        "speaker": { "en": "Village Elder", "id": "Kepala Suku" },
         "lines": [
-          { "en": "Watch her hands closely. The plates keep spinning and never once slip.", "id": "Perhatikan tangannya baik-baik. Piring-piring itu terus berputar dan tak sekali pun terlepas." },
-          { "en": "That is decades of quiet practice, all folded into a single beat.", "id": "Itu adalah hasil latihan bertahun-tahun yang tenang, semua terangkum dalam satu ketukan." },
-          { "en": "She notices your camera and gives a warm nod. Some moments are truly worth keeping.", "id": "Ia melihat kameramu dan memberi anggukan hangat. Beberapa momen memang layak untuk disimpan." }
+          { "en": "Welcome, traveler. This honai has kept my family warm through more seasons than I can count.", "id": "Selamat datang, pengelana. Honai ini sudah menghangatkan keluargaku lebih banyak musim daripada yang bisa kuhitung." },
+          { "en": "Its round walls and thick thatch keep the cold mountain air outside where it belongs.", "id": "Dinding bundar dan atap jerami tebalnya menahan udara pegunungan yang dingin tetap di luar." },
+          { "en": "Stay a while, and let your camera see what still gathers us together.", "id": "Tinggallah sejenak, dan biarkan kameramu melihat apa yang masih menyatukan kami." }
         ]
       }
+    },
+    {
+      "id": "obj_papeda",
+      "name": "Papeda & Sagu Lempeng",
+      "sprite": "papeda_1",
+      "noShadow": true,
+      "x": 941, "y": 554,
+      "bbox": { "x": 783, "y": 441, "w": 315, "h": 225 },
+      "mission": {
+        "en": "Capture the sago being pounded into papeda beside its crisp lempeng cousins",
+        "id": "Abadikan sagu yang sedang ditumbuk menjadi papeda di samping sagu lempeng yang renyah"
+      },
+      "isSpecial": false,
+      "challenge": "none"
+    },
+    {
+      "id": "obj_tahuri",
+      "name": "Tahuri",
+      "sprite": "tahuri_1",
+      "noShadow": true,
+      "musicNote": true,
+      "x": 401, "y": 531,
+      "bbox": { "x": 329, "y": 443, "w": 144, "h": 175 },
+      "mission": {
+        "en": "Find the conch shell blown like a horn to call the village together",
+        "id": "Temukan kulit kerang yang ditiup bagai terompet untuk memanggil warga berkumpul"
+      },
+      "isSpecial": false,
+      "challenge": "none"
+    },
+    {
+      "id": "obj_tifa",
+      "name": "Tifa",
+      "sprite": "tifa_1",
+      "noShadow": true,
+      "musicNote": true,
+      "x": 604, "y": 303,
+      "bbox": { "x": 542, "y": 220, "w": 124, "h": 166 },
+      "mission": {
+        "en": "Frame the hand drum whose beat keeps every dancer moving together",
+        "id": "Bidik gendang tangan yang tabuhannya menjaga setiap penari bergerak bersama"
+      },
+      "isSpecial": false,
+      "challenge": "none"
+    },
+    {
+      "id": "obj_rumba",
+      "name": "Rumba",
+      "sprite": "rumba_1",
+      "noShadow": true,
+      "musicNote": true,
+      "x": 163, "y": 381,
+      "bbox": { "x": 87, "y": 301, "w": 152, "h": 159 },
+      "mission": {
+        "en": "Photograph the pair of flower shakers rattling in time with the dance",
+        "id": "Potret sepasang kerincingan bunga yang berbunyi mengikuti irama tarian"
+      },
+      "isSpecial": false,
+      "challenge": "none"
     }
   ]
 }
