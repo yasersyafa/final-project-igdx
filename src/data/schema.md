@@ -57,6 +57,9 @@ Each level file lives in `src/data/levels/levelN.json`.
 - **Exactly one** object has `isSpecial: true` and carries a `dialog`.
 - `idleAnim` maps to a procedural motion preset name, not a spritesheet (for now):
   `"bob"`, `"breathe"`, or `"sway"`. Omit for a fully static object.
+- `musicNote: true` spawns a looping "♪"/"♫" above the object that rises, drifts,
+  and fades out (`noteFloat` in `src/anim/motion.js`). Use on instrument objects
+  to read as "playing". Disabled under reduced-motion.
 - `bbox` is the framing/scoring hit area in world pixels (top-left origin). Keep it
   consistent with `x,y` (typically centered on the object).
 - `x,y` is the object **center** (sprites/shapes use origin 0.5, 0.5).

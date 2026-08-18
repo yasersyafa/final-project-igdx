@@ -2,7 +2,7 @@
 // Thin Phaser wrapper. Origin (0.5,0.5) so swapping in a same-bounds sprite needs
 // no motion edits. Idle motion + capture highlight come from src/anim/motion.js.
 import Phaser from 'phaser';
-import { idleByName, DUR } from '../anim/motion.js';
+import { idleByName, noteFloat, DUR, motionFlags } from '../anim/motion.js';
 import { FONTS } from '../config/fonts.js';
 
 // Stable color per id so placeholder shapes are distinguishable.
@@ -73,6 +73,7 @@ export class PhotoObject extends Phaser.GameObjects.Container {
 
     this.captured = false;
     this._startIdle();
+    this._startNoteLoop();
   }
 
   _startIdle() {
@@ -80,6 +81,40 @@ export class PhotoObject extends Phaser.GameObjects.Container {
     if (this.data_.idleAnim) {
       idleByName(this.data_.idleAnim, this.body_, { shadow: this.shadow });
     }
+  }
+
+  // level data "musicNote: true" -> a "♪" spawns above the object, rises,
+  // drifts sideways and fades out (noteFloat), repeating on a loop. Used for
+  // instrument objects (e.g. Tagonggong, Kolintang) to read as "playing".
+  _startNoteLoop() {
+    if (!this.data_.musicNote) return;
+    const spawnNote = () => {
+      if (!this.scene || motionFlags.reduced) return;
+      const glyph = Math.random() < 0.5 ? '♪' : '♫';
+      const note = this.scene.add.text(0, -this.bbox.h * 0.3, glyph, {
+        fontFamily: FONTS.body,
+        fontSize: '20px',
+        color: '#ffe9a8',
+      }).setOrigin(0.5, 0.5);
+      this.add(note);
+      noteFloat(note, {
+        distance: 34,
+        drift: (Math.random() - 0.5) * 28,
+        duration: DUR.idleBob * 1.4,
+        onComplete: () => note.destroy(),
+      });
+    };
+    spawnNote();
+    this._noteTimer = this.scene.time.addEvent({
+      delay: 1400,
+      loop: true,
+      callback: spawnNote,
+    });
+  }
+
+  destroy(fromScene) {
+    if (this._noteTimer) this._noteTimer.remove(false);
+    super.destroy(fromScene);
   }
 
   // STAGING: brief highlight above siblings, no scale animation.

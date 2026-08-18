@@ -47,7 +47,8 @@
         "en": "Find the drum that beats out the rhythm calling everyone into the Tulude dance",
         "id": "Temukan gendang yang menabuh irama untuk mengajak semua orang menari dalam Tulude"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "musicNote": true
     },
     {
       "id": "obj_cakalangfufu",
@@ -74,7 +75,8 @@
         "en": "Frame the wooden xylophone whose rows of tuned bars ring out warm island melodies",
         "id": "Bidik alat musik kayu yang deretan bilahnya melantunkan melodi hangat khas kepulauan"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "musicNote": true
     },
     {
       "id": "obj_rumahwale",

@@ -179,6 +179,27 @@ export function idleSway(target, opts = {}) {
   });
 }
 
+// noteFloat — one-shot: Arcs (drift while rising), Slow-out, Appeal.
+// Rises and drifts sideways while fading to 0. Caller spawns+destroys the
+// target (e.g. a "♪" text) per shot; this only drives the transform.
+export function noteFloat(target, opts = {}) {
+  const s = sceneOf(target); if (!s || motionFlags.reduced) return null;
+  const baseX = target.x, baseY = target.y;
+  const dy = amp(opts.distance ?? 40);
+  const dx = amp(opts.drift ?? 14);
+  target.setAlpha(opts.startAlpha ?? 1);
+  return s.tweens.add({
+    targets: target,
+    y: baseY - dy,
+    x: baseX + dx,
+    alpha: 0,
+    ease: EASE.out,
+    duration: opts.duration ?? DUR.idleBob,
+    delay: opts.delay ?? 0,
+    onComplete: opts.onComplete,
+  });
+}
+
 // Secondary action: shadow ellipse scales inversely to bob height.
 function attachShadow(s, shadow, target, baseY, dy, duration, delay) {
   const b = baseScale(shadow);
@@ -311,6 +332,6 @@ export function fadeScene(scene, dir = 'in', opts = {}) {
 export default {
   DUR, EASE, motionFlags, setReducedMotion,
   popIn, popOut, pressDip, squashLand,
-  idleBob, idleBreathe, idleSway, idleByName,
+  idleBob, idleBreathe, idleSway, idleByName, noteFloat,
   reticleSettle, shutterFlash, checkPop, missPulse, gradeReveal, fadeScene,
 };
