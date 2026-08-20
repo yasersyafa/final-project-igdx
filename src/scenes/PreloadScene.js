@@ -56,13 +56,24 @@ export class PreloadScene extends Phaser.Scene {
     this.load.audio("bgm_sulut", "src/sounds/soundtrack/Sulut_BGM.mp3");
     this.load.image("bg_maluku", "src/arts/level-1/background.png");
     this.load.image("honai_1", "src/arts/level-1/karowari.png");
-    this.load.image("bakar_batu_1", "src/arts/level-1/bakar-batu.png");
-    this.load.image("sagu_1", "src/arts/level-1/papeda.png");
-    this.load.image("tahuri_1", "src/arts/level-1/music-1.png");
-    this.load.image("rumba_1", "src/arts/level-1/music-2.png");
-    this.load.image("tifa_1", "src/arts/level-1/music-3.png");
+    this.load.image("bakar_batu_1", "src/arts/level-1/api-1.png");
+    this.load.image("bakar_batu_2", "src/arts/level-1/api-2.png");
+    this.load.image("bakar_batu_3", "src/arts/level-1/api-3.png");
+    this.load.image("sagu_1", "src/arts/level-1/sagu-1.png");
+    this.load.image("sagu_2", "src/arts/level-1/sagu-2.png");
+    this.load.image("tahuri_1", "src/arts/level-1/tahuri-1.png");
+    this.load.image("tahuri_2", "src/arts/level-1/tahuri-2.png");
+    this.load.image("tahuri_3", "src/arts/level-1/tahuri-3.png");
+    this.load.image("tifa_1", "src/arts/level-1/tifa-1.png");
+    this.load.image("tifa_2", "src/arts/level-1/tifa-2.png");
+    this.load.image("tifa_3", "src/arts/level-1/tifa-3.png");
+    this.load.image("rumba_1", "src/arts/level-1/rumba-1.png");
+    this.load.image("rumba_2", "src/arts/level-1/rumba-2.png");
+    this.load.image("rumba_3", "src/arts/level-1/rumba-3.png");
     this.load.image("bg_manado", "src/arts/level-2/background.png");
-    this.load.image("cakalang_fufu", "src/arts/level-2/cakalang-2.png");
+    this.load.image("cakalang_closed", "src/arts/level-2/Cakalangfufu_Closed.png");
+    this.load.image("cakalang_open_1", "src/arts/level-2/Cakalangfufu_Open_1.png");
+    this.load.image("cakalang_open_2", "src/arts/level-2/Cakalangfufu_Open_2.png");
     this.load.image("rumah_wale", "src/arts/level-2/wale.png");
     this.load.image("kolintang_1", "src/arts/level-2/Kolintang_1.png");
     this.load.image("kolintang_2", "src/arts/level-2/Kolintang_2.png");
@@ -84,6 +95,40 @@ export class PreloadScene extends Phaser.Scene {
     // --- REGISTER idleAnim ANIMATIONS HERE when real spritesheets exist ----
     // (Idle motion is procedural for now — see src/anim/motion.js.)
     this.anims.create({
+      key: "anim_bakarbatu",
+      frames: [
+        { key: "bakar_batu_1" },
+        { key: "bakar_batu_2" },
+        { key: "bakar_batu_3" },
+      ],
+      frameRate: 6,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "anim_sagu",
+      frames: [{ key: "sagu_1" }, { key: "sagu_2" }],
+      frameRate: 2,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "anim_tahuri",
+      frames: [{ key: "tahuri_1" }, { key: "tahuri_2" }, { key: "tahuri_3" }],
+      frameRate: 4,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "anim_tifa",
+      frames: [{ key: "tifa_1" }, { key: "tifa_2" }, { key: "tifa_3" }],
+      frameRate: 4,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "anim_rumba",
+      frames: [{ key: "rumba_1" }, { key: "rumba_2" }, { key: "rumba_3" }],
+      frameRate: 4,
+      repeat: -1,
+    });
+    this.anims.create({
       key: "anim_kolintang",
       frames: [
         { key: "kolintang_1" },
@@ -97,6 +142,12 @@ export class PreloadScene extends Phaser.Scene {
     this.anims.create({
       key: "anim_tulude",
       frames: [{ key: "tulude_1" }, { key: "tulude_2" }],
+      frameRate: 2,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "anim_cakalang_open",
+      frames: [{ key: "cakalang_open_1" }, { key: "cakalang_open_2" }],
       frameRate: 2,
       repeat: -1,
     });

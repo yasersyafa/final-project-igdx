@@ -22,10 +22,11 @@
       "id": "dec_bakarbatu",
       "name": "Bakar Batu",
       "sprite": "bakar_batu_1",
+      "spriteAnim": "anim_bakarbatu",
       "noShadow": true,
-      "x": 563,
-      "y": 450,
-      "bbox": { "x": 448, "y": 408, "w": 230, "h": 84 }
+      "x": 583,
+      "y": 415,
+      "bbox": { "x": 448, "y": 286, "w": 270, "h": 258 }
     }
   ],
   "objects": [
@@ -34,9 +35,9 @@
       "name": "Rumah Honai",
       "sprite": "honai_1",
       "noShadow": true,
-      "x": 958,
+      "x": 988,
       "y": 268,
-      "bbox": { "x": 768, "y": 110, "w": 380, "h": 316 },
+      "bbox": { "x": 798, "y": 110, "w": 380, "h": 316 },
       "mission": {
         "en": "Frame the round, thatch-roofed house standing at the heart of the village",
         "id": "Bidik rumah beratap jerami yang berdiri bundar di tengah kampung"
@@ -65,6 +66,7 @@
       "id": "obj_papeda",
       "name": "Sagu Lempeng",
       "sprite": "sagu_1",
+      "spriteAnim": "anim_sagu",
       "noShadow": true,
       "x": 941,
       "y": 554,
@@ -80,6 +82,7 @@
       "id": "obj_tahuri",
       "name": "Tahuri",
       "sprite": "tahuri_1",
+      "spriteAnim": "anim_tahuri",
       "noShadow": true,
       "musicNote": true,
       "x": 401,
@@ -96,11 +99,12 @@
       "id": "obj_tifa",
       "name": "Tifa",
       "sprite": "tifa_1",
+      "spriteAnim": "anim_tifa",
       "noShadow": true,
       "musicNote": true,
-      "x": 604,
+      "x": 484,
       "y": 303,
-      "bbox": { "x": 542, "y": 220, "w": 124, "h": 166 },
+      "bbox": { "x": 410, "y": 220, "w": 148, "h": 166 },
       "mission": {
         "en": "Frame the hand drum whose beat keeps every dancer moving together",
         "id": "Bidik gendang tangan yang tabuhannya menjaga setiap penari bergerak bersama"
@@ -112,11 +116,12 @@
       "id": "obj_rumba",
       "name": "Rumba",
       "sprite": "rumba_1",
+      "spriteAnim": "anim_rumba",
       "noShadow": true,
       "musicNote": true,
       "x": 163,
       "y": 381,
-      "bbox": { "x": 87, "y": 301, "w": 152, "h": 159 },
+      "bbox": { "x": 97, "y": 301, "w": 131, "h": 159 },
       "mission": {
         "en": "Photograph the pair of flower shakers rattling in time with the dance",
         "id": "Potret sepasang kerincingan bunga yang berbunyi mengikuti irama tarian"
