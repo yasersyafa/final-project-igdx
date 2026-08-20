@@ -54,6 +54,7 @@ export function initLogicSystem(scene, bus, levelData) {
       if (dataUrl) addPhoto(levelData.id, { id, dataUrl, objectId });
     }
 
+    let isFirstCapture = false;
     if (res.success) {
       const sprite = sprites.get(res.objectId);
       if (sprite) sprite.flashHighlight();
@@ -63,14 +64,16 @@ export function initLogicSystem(scene, bus, levelData) {
       // Live shot-list check-off: fire once per mission object.
       if (!captured.has(res.objectId)) {
         captured.add(res.objectId);
+        isFirstCapture = true;
         bus.emit(EVENTS.MISSION_CAPTURED, { objectId: res.objectId });
       }
     }
 
-    var obj = objects.find((o) => o.id === res.objectId);
-    const newObjId = res.objectId + "_after";
-    if(res.success){
-      if(obj && obj.dialog && obj.challenge == "before"){
+    const obj = objects.find((o) => o.id === res.objectId);
+    // before/after dialog + sprite swap fires once, on the first successful
+    // capture of each state, not on every repeat shot of an already-captured object.
+    if (res.success && isFirstCapture) {
+      if (obj && obj.dialog && obj.challenge === "before") {
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(obj.dialog.speaker),
           lines: (obj.dialog.lines || []).map(L),
@@ -78,23 +81,16 @@ export function initLogicSystem(scene, bus, levelData) {
         const beforeSprite = sprites.get(res.objectId);
         if (beforeSprite) beforeSprite.setVisible(false);
 
-        const afterSprite = sprites.get(newObjId);
-        if (afterSprite) {
-          afterSprite.setVisible(true);
-          obj = objects.find((o) => o.id === newObjId);
-        }
-      }
-
-      else if(obj && obj.dialog && obj.challenge == "after"){
+        const afterSprite = sprites.get(res.objectId + "_after");
+        if (afterSprite) afterSprite.setVisible(true);
+      } else if (obj && obj.dialog && obj.challenge === "after") {
         bus.emit(EVENTS.DIALOG_SHOW, {
-          speaker: L(newObj.dialog.speaker),
-          lines: (newObj.dialog.lines || []).map(L),
+          speaker: L(obj.dialog.speaker),
+          lines: (obj.dialog.lines || []).map(L),
         });
       }
     }
 
-    var newObj = objects.find((o) => o.id === newObjId);
-    
 
     if (res.success && res.isSpecial && !specialShown) {
       specialShown = true;

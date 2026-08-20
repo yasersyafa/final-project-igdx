@@ -53,8 +53,30 @@
     },
     {
       "id": "obj_cakalangfufu",
-      "name": "Cakalang Fufu",
-      "sprite": "cakalang_fufu",
+      "name": "Cakalang Fufu Closed",
+      "sprite": "cakalang_closed",
+      "noShadow": true,
+      "x": 620, "y": 280,
+      "bbox": { "x": 490, "y": 141, "w": 261, "h": 278 },
+      "mission": {
+        "en": "Find the smokehouse where cakalang fufu is curing, still hidden behind the fire's smoke",
+        "id": "Temukan pondok asap tempat cakalang fufu diasapi, masih tersembunyi di balik kepulan asap"
+      },
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "The tuna strips are still curing inside, hidden by the smoke.", "id": "Potongan cakalangnya masih diasapi di dalam, tersembunyi oleh asap." },
+          { "en": "There! The smoke has cleared and the golden cakalang fufu is ready to be seen.", "id": "Nah! Asapnya sudah memudar dan cakalang fufu keemasan itu siap terlihat." }
+        ]
+      }
+    },
+    {
+      "id": "obj_cakalangfufu_after",
+      "name": "Cakalang Fufu Open",
+      "sprite": "cakalang_open_1",
+      "spriteAnim": "anim_cakalang_open",
       "noShadow": true,
       "x": 620, "y": 280,
       "bbox": { "x": 490, "y": 141, "w": 261, "h": 278 },
@@ -62,7 +84,14 @@
         "en": "Capture the smoked skipjack tuna hanging golden and fragrant over its coconut husk fire",
         "id": "Abadikan ikan cakalang asap yang tergantung keemasan dan harum di atas api sabut kelapa"
       },
-      "isSpecial": false
+      "isSpecial": false,
+      "challenge": "after",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "There it is, the cakalang fufu in full golden glory, smoky and ready to eat.", "id": "Itu dia, cakalang fufu dalam kemilau keemasan penuh, harum asap dan siap disantap." }
+        ]
+      }
     },
     {
       "id": "obj_kolintang",
