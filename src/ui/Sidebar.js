@@ -90,7 +90,8 @@ export class Sidebar {
   }
 
   // Switch tab content. Auto-opens the drawer if it's closed (e.g. a fresh photo
-  // pulls the roll tab into view so the player notices it landed).
+  // pulls the roll tab into view so the player notices it landed) — but only
+  // visually while the camera is lowered; see _open()'s camVisible guard.
   showTab(tab) {
     if (this.tab === tab && this.open) return;
     this.tab = tab;
@@ -102,11 +103,18 @@ export class Sidebar {
     if (!this.open) this._open();
   }
 
-  toggle() { this.open ? this._close() : this._open(); }
+  toggle() {
+    if (!this.camVisible) return; // handle is hidden/non-interactive while aiming anyway
+    this.open ? this._close() : this._open();
+  }
 
   _open() {
     this.open = true;
     this._updateHandleArrow();
+    // Remember the intent (e.g. PHOTO_TAKEN's showTab('roll') mid-aim) but don't
+    // reveal it until the camera is actually lowered — never slide open over the
+    // viewfinder/snapshot strip while aiming.
+    if (!this.camVisible) return;
     this._slidePanel(this.openX);
     if (this.tab === 'shots') this.missions.show();
   }
@@ -127,16 +135,28 @@ export class Sidebar {
       if (this.open) this._slidePanel(this.openX);
     } else {
       popOut(this.handle, { onComplete: () => this.handle.setVisible(false) });
-      if (this.open) this._slidePanel(this.closedX);
+      // Snap shut instantly (no tween) every time camera mode is entered, whatever
+      // state it was in — guarantees the drawer can never be mid-slide, or forced
+      // back open by a stray showTab() call, while a snapshot is taken.
+      this._snapClosed();
     }
+  }
+
+  _snapClosed() {
+    if (this._panelTween) { this._panelTween.stop(); this._panelTween = null; }
+    if (this._handleTween) { this._handleTween.stop(); this._handleTween = null; }
+    this.panel.x = this.closedX;
+    this.handle.x = this._handleX(this.closedX);
   }
 
   // Tweens the panel and rides the handle along its inner edge, in lockstep —
   // same ease/duration on both keeps the handle's offset from the panel constant
   // at every frame, so it visually stays glued to the panel while it slides.
   _slidePanel(targetX) {
-    this.scene.tweens.add({ targets: this.panel, x: targetX, ease: EASE.cubicOut, duration: DUR.base });
-    this.scene.tweens.add({ targets: this.handle, x: this._handleX(targetX), ease: EASE.cubicOut, duration: DUR.base });
+    if (this._panelTween) this._panelTween.stop();
+    if (this._handleTween) this._handleTween.stop();
+    this._panelTween = this.scene.tweens.add({ targets: this.panel, x: targetX, ease: EASE.cubicOut, duration: DUR.base });
+    this._handleTween = this.scene.tweens.add({ targets: this.handle, x: this._handleX(targetX), ease: EASE.cubicOut, duration: DUR.base });
   }
 
   _handleX(panelX) {
