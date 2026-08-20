@@ -3,6 +3,7 @@
   "name": "Maluku",
   "background": "bg_maluku",
   "bgColor": "#e8935f",
+  "bgm": "bgm_maluku",
   "cutscene": [
     {
       "en": "The job is a simple one. Go out there and photograph the culture that is still living and breathing.",
