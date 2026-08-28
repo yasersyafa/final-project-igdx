@@ -7,7 +7,7 @@ import { loadProgress } from '../core/progress.js';
 import { popIn, fadeScene } from '../anim/motion.js';
 import { makeButton } from '../ui/Button.js';
 import { LevelInfoDialog } from '../ui/LevelInfoDialog.js';
-import { FONTS } from '../config/fonts.js';
+import { FONTS, letterSpacing } from '../config/fonts.js';
 import { THEME } from '../config/theme.js';
 import { t, L } from '../core/i18n.js';
 
@@ -20,7 +20,7 @@ export class LevelSelectScene extends Phaser.Scene {
     fadeScene(this, 'in');
 
     const head = this.add.text(W / 2, H * 0.22, t('levelselect.title'), {
-      fontFamily: FONTS.display, fontSize: '40px', color: THEME.ink, fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '40px', letterSpacing: letterSpacing(40), color: THEME.ink, fontStyle: 'bold',
     }).setOrigin(0.5);
     popIn(head);
 

@@ -45,6 +45,15 @@ export class DialogBox {
     }).setOrigin(1, 0);
     this.panel.add([bg, nameTag, this.speaker, this.body, this.hint]);
 
+    // Character portrait, standing beside (right of) the panel — not a panel
+    // child so it can be taller than the box and pop in/out on its own.
+    this.portraitW = 200;
+    const portraitOverlap = 40; // beririsan dgn sisi panel
+    const portraitYOffset = 30; // naik dari bottom screen
+    const portraitX = W / 2 + pw / 2 - portraitOverlap + this.portraitW / 2;
+    this.portrait = scene.add.image(portraitX, H - portraitYOffset, 'girl_happy')
+      .setOrigin(0.5, 1).setDepth(depth + 2).setVisible(false);
+
     this._onShow = (d) => this.show(d);
     bus.on(EVENTS.DIALOG_SHOW, this._onShow);
 
@@ -61,7 +70,7 @@ export class DialogBox {
     });
   }
 
-  show({ speaker, lines }) {
+  show({ speaker, lines, portrait }) {
     this.open = true;
     this.lines = lines || [];
     this.index = 0;
@@ -69,6 +78,19 @@ export class DialogBox {
     this.body.setText('');
     this.panel.setVisible(true);
     this.scene.tweens.add({ targets: this.dim, fillAlpha: 0.45, ease: EASE.out, duration: DUR.base });
+
+    const key = portrait === null ? null : (portrait || 'girl_happy');
+    if (key && this.scene.textures.exists(key)) {
+      this.portrait.setTexture(key);
+      const src = this.scene.textures.get(key).getSourceImage();
+      this.portrait.setDisplaySize(this.portraitW, this.portraitW * (src.height / src.width));
+      this.portrait.__baseScale = null; // recapture: display size just changed
+      this.portrait.setVisible(true);
+      popIn(this.portrait, { delay: 60 });
+    } else {
+      this.portrait.setVisible(false);
+    }
+
     popIn(this.panel, {
       onComplete: () => {
         // OVERLAPPING ACTION: speaker fades in, then first line.
@@ -130,6 +152,7 @@ export class DialogBox {
     this._stopTyping();
     this.open = false;
     this.scene.tweens.add({ targets: this.dim, fillAlpha: 0, ease: EASE.in, duration: DUR.base });
+    if (this.portrait.visible) popOut(this.portrait, { onComplete: () => this.portrait.setVisible(false) });
     popOut(this.panel, {
       onComplete: () => {
         this.panel.setVisible(true).setScale(1); // reset for next open

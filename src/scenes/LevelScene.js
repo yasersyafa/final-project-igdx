@@ -6,7 +6,7 @@ import { bus } from "../core/EventBus.js";
 import { EVENTS } from "../config/events.js";
 import { LEVELS } from "./levels.js";
 import { fadeScene } from "../anim/motion.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 
 import { initCameraSystem } from "../camera/index.js";
 import { initLogicSystem } from "../domain/index.js";
@@ -65,6 +65,7 @@ export class LevelScene extends Phaser.Scene {
       .text(W / 2, 70, level.name, {
         fontFamily: FONTS.display,
         fontSize: "26px",
+        letterSpacing: letterSpacing(26),
         color: "#ffffff",
       })
       .setOrigin(0.5)

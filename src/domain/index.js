@@ -34,6 +34,10 @@ export function initLogicSystem(scene, bus, levelData) {
     id: o.id, bbox: o.bbox, mission: o.mission, isSpecial: o.isSpecial, name: o.name,
   }));
 
+  // Guide's own portrait art isn't in yet (pending asset) — skip the portrait
+  // only for Guide-speaker lines; every other dialog defaults to the happy pose.
+  const isGuideDialog = (d) => d && d.speaker && d.speaker.en === 'Guide';
+
   const roll = [];            // every photo taken: { id, frameBounds, thumbKey }
   const captured = new Set();  // mission objectIds currently captured in the roll
   let specialShown = false;
@@ -77,6 +81,7 @@ export function initLogicSystem(scene, bus, levelData) {
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(obj.dialog.speaker),
           lines: (obj.dialog.lines || []).map(L),
+          portrait: isGuideDialog(obj.dialog) ? null : 'girl_happy',
         });
         const beforeSprite = sprites.get(res.objectId);
         if (beforeSprite) beforeSprite.setVisible(false);
@@ -87,6 +92,7 @@ export function initLogicSystem(scene, bus, levelData) {
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(obj.dialog.speaker),
           lines: (obj.dialog.lines || []).map(L),
+          portrait: isGuideDialog(obj.dialog) ? null : 'girl_happy',
         });
       }
     }
@@ -99,6 +105,7 @@ export function initLogicSystem(scene, bus, levelData) {
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(specialObj.dialog.speaker),
           lines: (specialObj.dialog.lines || []).map(L),
+          portrait: isGuideDialog(specialObj.dialog) ? null : 'girl_happy',
         });
       }
     }

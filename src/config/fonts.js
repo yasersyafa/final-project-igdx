@@ -5,4 +5,7 @@ export const FONTS = {
   body: '"Darumadrop One", system-ui, sans-serif',    // normal text
 };
 
+// Knewave letter-spacing: 19% of font size, per Phaser's numeric letterSpacing style.
+export const letterSpacing = (fontSizePx) => Math.round(fontSizePx * 0.19);
+
 export default FONTS;

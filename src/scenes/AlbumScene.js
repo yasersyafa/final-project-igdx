@@ -15,22 +15,53 @@ import { photosFor, removePhoto } from "../core/gallery.js";
 import { popIn, fadeScene } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { ConfirmDialog } from "../ui/ConfirmDialog.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { THEME } from "../config/theme.js";
 import { t, L } from "../core/i18n.js";
 import EDU from "../data/education.json";
 
 // Left-page thumbnail grid.
-const COLS = 3;
-const TW = 118,
-  TH = 88;
-const GAP_X = 14,
+const COLS = 2;
+const TW = 151,
+  TH = 112;
+const GAP_X = 16,
   GAP_Y = 14;
 
 // Tab (bookmark) colors — active is the warm parchment of the open book.
 const TAB_ON = 0xefe2c0,
   TAB_OFF = 0x6b5d43;
 const BOOK_FILL = 0xefe2c0;
+
+// Each frame asset's inner (white) photo window as a fraction of the frame's
+// own display size — measured off the source art so a photo inset into the
+// frame lines up regardless of what size the frame is drawn at. `active` is
+// the tilted "picked up" polaroid used for the selected thumbnail; its window
+// is a rotated square, so photos placed inside it also need `angle`.
+const FRAME_KEY = "photo_border";
+const ACTIVE_FRAME_KEY = "photo_border_active";
+const FRAME_CONFIGS = {
+  [FRAME_KEY]: { innerW: 0.854, innerH: 0.521, innerX: 0.004, innerY: -0.034, angle: 0 },
+  [ACTIVE_FRAME_KEY]: { innerW: 0.593, innerH: 0.499, innerX: 0.036, innerY: -0.07, angle: -8.4 },
+};
+
+// album-book.png's two page areas as fractions of the book's own display
+// size — measured off the source art (curved page edges, off-center spine).
+const BOOK_KEY = "album_book";
+const BOOK_PAGE_X_OFFSET = 0.237; // book-center → each page-center, fraction of bookW
+const BOOK_PAGE_TOP_FRAC = 0.025; // book top edge → usable page top, fraction of bookH
+const BOOK_PAGE_BOTTOM_FRAC = 0.943; // book top edge → usable page bottom, fraction of bookH
+
+// Vertical scrollbar for the left-page thumbnail grid, drawn from a track
+// pill (stretched to the page height — a plain capsule shape, so stretching
+// it has no distortion artifact) and a draggable thumb sized to how much of
+// the grid is visible.
+const SCROLL_TRACK_KEY = "scroll_track";
+const SCROLL_THUMB_KEY = "scroll_thumb";
+const SCROLLBAR_W = 14;
+const SCROLLBAR_THUMB_W = 8;
+// Breathing room so the grid + scrollbar don't touch the page's curved top
+// edge or the tab row at the bottom.
+const GRID_PAGE_PAD_Y = 24;
 
 export class AlbumScene extends Phaser.Scene {
   constructor() {
@@ -45,7 +76,7 @@ export class AlbumScene extends Phaser.Scene {
 
   create() {
     const { width: W, height: H } = this.cameras.main;
-    this.cameras.main.setBackgroundColor(THEME.bg);
+    this.cameras.main.setBackgroundColor("#E8BF92");
     fadeScene(this, "in");
 
     this.confirm = new ConfirmDialog(this);
@@ -53,37 +84,49 @@ export class AlbumScene extends Phaser.Scene {
     this._rightItems = []; // right-page display objects, cleared on re-render
     this._scroll = null; // active field-notes scroll state, or null
 
-    // Mouse-wheel scrolling for the (masked) field notes when they overflow.
-    this.input.on("wheel", (_p, _over, _dx, dy) => this._scrollBy(dy));
+    // Mouse-wheel scrolling for whichever (masked) side overflows — the left
+    // page's thumbnail grid, or the right page's field notes.
+    this.input.on("wheel", (p, _over, _dx, dy) => {
+      if (p.x < this.bookX) this._scrollLeftBy(dy);
+      else this._scrollBy(dy);
+    });
 
     const head = this.add
       .text(W / 2, H * 0.08, t("album.title"), {
         fontFamily: FONTS.display,
         fontSize: "40px",
+        letterSpacing: letterSpacing(40),
         color: THEME.ink,
         fontStyle: "bold",
       })
       .setOrigin(0.5);
     popIn(head);
 
-    // ---- book panel (placeholder for open-book asset) -----------------------
-    this.bookW = Math.min(W * 0.82, 980);
-    this.bookH = H * 0.66;
+    // ---- book panel -----------------------------------------------------
+    const maxBookW = Math.min(W * 0.9, 1150);
+    const maxBookH = H * 0.77;
+    const bookSize = this._containSize(BOOK_KEY, maxBookW, maxBookH);
+    this.bookW = bookSize.w;
+    this.bookH = bookSize.h;
     this.bookX = W / 2;
-    this.bookY = H * 0.57;
-    this.add
-      .rectangle(this.bookX, this.bookY, this.bookW, this.bookH, BOOK_FILL, 1)
-      .setStrokeStyle(4, 0x9c855a, 1);
-    // center "spine" divides the two pages
-    this.add
-      .rectangle(this.bookX, this.bookY, 3, this.bookH - 40, 0x9c855a, 0.5)
-      .setOrigin(0.5);
+    this.bookY = H * 0.517;
+    if (this.textures.exists(BOOK_KEY)) {
+      this.add.image(this.bookX, this.bookY, BOOK_KEY).setDisplaySize(this.bookW, this.bookH);
+    } else {
+      this.add
+        .rectangle(this.bookX, this.bookY, this.bookW, this.bookH, BOOK_FILL, 1)
+        .setStrokeStyle(4, 0x9c855a, 1);
+      // center "spine" divides the two pages
+      this.add
+        .rectangle(this.bookX, this.bookY, 3, this.bookH - 40, 0x9c855a, 0.5)
+        .setOrigin(0.5);
+    }
 
     // page centers + a shared inner top edge
-    this.lpx = this.bookX - this.bookW / 4;
-    this.rpx = this.bookX + this.bookW / 4;
-    this.pageTop = this.bookY - this.bookH / 2 + 28;
-    this.pageBottom = this.bookY + this.bookH / 2 - 24;
+    this.lpx = this.bookX - this.bookW * BOOK_PAGE_X_OFFSET;
+    this.rpx = this.bookX + this.bookW * BOOK_PAGE_X_OFFSET;
+    this.pageTop = this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_TOP_FRAC;
+    this.pageBottom = this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_BOTTOM_FRAC;
 
     // ---- level tabs (placeholder for bookmark asset) ------------------------
     this._buildTabs();
@@ -126,6 +169,7 @@ export class AlbumScene extends Phaser.Scene {
         .text(x, y, lv.name, {
           fontFamily: FONTS.display,
           fontSize: "18px",
+          letterSpacing: letterSpacing(18),
           color: active ? "#2b2417" : "#efe2c0",
           fontStyle: "bold",
         })
@@ -180,6 +224,60 @@ export class AlbumScene extends Phaser.Scene {
     return `gal_${id}`;
   }
 
+  // Fits a texture's native aspect ratio inside a (maxW, maxH) box — never
+  // stretches, so real art never comes out squashed. Falls back to the box
+  // size itself when the texture isn't loaded (e.g. placeholder rects, which
+  // have no native aspect to preserve).
+  _containSize(texKey, maxW, maxH) {
+    const src = this.textures.exists(texKey) && this.textures.get(texKey).getSourceImage();
+    if (!src || !src.width || !src.height) return { w: maxW, h: maxH };
+    const scale = Math.min(maxW / src.width, maxH / src.height);
+    return { w: src.width * scale, h: src.height * scale };
+  }
+
+  // Fills a (targetW, targetH) box exactly with a texture, 1:1 to the box —
+  // scales up to cover it and center-crops the overflow, so the photo never
+  // stretches (no aspect distortion) and never leaves gaps inside the frame's
+  // window (no letterboxing either).
+  _coverFit(img, texKey, targetW, targetH) {
+    const src = this.textures.get(texKey).getSourceImage();
+    const scale = Math.max(targetW / src.width, targetH / src.height);
+    const cropW = targetW / scale;
+    const cropH = targetH / scale;
+    img.setCrop((src.width - cropW) / 2, (src.height - cropH) / 2, cropW, cropH);
+    img.setDisplaySize(targetW, targetH);
+  }
+
+  // Draws a photo-border frame centered at (cx, cy), fit within (maxW,
+  // maxH), with the photo texture (or a placeholder rect) inset into the
+  // frame's window — also aspect-fit, never stretched. Pass { active: true }
+  // to use the tilted "picked up" frame instead of the default upright one —
+  // selection is shown by swapping the frame art, not by drawing an extra
+  // border on top. Returns { frame, photo } so callers can push both into
+  // their item list.
+  _framedPhoto(cx, cy, maxW, maxH, key, { active = false } = {}) {
+    const frameKey = active ? ACTIVE_FRAME_KEY : FRAME_KEY;
+    const cfg = FRAME_CONFIGS[frameKey];
+    const { w, h } = this._containSize(frameKey, maxW, maxH);
+    const frame = this.textures.exists(frameKey)
+      ? this.add.image(cx, cy, frameKey).setDisplaySize(w, h)
+      : this.add.rectangle(cx, cy, w, h, 0x000000, 0).setStrokeStyle(2, 0x9c855a, 0.8);
+    frame.setOrigin(0.5);
+
+    const innerCX = cx + w * cfg.innerX;
+    const innerCY = cy + h * cfg.innerY;
+    const innerMaxW = w * cfg.innerW;
+    const innerMaxH = h * cfg.innerH;
+    const hasPhoto = this.textures.exists(key);
+    const photo = hasPhoto
+      ? this.add.image(innerCX, innerCY, key)
+      : this.add.rectangle(innerCX, innerCY, innerMaxW, innerMaxH, 0xd8c8a0, 1);
+    photo.setOrigin(0.5).setAngle(cfg.angle);
+    if (hasPhoto) this._coverFit(photo, key, innerMaxW, innerMaxH);
+
+    return { frame, photo };
+  }
+
   _render(photos) {
     this._renderLeft(photos);
     const sel = photos.find((p) => p.id === this._selectedId) || null;
@@ -190,6 +288,7 @@ export class AlbumScene extends Phaser.Scene {
   _renderLeft(photos) {
     this._leftItems.forEach((o) => o.destroy());
     this._leftItems = [];
+    this._leftScroll = null;
 
     if (photos.length === 0) {
       const empty = this.add
@@ -207,38 +306,87 @@ export class AlbumScene extends Phaser.Scene {
     const rows = Math.ceil(photos.length / COLS);
     const gridW = COLS * TW + (COLS - 1) * GAP_X;
     const gridH = rows * TH + (rows - 1) * GAP_Y;
+    const areaTop = this.pageTop + GRID_PAGE_PAD_Y;
+    const areaBottom = this.pageBottom - GRID_PAGE_PAD_Y;
+    const pageH = areaBottom - areaTop;
     const startX = this.lpx - gridW / 2 + TW / 2;
-    const startY = this.pageTop + Math.max(0, (this.pageBottom - this.pageTop - gridH) / 2) + TH / 2;
+    const startY = areaTop + Math.max(0, (pageH - gridH) / 2) + TH / 2;
 
+    // Thumbnails live in a container so overflow can be masked and the whole
+    // grid scrolled by moving one object instead of every frame/photo pair.
+    const content = this.add.container(0, 0);
     photos.forEach((p, i) => {
       const cx = startX + (i % COLS) * (TW + GAP_X);
       const cy = startY + Math.floor(i / COLS) * (TH + GAP_Y);
       const key = this._key(p.id);
       const selected = p.id === this._selectedId;
 
-      const img = this.textures.exists(key)
-        ? this.add.image(cx, cy, key).setDisplaySize(TW, TH)
-        : this.add.rectangle(cx, cy, TW, TH, 0xd8c8a0, 1);
-      img.setOrigin(0.5).setInteractive({ useHandCursor: true });
-      img.on("pointerdown", () => this._select(p.id));
+      const { frame, photo: img } = this._framedPhoto(cx, cy, TW, TH, key, { active: selected });
+      frame.setInteractive({ useHandCursor: true });
+      frame.on("pointerdown", () => this._select(p.id));
+      content.add([frame, img]);
 
-      const border = this.add
-        .rectangle(cx, cy, TW, TH, 0x000000, 0)
-        .setOrigin(0.5)
-        .setStrokeStyle(selected ? 4 : 2, selected ? 0xc98a2b : 0x9c855a, selected ? 1 : 0.8);
-
-      this._leftItems.push(img, border);
-
-      // A small bookmark marks mission captures (they carry field notes).
-      if (p.objectId) {
-        const dot = this.add
-          .text(cx + TW / 2 - 5, cy - TH / 2 + 3, "📖", { fontSize: "14px" })
-          .setOrigin(1, 0);
-        this._leftItems.push(dot);
-      }
-
-      popIn(img, { delay: 40 + i * 25 });
+      popIn(frame, { delay: 40 + i * 25 });
     });
+    this._leftItems.push(content);
+
+    // Clip the grid to the page bounds so overflow scrolls instead of
+    // spilling onto the spine or off the bottom edge.
+    const maskW = gridW + 20;
+    const g = this.make.graphics({ add: false });
+    g.fillStyle(0xffffff);
+    g.fillRect(this.lpx - maskW / 2, areaTop, maskW, pageH);
+    content.setMask(g.createGeometryMask());
+    this._leftItems.push(g);
+
+    const max = Math.max(0, gridH - pageH);
+    if (max <= 0) return; // fits — no scrollbar needed
+
+    // Track + draggable thumb, tucked in the margin between the grid and the
+    // spine, matching the grid's own top/bottom padding so it doesn't run
+    // the full length of the page. Both are plain capsule art, so stretching
+    // the track vertically is safe (no recognizable detail to distort).
+    const trackX = this.lpx + gridW / 2 + 6;
+    const track = this.add
+      .image(trackX, areaTop, SCROLL_TRACK_KEY)
+      .setOrigin(0.5, 0)
+      .setDisplaySize(SCROLLBAR_W, pageH);
+    this._leftItems.push(track);
+
+    const thumbH = Math.max(30, (pageH * pageH) / gridH);
+    const thumb = this.add
+      .image(trackX, areaTop, SCROLL_THUMB_KEY)
+      .setOrigin(0.5, 0)
+      .setDisplaySize(SCROLLBAR_THUMB_W, thumbH)
+      .setInteractive({ useHandCursor: true, draggable: true, cursor: "grab" });
+    this._leftItems.push(thumb);
+
+    this._leftScroll = { content, thumb, top: areaTop, regionH: pageH, max, thumbH, offset: 0, dragBase: 0, dragY: 0 };
+
+    thumb.on("dragstart", (p) => {
+      this._leftScroll.dragBase = this._leftScroll.offset;
+      this._leftScroll.dragY = p.y;
+    });
+    thumb.on("drag", (p) => {
+      const s = this._leftScroll;
+      const range = s.regionH - s.thumbH;
+      const deltaOffset = range > 0 ? ((p.y - s.dragY) / range) * s.max : 0;
+      this._setLeftScroll(s.dragBase + deltaOffset);
+    });
+  }
+
+  // Wheel handler target: scroll the thumbnail grid by a wheel delta.
+  _scrollLeftBy(dy) {
+    if (!this._leftScroll) return;
+    this._setLeftScroll(this._leftScroll.offset + dy);
+  }
+
+  // Apply a clamped scroll offset to the grid content + scrollbar thumb.
+  _setLeftScroll(next) {
+    const s = this._leftScroll;
+    s.offset = Phaser.Math.Clamp(next, 0, s.max);
+    s.content.y = -s.offset;
+    s.thumb.y = s.top + (s.offset / s.max) * (s.regionH - s.thumbH);
   }
 
   _select(id) {
@@ -275,20 +423,15 @@ export class AlbumScene extends Phaser.Scene {
     const photoH = photoW * 0.75;
     const py = this.pageTop + photoH / 2;
     const key = this._key(photo.id);
-    const img = this.textures.exists(key)
-      ? this.add.image(this.rpx, py, key).setDisplaySize(photoW, photoH)
-      : this.add.rectangle(this.rpx, py, photoW, photoH, 0xd8c8a0, 1);
-    img.setOrigin(0.5);
-    const frame = this.add
-      .rectangle(this.rpx, py, photoW, photoH, 0x000000, 0)
-      .setStrokeStyle(3, 0x9c855a, 1);
-    this._rightItems.push(img, frame);
+    const { frame, photo: img } = this._framedPhoto(this.rpx, py, photoW, photoH, key);
+    this._rightItems.push(frame, img);
 
     // title
     const title = this.add
       .text(this.rpx, py + photoH / 2 + 14, info ? info.name : t("album.snapshot"), {
         fontFamily: FONTS.display,
         fontSize: "22px",
+        letterSpacing: letterSpacing(22),
         color: "#2b2417",
         fontStyle: "bold",
         align: "center",

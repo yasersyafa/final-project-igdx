@@ -62,7 +62,7 @@ export class ControlBar {
   // the player's explicit "finish anyway". All missions done -> finalize straight away.
   _onConfirm() {
     if (this._locked) {
-      this.bus.emit(EVENTS.DIALOG_SHOW, { lines: [t('confirm.empty')] });
+      this.bus.emit(EVENTS.DIALOG_SHOW, { lines: [t('confirm.empty')], portrait: 'girl_confused' });
       return;
     }
     const remaining = this._missionTotal - this._captured.size;

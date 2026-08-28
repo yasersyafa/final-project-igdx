@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { popIn, fadeScene, DUR, idleBob } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
 import { SettingsDialog } from "../ui/SettingsDialog.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { THEME as PALETTE } from "../config/theme.js";
 import { t } from "../core/i18n.js";
 import { bus } from "../core/EventBus.js";
@@ -23,6 +23,7 @@ export class MainMenuScene extends Phaser.Scene {
       .text(W / 2, H * 0.28, "Photo Walk", {
         fontFamily: FONTS.display,
         fontSize: "64px",
+        letterSpacing: letterSpacing(64),
         color: PALETTE.ink,
         fontStyle: "bold",
       })

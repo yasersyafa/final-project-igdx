@@ -8,7 +8,7 @@ import Phaser from 'phaser';
 import { bus } from '../core/EventBus.js';
 import { EVENTS } from '../config/events.js';
 import { fadeScene } from '../anim/motion.js';
-import { FONTS } from '../config/fonts.js';
+import { FONTS, letterSpacing } from '../config/fonts.js';
 import { L, t } from '../core/i18n.js';
 import { markTutorialSeen } from '../core/settings.js';
 
@@ -43,7 +43,7 @@ export class TutorialScene extends Phaser.Scene {
     this.world.add([bg, ground]);
 
     const title = this.add
-      .text(W / 2, 70, L(level.name), { fontFamily: FONTS.display, fontSize: '26px', color: '#ffffff' })
+      .text(W / 2, 70, L(level.name), { fontFamily: FONTS.display, fontSize: '26px', letterSpacing: letterSpacing(26), color: '#ffffff' })
       .setOrigin(0.5).setDepth(700).setAlpha(0);
     this.tweens.add({
       targets: title, alpha: 1, duration: 400, yoyo: true, hold: 1400, ease: 'Sine.easeInOut',

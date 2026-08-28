@@ -6,7 +6,7 @@
 import { popIn, popOut, EASE, DUR } from "../anim/motion.js";
 import { makeButton } from "./Button.js";
 import { ConfirmDialog } from "./ConfirmDialog.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { THEME } from "../config/theme.js";
 import { LANGUAGES } from "../config/languages.js";
 import { getLang, setLang, getSidebarSide, setSidebarSide } from "../core/settings.js";
@@ -68,6 +68,7 @@ export class SettingsDialog {
       .text(0, y + TITLE_H / 2, t("settings.title"), {
         fontFamily: FONTS.display,
         fontSize: "30px",
+        letterSpacing: letterSpacing(30),
         color: THEME.ink,
         fontStyle: "bold",
       })
@@ -95,6 +96,7 @@ export class SettingsDialog {
         .text(0, oy, l.label, {
           fontFamily: FONTS.display,
           fontSize: "20px",
+          letterSpacing: letterSpacing(20),
           color: THEME.ink,
         })
         .setOrigin(0.5);
@@ -128,6 +130,7 @@ export class SettingsDialog {
         .text(ox, sideOptY, t(s.key), {
           fontFamily: FONTS.display,
           fontSize: "18px",
+          letterSpacing: letterSpacing(18),
           color: THEME.ink,
         })
         .setOrigin(0.5);

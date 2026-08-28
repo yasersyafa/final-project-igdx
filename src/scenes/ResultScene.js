@@ -5,7 +5,7 @@ import { LEVELS } from "./levels.js";
 import { gradeForFrac, starsForFrac, recordResult } from "../core/progress.js";
 import { popIn, gradeReveal, checkPop, fadeScene } from "../anim/motion.js";
 import { makeButton } from "../ui/Button.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { THEME } from "../config/theme.js";
 import { t, L } from "../core/i18n.js";
 
@@ -41,6 +41,7 @@ export class ResultScene extends Phaser.Scene {
       .text(W / 2, 70, this.payload.levelName || t("result.title"), {
         fontFamily: FONTS.display,
         fontSize: "32px",
+        letterSpacing: letterSpacing(32),
         color: THEME.ink,
         fontStyle: "bold",
       })
@@ -110,6 +111,7 @@ export class ResultScene extends Phaser.Scene {
       .text(W / 2, y + 80, grade, {
         fontFamily: FONTS.display,
         fontSize: "64px",
+        letterSpacing: letterSpacing(64),
         color,
         fontStyle: "bold",
       })

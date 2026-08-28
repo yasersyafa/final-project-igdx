@@ -14,7 +14,7 @@ export const EVENTS = {
   MISSIONS_SYNC:   'mission:sync',     // reconcile ticks after a delete -> { capturedIds: string[] }
   SUBMIT_REQUESTED:'submit:requested', // Confirm clicked -> finalize & evaluate session
 
-  DIALOG_SHOW:     'dialog:show',      // -> { speaker, lines: string[] }
+  DIALOG_SHOW:     'dialog:show',      // -> { speaker, lines: string[], portrait? }
   DIALOG_CLOSED:   'dialog:closed',
 
   LEVEL_COMPLETED: 'level:completed',  // -> { total, max, breakdown, missionResults }
@@ -45,6 +45,10 @@ export const EVENTS = {
 // MISSION_CAPTURED payload = { objectId } — fired once, the first time a mission
 // object is photographed at coverage >= CAPTURE_THRESHOLD. Drives the live
 // shot-list check-off in the HUD.
+//
+// DIALOG_SHOW.portrait = optional texture key shown to the right of the dialogue
+// box. Omit to default to 'girl_happy'; pass null to show no portrait (e.g. the
+// Guide speaker, whose own portrait art isn't in yet).
 //
 // LEVEL_COMPLETED.missionResults = per mission object:
 // [{ objectId, name, mission, isSpecial, done: boolean, score: number }]

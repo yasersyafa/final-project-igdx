@@ -5,7 +5,7 @@
 import Phaser from "phaser";
 import { LEVELS } from "./levels.js";
 import { fadeScene, motionFlags, EASE, DUR } from "../anim/motion.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { t, L } from "../core/i18n.js";
 
 const BAR_H = 90;
@@ -107,6 +107,7 @@ export class CutsceneScene extends Phaser.Scene {
       .text(W - 28, H - 26, t("btn.skip"), {
         fontFamily: FONTS.display,
         fontSize: "16px",
+        letterSpacing: letterSpacing(16),
         color: "#c9c2b6",
       })
       .setOrigin(1, 0.5)

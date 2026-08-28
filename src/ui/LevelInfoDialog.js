@@ -4,7 +4,7 @@
 // Modeled on ui/ConfirmDialog.js — caller owns it and passes callbacks.
 import { popIn, popOut, EASE, DUR } from '../anim/motion.js';
 import { makeButton } from './Button.js';
-import { FONTS } from '../config/fonts.js';
+import { FONTS, letterSpacing } from '../config/fonts.js';
 import { THEME } from '../config/theme.js';
 import { t } from '../core/i18n.js';
 
@@ -22,7 +22,7 @@ export class LevelInfoDialog {
     this.panel = scene.add.container(W / 2, H / 2).setDepth(depth + 1).setVisible(false);
     const bg = scene.add.rectangle(0, 0, pw, ph, 0xfef2c4, 0.98).setOrigin(0.5).setStrokeStyle(3, THEME.panelBorder, 0.9);
     this.title = scene.add.text(0, -92, '', {
-      fontFamily: FONTS.display, fontSize: '30px', color: THEME.ink, fontStyle: 'bold',
+      fontFamily: FONTS.display, fontSize: '30px', letterSpacing: letterSpacing(30), color: THEME.ink, fontStyle: 'bold',
     }).setOrigin(0.5);
     this.desc = scene.add.text(0, -30, '', {
       fontFamily: FONTS.body, fontSize: '18px', color: THEME.muted,

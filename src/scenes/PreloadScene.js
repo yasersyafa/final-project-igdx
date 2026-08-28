@@ -4,7 +4,7 @@
 // and registering idle animations by the same keys the level data references.
 import Phaser from "phaser";
 import { EASE, DUR } from "../anim/motion.js";
-import { FONTS } from "../config/fonts.js";
+import { FONTS, letterSpacing } from "../config/fonts.js";
 import { t } from "../core/i18n.js";
 import * as AudioManager from "../core/AudioManager.js";
 
@@ -88,6 +88,13 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image("decor_corgi", "src/arts/level-2/decor-2.png");
     this.load.image("ui_dialogue_box", "src/arts/ui/dialogue-box.png");
     this.load.image("ui_dialogue_name", "src/arts/ui/dialogue-name.png");
+    this.load.image("girl_happy", "src/arts/characters/girl/happy.png");
+    this.load.image("girl_confused", "src/arts/characters/girl/confused.png");
+    this.load.image("photo_border", "src/arts/album/photo-border.png");
+    this.load.image("photo_border_active", "src/arts/album/photo-border-active.png");
+    this.load.image("album_book", "src/arts/album/album-book.png");
+    this.load.image("scroll_track", "src/arts/ui/outer-scroll.png");
+    this.load.image("scroll_thumb", "src/arts/ui/scroll-handler.png");
     // For now load nothing else real; ensure the bar still animates to 100%.
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }
@@ -180,6 +187,7 @@ export class PreloadScene extends Phaser.Scene {
       .text(W / 2, H / 2, t("boot.tapstart"), {
         fontFamily: FONTS.display,
         fontSize: "28px",
+        letterSpacing: letterSpacing(28),
         color: "#fff5e6",
       })
       .setOrigin(0.5)
