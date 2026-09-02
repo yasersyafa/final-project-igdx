@@ -6,12 +6,25 @@ import { coverage, framingScore } from './FramingScorer.js';
 // Checking each object independently against every photo would let one broad/loose
 // shot credit several missions at once — inconsistent with the live per-shot tick,
 // which only ever fires for the best match. Returns a Map<objectId, bestFramingScore>.
+const AFTER_SUFFIX = '_after';
+
 function bestPerPhotoCredits(photos, objects, config) {
   const threshold = config.CAPTURE_THRESHOLD;
   const scoring = config.SCORING;
   const scores = new Map();
+  const swapped = new Set();
+
   for (const p of photos) {
-    const covered = objects.filter((o) => coverage(o.bbox, p.frameBounds) >= threshold);
+    const active = objects.filter((o) => {
+      if (o.id.endsWith(AFTER_SUFFIX)) {
+        const beforeId = o.id.slice(0, -AFTER_SUFFIX.length);
+        return swapped.has(beforeId);
+      }
+      const hasAfterVariant = objects.some((e) => e.id === o.id + AFTER_SUFFIX);
+      return hasAfterVariant ? !swapped.has(o.id) : true;
+    });
+
+    const covered = active.filter((o) => coverage(o.bbox, p.frameBounds) >= threshold);
     if (covered.length === 0) continue;
     let best = covered[0];
     let bestScore = framingScore(best.bbox, p.frameBounds, scoring);
@@ -19,6 +32,14 @@ function bestPerPhotoCredits(photos, objects, config) {
       const s = framingScore(covered[i].bbox, p.frameBounds, scoring);
       if (s > bestScore) { best = covered[i]; bestScore = s; }
     }
+
+    // Replay the swap so any later photo in this same roll sees the after
+    // object as eligible, mirroring the live game exactly.
+    if (!best.id.endsWith(AFTER_SUFFIX)) {
+      const hasAfterVariant = objects.some((e) => e.id === best.id + AFTER_SUFFIX);
+      if (hasAfterVariant) swapped.add(best.id);
+    }
+    
     if (!best.mission) continue;
     const prev = scores.get(best.id) || 0;
     if (bestScore > prev) scores.set(best.id, bestScore);

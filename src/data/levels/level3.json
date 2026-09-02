@@ -16,6 +16,34 @@
   ],
   "objects": [
     {
+      "id": "obj_pemaingamelan1_before",
+      "name": "Pemain Gamelan 1",
+      "sprite": "Pemain Gamelan 1",
+      "idleAnim": "sway",
+      "x": 100, "y": 450,
+      "bbox": { "x": 100, "y": 395, "w": 100, "h": 110 },
+      "mission": {
+        "en": "Gamelan 1",
+        "id": "Gamelan 1"
+      },
+      "isSpecial": false,
+      "challenge": "before"
+    },
+    {
+      "id": "obj_pemaingamelan1_after",
+      "name": "Pemain Gamelan 1",
+      "sprite": "Pemain Gamelan 1",
+      "idleAnim": "sway",
+      "x": 400, "y": 450,
+      "bbox": { "x": 400, "y": 395, "w": 100, "h": 110 },
+      "mission": {
+        "en": "Gamelan 1",
+        "id": "Gamelan 1"
+      },
+      "isSpecial": false,
+      "challenge": "after"
+    },
+    {
       "id": "obj_becak",
       "name": "Becak",
       "sprite": "becak",

@@ -38,15 +38,34 @@ export function initLogicSystem(scene, bus, levelData) {
   // only for Guide-speaker lines; every other dialog defaults to the happy pose.
   const isGuideDialog = (d) => d && d.speaker && d.speaker.en === 'Guide';
 
+  const AFTER_SUFFIX = '_after';
   const roll = [];            // every photo taken: { id, frameBounds, thumbKey }
-  const captured = new Set();  // mission objectIds currently captured in the roll
+  const captured = new Set(); // mission objectIds currently captured in the roll
+  const swapped = new Set();  // before-object ids that have already flipped to "_after"
+                               // (tracked separately from `captured`: a "before" object
+                               // may carry no mission at all, so it can never appear in
+                               // `captured`, but it must still be able to trigger its swap)
   let specialShown = false;
 
   const onPhoto = ({ id, frameBounds, thumbKey }) => {
     roll.push({ id, frameBounds, thumbKey });
 
+    const activeEvalObjects = evalObjects.filter((o) => {
+      if (o.id.endsWith(AFTER_SUFFIX)) {
+        const beforeId = o.id.slice(0, -AFTER_SUFFIX.length);
+        return swapped.has(beforeId); // only eligible once its "before" has been swapped away
+      }
+      const hasAfterVariant = evalObjects.some((e) => e.id === o.id + AFTER_SUFFIX);
+      return hasAfterVariant ? !swapped.has(o.id) : true; // retire "before" once swapped
+    });
+
     // Per-shot evaluate: drives live feedback + the special-object dialog.
-    const res = evaluate(frameBounds, evalObjects, { isComplete: () => false }, CONFIG);
+    const res = evaluate(frameBounds, activeEvalObjects, { isComplete: () => false }, CONFIG);
+    // Whatever object was actually best-framed this shot, success or not — a
+    // mission-less "before" object always comes back as res.success === false
+    // (reason: 'wrong_object'), but it's still the matched object, and the
+    // swap below needs to fire off of it regardless of mission status.
+    const matchedObj = res.objectId ? objects.find((o) => o.id === res.objectId) : null;
 
     // Persist the shot to the per-level gallery (auto-save on capture). The
     // snapshot texture exists here since PHOTO_TAKEN fires in its callback.
@@ -73,22 +92,35 @@ export function initLogicSystem(scene, bus, levelData) {
       }
     }
 
-    const obj = objects.find((o) => o.id === res.objectId);
-    // before/after dialog + sprite swap fires once, on the first successful
-    // capture of each state, not on every repeat shot of an already-captured object.
-    if (res.success && isFirstCapture) {
-      if (obj && obj.dialog && obj.challenge === "before") {
-        bus.emit(EVENTS.DIALOG_SHOW, {
-          speaker: L(obj.dialog.speaker),
-          lines: (obj.dialog.lines || []).map(L),
-          portrait: isGuideDialog(obj.dialog) ? null : 'girl_happy',
-        });
-        const beforeSprite = sprites.get(res.objectId);
-        if (beforeSprite) beforeSprite.setVisible(false);
+    // before -> after swap: fires the first time a "before" object is the
+    // best-framed match, independent of mission/success — a "before" object
+    // with no mission field will never satisfy res.success, so this cannot be
+    // gated on that like the after-dialog block below is.
+    if (matchedObj && matchedObj.challenge === "before" && !swapped.has(matchedObj.id)) {
+      swapped.add(matchedObj.id);
 
-        const afterSprite = sprites.get(res.objectId + "_after");
-        if (afterSprite) afterSprite.setVisible(true);
-      } else if (obj && obj.dialog && obj.challenge === "after") {
+      if (matchedObj.dialog) {
+        bus.emit(EVENTS.DIALOG_SHOW, {
+          speaker: L(matchedObj.dialog.speaker),
+          lines: (matchedObj.dialog.lines || []).map(L),
+          portrait: isGuideDialog(matchedObj.dialog) ? null : 'girl_happy',
+        });
+      }
+      const beforeSprite = sprites.get(matchedObj.id);
+      if (beforeSprite) {
+        beforeSprite.flashHighlight(); // visual feedback even when it scores no mission
+        beforeSprite.setVisible(false);
+      }
+      const afterSprite = sprites.get(matchedObj.id + AFTER_SUFFIX);
+      if (afterSprite) afterSprite.setVisible(true);
+    }
+
+    // "after" dialog fires once, on the first successful mission capture of
+    // the after object (this one stays gated on res.success: the after object
+    // is the one that's actually supposed to carry the mission).
+    if (res.success && isFirstCapture) {
+      const obj = objects.find((o) => o.id === res.objectId);
+      if (obj && obj.dialog && obj.challenge === "after") {
         bus.emit(EVENTS.DIALOG_SHOW, {
           speaker: L(obj.dialog.speaker),
           lines: (obj.dialog.lines || []).map(L),
@@ -96,7 +128,6 @@ export function initLogicSystem(scene, bus, levelData) {
         });
       }
     }
-
 
     if (res.success && res.isSpecial && !specialShown) {
       specialShown = true;
