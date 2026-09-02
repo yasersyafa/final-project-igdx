@@ -16,34 +16,6 @@
   ],
   "objects": [
     {
-      "id": "obj_pemaingamelan1_before",
-      "name": "Pemain Gamelan 1",
-      "sprite": "Pemain Gamelan 1",
-      "idleAnim": "sway",
-      "x": 100, "y": 450,
-      "bbox": { "x": 100, "y": 395, "w": 100, "h": 110 },
-      "mission": {
-        "en": "Gamelan 1",
-        "id": "Gamelan 1"
-      },
-      "isSpecial": false,
-      "challenge": "before"
-    },
-    {
-      "id": "obj_pemaingamelan1_after",
-      "name": "Pemain Gamelan 1",
-      "sprite": "Pemain Gamelan 1",
-      "idleAnim": "sway",
-      "x": 400, "y": 450,
-      "bbox": { "x": 400, "y": 395, "w": 100, "h": 110 },
-      "mission": {
-        "en": "Gamelan 1",
-        "id": "Gamelan 1"
-      },
-      "isSpecial": false,
-      "challenge": "after"
-    },
-    {
       "id": "obj_becak",
       "name": "Becak",
       "sprite": "becak",
@@ -87,6 +59,44 @@
           { "en": "Behind the lit screen, the leather comes alive and lets the shadows do all the talking.", "id": "Di balik layar yang bercahaya, kulit itu menjadi hidup dan membiarkan bayangan yang berbicara." },
           { "en": "A whole night of love and war, played out patiently on a single glowing cloth.", "id": "Semalam penuh kisah cinta dan perang, dimainkan dengan sabar di atas selembar kain yang bercahaya." },
           { "en": "He gently turns a puppet toward you and smiles. 'Go on, take this one home.'", "id": "Ia perlahan mengarahkan sebuah wayang ke arahmu sambil tersenyum. 'Ayo, bawa yang ini pulang.'" }
+        ]
+      }
+    },
+    {
+      "id": "obj_gamelan1",
+      "name": "Gamelan 1",
+      "sprite": "gamelan1",
+      "noShadow": true,
+      "x": 400, "y": 450,
+      "bbox": { "x": 370, "y": 395, "w": 100, "h": 110 },
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Ah! He's a Saron player. Saron is a melodic instrument that is made of brass. Have you heard of a loud ringing sound from the ensemble? That's Saron!", 
+          "id": "Ah! Dia adalah pemain saron. Saron adalah alat musik melodis tradisional terbuat dari kuningan. Kamu dengan suara tumbukan nyaring yang sering terdengar dalam ansambel? Itu adalah Saron!" }
+        ]
+      }
+    },
+    {
+      "id": "obj_gamelan1_after",
+      "name": "Gamelan 1 After",
+      "sprite": "gamelan1_after",
+      "spriteAnim": "gamelan1_after",
+      "noShadow": true,
+      "x": 800, "y": 450,
+      "bbox": { "x": 770, "y": 395, "w": 150, "h": 150 },
+      "mission": {
+        "en": "Festive ensemble with various traditional Javanese musical instruments",
+        "id": "Ansambel meriah yang berisikan berbagai alat musik tradisional Jawa"
+      },
+      "isSpecial": false,
+      "challenge": "after",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "There it is, the cakalang fufu in full golden glory, smoky and ready to eat.", "id": "Itu dia, cakalang fufu dalam kemilau keemasan penuh, harum asap dan siap disantap." }
         ]
       }
     }
