@@ -87,6 +87,97 @@
       "noShadow": true,
       "x": 800, "y": 450,
       "bbox": { "x": 770, "y": 395, "w": 150, "h": 150 },
+      "isSpecial": false,
+      "challenge": "after",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Looks like not all of the gamelan players are ready. Let's search for them!", 
+          "id": "Sepertinya pemain gamelannya belum lengkap. Ayo kita cari lagi!" }
+        ]
+      }
+    },
+
+    {
+      "id": "obj_gamelan2",
+      "name": "Gamelan 2",
+      "sprite": "gamelan2",
+      "noShadow": true,
+      "x": 400, "y": 450,
+      "bbox": { "x": 370, "y": 395, "w": 100, "h": 110 },
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "There! One of the Saron players. Have you ever wondered why the Saron looks like a piano but with different notes? It's because Saron uses the Pelog notes that consists of do-mi-fa-sol-ti!", 
+          "id": "Lihat! Si pemain saron. Kamu penasaran gk sih kenapa saron bentuknya seperti piano tapi nadanya berbeda? Karena saron mengikuti tangga nada pelog yang berisi do-mi-fa-sol-si!" }
+        ]
+      }
+    },
+    {
+      "id": "obj_gamelan2_after",
+      "name": "Gamelan 2 After",
+      "sprite": "gamelan2_after",
+      "spriteAnim": "gamelan2_after",
+      "noShadow": true,
+      "x": 800, "y": 450,
+      "bbox": { "x": 770, "y": 395, "w": 150, "h": 150 },
+      "isSpecial": false,
+      "challenge": "after",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Looks like not all of the gamelan players are ready. Let's search for them!", 
+          "id": "Sepertinya pemain gamelannya belum lengkap. Ayo kita cari lagi!" }
+        ]
+      }
+    },
+
+    {
+      "id": "obj_gamelan3",
+      "name": "Gamelan 3",
+      "sprite": "gamelan3",
+      "noShadow": true,
+      "x": 400, "y": 450,
+      "bbox": { "x": 370, "y": 395, "w": 100, "h": 110 },
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Bing! Bong! Sound from the Gong! A percussion instrument without any notes, but with many meanings. Gongs are usually the symbol of a beginning and the end!", 
+          "id": "Bing! Bong! Suara dari pemain Gong! Alat musik perkusi yang tidak mempunyai banyak nada, namun banyak arti. Gong biasanya menjadi simbol permulaan dan akhir!" }
+        ]
+      }
+    },
+    {
+      "id": "obj_gamelan3_after",
+      "name": "Gamelan 3 After",
+      "sprite": "gamelan3_after",
+      "spriteAnim": "gamelan3_after",
+      "noShadow": true,
+      "x": 800, "y": 450,
+      "bbox": { "x": 770, "y": 395, "w": 150, "h": 150 },
+      "isSpecial": false,
+      "challenge": "before",
+      "dialog": {
+        "speaker": { "en": "Guide", "id": "Pemandu" },
+        "lines": [
+          { "en": "Looks like not all of the gamelan players are ready. Let's search for them!", 
+          "id": "Sepertinya pemain gamelannya belum lengkap. Ayo kita cari lagi!" }
+        ]
+      }
+    },
+
+    {
+      "id": "obj_gamelan",
+      "name": "Set Gamelan",
+      "sprite": "gamelan",
+      "spriteAnim": "gamelan",
+      "noShadow": true,
+      "x": 800, "y": 450,
+      "bbox": { "x": 770, "y": 395, "w": 150, "h": 150 },
       "mission": {
         "en": "Festive ensemble with various traditional Javanese musical instruments",
         "id": "Ansambel meriah yang berisikan berbagai alat musik tradisional Jawa"
@@ -96,7 +187,8 @@
       "dialog": {
         "speaker": { "en": "Guide", "id": "Pemandu" },
         "lines": [
-          { "en": "There it is, the cakalang fufu in full golden glory, smoky and ready to eat.", "id": "Itu dia, cakalang fufu dalam kemilau keemasan penuh, harum asap dan siap disantap." }
+          { "en": "Looks like not all of the gamelan players are ready. Let's search for them!", 
+          "id": "Sepertinya pemain gamelannya belum lengkap. Ayo kita cari lagi!" }
         ]
       }
     }
