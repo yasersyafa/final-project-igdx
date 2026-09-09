@@ -22,10 +22,13 @@ import EDU from "../data/education.json";
 
 // Left-page thumbnail grid.
 const COLS = 2;
-const TW = 185,
+// TW matches the frame art's rendered width at height TH (photo-border.png is
+// 160x211 portrait, fit by height) so cells hug the frame and the two columns
+// sit adjacent.
+const TW = 104,
   TH = 137;
-const GAP_X = 16,
-  GAP_Y = 16;
+const GAP_X = 56,
+  GAP_Y = 56;
 
 // Tab (bookmark) colors — active is the warm parchment of the open book.
 const TAB_ON = 0xefe2c0,
@@ -383,7 +386,8 @@ export class AlbumScene extends Phaser.Scene {
     // spine, matching the grid's own top/bottom padding so it doesn't run
     // the full length of the page. Both are plain capsule art, so stretching
     // the track vertically is safe (no recognizable detail to distort).
-    const trackX = this.lpx + gridW / 2 + 6 - 50;
+    // 15px gap between the grid's right edge and the scrollbar's left edge.
+    const trackX = this.lpx + gridW / 2 + 15 + SCROLLBAR_W / 2;
     const track = this.add
       .image(trackX, areaTop, SCROLL_TRACK_KEY)
       .setOrigin(0.5, 0)
