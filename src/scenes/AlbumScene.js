@@ -22,10 +22,10 @@ import EDU from "../data/education.json";
 
 // Left-page thumbnail grid.
 const COLS = 2;
-const TW = 151,
-  TH = 112;
+const TW = 185,
+  TH = 137;
 const GAP_X = 16,
-  GAP_Y = 14;
+  GAP_Y = 16;
 
 // Tab (bookmark) colors — active is the warm parchment of the open book.
 const TAB_ON = 0xefe2c0,
@@ -40,9 +40,24 @@ const BOOK_FILL = 0xefe2c0;
 const FRAME_KEY = "photo_border";
 const ACTIVE_FRAME_KEY = "photo_border_active";
 const FRAME_CONFIGS = {
-  [FRAME_KEY]: { innerW: 0.854, innerH: 0.521, innerX: 0.004, innerY: -0.034, angle: 0 },
-  [ACTIVE_FRAME_KEY]: { innerW: 0.593, innerH: 0.499, innerX: 0.036, innerY: -0.07, angle: -8.4 },
+  [FRAME_KEY]: {
+    innerW: 0.854,
+    innerH: 0.521,
+    innerX: 0.004,
+    innerY: -0.034,
+    angle: 0,
+  },
+  [ACTIVE_FRAME_KEY]: {
+    innerW: 0.593,
+    innerH: 0.499,
+    innerX: 0.036,
+    innerY: -0.07,
+    angle: -8.4,
+  },
 };
+
+const ACTIVE_FRAME_SCALE = 1;
+const ACTIVE_FRAME_ANGLE = -15;
 
 // album-book.png's two page areas as fractions of the book's own display
 // size — measured off the source art (curved page edges, off-center spine).
@@ -111,7 +126,9 @@ export class AlbumScene extends Phaser.Scene {
     this.bookX = W / 2;
     this.bookY = H * 0.517;
     if (this.textures.exists(BOOK_KEY)) {
-      this.add.image(this.bookX, this.bookY, BOOK_KEY).setDisplaySize(this.bookW, this.bookH);
+      this.add
+        .image(this.bookX, this.bookY, BOOK_KEY)
+        .setDisplaySize(this.bookW, this.bookH);
     } else {
       this.add
         .rectangle(this.bookX, this.bookY, this.bookW, this.bookH, BOOK_FILL, 1)
@@ -125,8 +142,10 @@ export class AlbumScene extends Phaser.Scene {
     // page centers + a shared inner top edge
     this.lpx = this.bookX - this.bookW * BOOK_PAGE_X_OFFSET;
     this.rpx = this.bookX + this.bookW * BOOK_PAGE_X_OFFSET;
-    this.pageTop = this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_TOP_FRAC;
-    this.pageBottom = this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_BOTTOM_FRAC;
+    this.pageTop =
+      this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_TOP_FRAC;
+    this.pageBottom =
+      this.bookY - this.bookH / 2 + this.bookH * BOOK_PAGE_BOTTOM_FRAC;
 
     // ---- level tabs (placeholder for bookmark asset) ------------------------
     this._buildTabs();
@@ -229,7 +248,9 @@ export class AlbumScene extends Phaser.Scene {
   // size itself when the texture isn't loaded (e.g. placeholder rects, which
   // have no native aspect to preserve).
   _containSize(texKey, maxW, maxH) {
-    const src = this.textures.exists(texKey) && this.textures.get(texKey).getSourceImage();
+    const src =
+      this.textures.exists(texKey) &&
+      this.textures.get(texKey).getSourceImage();
     if (!src || !src.width || !src.height) return { w: maxW, h: maxH };
     const scale = Math.min(maxW / src.width, maxH / src.height);
     return { w: src.width * scale, h: src.height * scale };
@@ -244,35 +265,49 @@ export class AlbumScene extends Phaser.Scene {
     const scale = Math.max(targetW / src.width, targetH / src.height);
     const cropW = targetW / scale;
     const cropH = targetH / scale;
-    img.setCrop((src.width - cropW) / 2, (src.height - cropH) / 2, cropW, cropH);
+    img.setCrop(
+      (src.width - cropW) / 2,
+      (src.height - cropH) / 2,
+      cropW,
+      cropH,
+    );
     img.setDisplaySize(targetW, targetH);
   }
 
   // Draws a photo-border frame centered at (cx, cy), fit within (maxW,
   // maxH), with the photo texture (or a placeholder rect) inset into the
   // frame's window — also aspect-fit, never stretched. Pass { active: true }
-  // to use the tilted "picked up" frame instead of the default upright one —
-  // selection is shown by swapping the frame art, not by drawing an extra
-  // border on top. Returns { frame, photo } so callers can push both into
-  // their item list.
+  // for the selected thumbnail: same frame art, drawn larger and rotated
+  // -45deg so it reads as "picked up" — no sprite swap. Returns { frame,
+  // photo } so callers can push both into their item list.
   _framedPhoto(cx, cy, maxW, maxH, key, { active = false } = {}) {
-    const frameKey = active ? ACTIVE_FRAME_KEY : FRAME_KEY;
+    const frameKey = FRAME_KEY;
     const cfg = FRAME_CONFIGS[frameKey];
-    const { w, h } = this._containSize(frameKey, maxW, maxH);
+    const s = active ? ACTIVE_FRAME_SCALE : 1;
+    const spin = active ? ACTIVE_FRAME_ANGLE : 0;
+    const { w, h } = this._containSize(frameKey, maxW * s, maxH * s);
     const frame = this.textures.exists(frameKey)
       ? this.add.image(cx, cy, frameKey).setDisplaySize(w, h)
-      : this.add.rectangle(cx, cy, w, h, 0x000000, 0).setStrokeStyle(2, 0x9c855a, 0.8);
-    frame.setOrigin(0.5);
+      : this.add
+          .rectangle(cx, cy, w, h, 0x000000, 0)
+          .setStrokeStyle(2, 0x9c855a, 0.8);
+    frame.setOrigin(0.5).setAngle(spin);
 
-    const innerCX = cx + w * cfg.innerX;
-    const innerCY = cy + h * cfg.innerY;
+    // Inner-window offset rotates with the frame.
+    const offX = w * cfg.innerX;
+    const offY = h * cfg.innerY;
+    const rad = Phaser.Math.DegToRad(spin);
+    const cos = Math.cos(rad),
+      sin = Math.sin(rad);
+    const innerCX = cx + offX * cos - offY * sin;
+    const innerCY = cy + offX * sin + offY * cos;
     const innerMaxW = w * cfg.innerW;
     const innerMaxH = h * cfg.innerH;
     const hasPhoto = this.textures.exists(key);
     const photo = hasPhoto
       ? this.add.image(innerCX, innerCY, key)
       : this.add.rectangle(innerCX, innerCY, innerMaxW, innerMaxH, 0xd8c8a0, 1);
-    photo.setOrigin(0.5).setAngle(cfg.angle);
+    photo.setOrigin(0.5).setAngle(cfg.angle + spin);
     if (hasPhoto) this._coverFit(photo, key, innerMaxW, innerMaxH);
 
     return { frame, photo };
@@ -321,7 +356,9 @@ export class AlbumScene extends Phaser.Scene {
       const key = this._key(p.id);
       const selected = p.id === this._selectedId;
 
-      const { frame, photo: img } = this._framedPhoto(cx, cy, TW, TH, key, { active: selected });
+      const { frame, photo: img } = this._framedPhoto(cx, cy, TW, TH, key, {
+        active: selected,
+      });
       frame.setInteractive({ useHandCursor: true });
       frame.on("pointerdown", () => this._select(p.id));
       content.add([frame, img]);
@@ -346,7 +383,7 @@ export class AlbumScene extends Phaser.Scene {
     // spine, matching the grid's own top/bottom padding so it doesn't run
     // the full length of the page. Both are plain capsule art, so stretching
     // the track vertically is safe (no recognizable detail to distort).
-    const trackX = this.lpx + gridW / 2 + 6;
+    const trackX = this.lpx + gridW / 2 + 6 - 50;
     const track = this.add
       .image(trackX, areaTop, SCROLL_TRACK_KEY)
       .setOrigin(0.5, 0)
@@ -361,7 +398,17 @@ export class AlbumScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true, draggable: true, cursor: "grab" });
     this._leftItems.push(thumb);
 
-    this._leftScroll = { content, thumb, top: areaTop, regionH: pageH, max, thumbH, offset: 0, dragBase: 0, dragY: 0 };
+    this._leftScroll = {
+      content,
+      thumb,
+      top: areaTop,
+      regionH: pageH,
+      max,
+      thumbH,
+      offset: 0,
+      dragBase: 0,
+      dragY: 0,
+    };
 
     thumb.on("dragstart", (p) => {
       this._leftScroll.dragBase = this._leftScroll.offset;
@@ -423,20 +470,31 @@ export class AlbumScene extends Phaser.Scene {
     const photoH = photoW * 0.75;
     const py = this.pageTop + photoH / 2;
     const key = this._key(photo.id);
-    const { frame, photo: img } = this._framedPhoto(this.rpx, py, photoW, photoH, key);
+    const { frame, photo: img } = this._framedPhoto(
+      this.rpx,
+      py,
+      photoW,
+      photoH,
+      key,
+    );
     this._rightItems.push(frame, img);
 
     // title
     const title = this.add
-      .text(this.rpx, py + photoH / 2 + 14, info ? info.name : t("album.snapshot"), {
-        fontFamily: FONTS.display,
-        fontSize: "22px",
-        letterSpacing: letterSpacing(22),
-        color: "#2b2417",
-        fontStyle: "bold",
-        align: "center",
-        wordWrap: { width: textW },
-      })
+      .text(
+        this.rpx,
+        py + photoH / 2 + 14,
+        info ? info.name : t("album.snapshot"),
+        {
+          fontFamily: FONTS.display,
+          fontSize: "22px",
+          letterSpacing: letterSpacing(22),
+          color: "#2b2417",
+          fontStyle: "bold",
+          align: "center",
+          wordWrap: { width: textW },
+        },
+      )
       .setOrigin(0.5, 0);
     this._rightItems.push(title);
 
@@ -461,19 +519,14 @@ export class AlbumScene extends Phaser.Scene {
     if (regionH < 24) return;
 
     const body = this.add
-      .text(
-        this.rpx,
-        regionTop,
-        info ? info.edu : t("album.randomnote"),
-        {
-          fontFamily: FONTS.body,
-          fontSize: "16px",
-          color: info ? "#3a3222" : "#7a6f57",
-          align: "center",
-          lineSpacing: 4,
-          wordWrap: { width: textW },
-        },
-      )
+      .text(this.rpx, regionTop, info ? info.edu : t("album.randomnote"), {
+        fontFamily: FONTS.body,
+        fontSize: "16px",
+        color: info ? "#3a3222" : "#7a6f57",
+        align: "center",
+        lineSpacing: 4,
+        wordWrap: { width: textW },
+      })
       .setOrigin(0.5, 0);
     this._rightItems.push(body);
 
@@ -501,7 +554,17 @@ export class AlbumScene extends Phaser.Scene {
       .setInteractive({ useHandCursor: true, draggable: true });
     this._rightItems.push(zone);
 
-    this._scroll = { body, thumb, top: regionTop, regionH, max, thumbH, offset: 0, dragBase: 0, dragY: 0 };
+    this._scroll = {
+      body,
+      thumb,
+      top: regionTop,
+      regionH,
+      max,
+      thumbH,
+      offset: 0,
+      dragBase: 0,
+      dragY: 0,
+    };
 
     zone.on("dragstart", (p) => {
       this._scroll.dragBase = this._scroll.offset;
