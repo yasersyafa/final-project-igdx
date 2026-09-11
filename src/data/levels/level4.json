@@ -58,10 +58,6 @@
       "noShadow": true,
       "x": 620, "y": 280,
       "bbox": { "x": 490, "y": 141, "w": 261, "h": 278 },
-      "mission": {
-        "en": "Find the smokehouse where cakalang fufu is curing, still hidden behind the fire's smoke",
-        "id": "Temukan pondok asap tempat cakalang fufu diasapi, masih tersembunyi di balik kepulan asap"
-      },
       "isSpecial": false,
       "challenge": "before",
       "dialog": {
