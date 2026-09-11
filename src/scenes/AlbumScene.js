@@ -18,6 +18,7 @@ import { ConfirmDialog } from "../ui/ConfirmDialog.js";
 import { FONTS, letterSpacing } from "../config/fonts.js";
 import { THEME } from "../config/theme.js";
 import { t, L } from "../core/i18n.js";
+import { DEBUG } from "../config/debug.js";
 import EDU from "../data/education.json";
 
 // Left-page thumbnail grid.
@@ -77,6 +78,9 @@ const SCROLL_TRACK_KEY = "scroll_track";
 const SCROLL_THUMB_KEY = "scroll_thumb";
 const SCROLLBAR_W = 14;
 const SCROLLBAR_THUMB_W = 8;
+// Extra vertical inset for the scrollbar only, so the track is shorter than
+// the visible grid region (top + bottom).
+const SCROLLBAR_PAD_Y = 40;
 // Breathing room so the grid + scrollbar don't touch the page's curved top
 // edge or the tab row at the bottom.
 const GRID_PAGE_PAD_Y = 24;
@@ -372,12 +376,38 @@ export class AlbumScene extends Phaser.Scene {
 
     // Clip the grid to the page bounds so overflow scrolls instead of
     // spilling onto the spine or off the bottom edge.
-    const maskW = gridW + 20;
+    const maskW = gridW + 62;
     const g = this.make.graphics({ add: false });
     g.fillStyle(0xffffff);
     g.fillRect(this.lpx - maskW / 2, areaTop, maskW, pageH);
     content.setMask(g.createGeometryMask());
     this._leftItems.push(g);
+
+    if (DEBUG.albumGrid) {
+      const dbg = this.add.graphics();
+      // mask rect (magenta)
+      dbg.lineStyle(2, 0xff00ff, 1);
+      dbg.strokeRect(this.lpx - maskW / 2, areaTop, maskW, pageH);
+      // grid bounds (cyan)
+      dbg.lineStyle(2, 0x00ffff, 1);
+      dbg.strokeRect(
+        this.lpx - gridW / 2,
+        startY - TH / 2,
+        gridW,
+        rows * TH + (rows - 1) * GAP_Y,
+      );
+      // per-cell TW x TH boxes (yellow)
+      dbg.lineStyle(1, 0xffff00, 0.7);
+      for (let i = 0; i < rows * COLS; i++) {
+        const cx = startX + (i % COLS) * (TW + GAP_X);
+        const cy = startY + Math.floor(i / COLS) * (TH + GAP_Y);
+        dbg.strokeRect(cx - TW / 2, cy - TH / 2, TW, TH);
+      }
+      // page-center vertical line (red)
+      dbg.lineStyle(1, 0xff0000, 0.8);
+      dbg.lineBetween(this.lpx, areaTop, this.lpx, areaTop + pageH);
+      this._leftItems.push(dbg);
+    }
 
     const max = Math.max(0, gridH - pageH);
     if (max <= 0) return; // fits — no scrollbar needed
@@ -388,15 +418,17 @@ export class AlbumScene extends Phaser.Scene {
     // the track vertically is safe (no recognizable detail to distort).
     // 15px gap between the grid's right edge and the scrollbar's left edge.
     const trackX = this.lpx + gridW / 2 + 15 + SCROLLBAR_W / 2;
+    const barTop = areaTop + SCROLLBAR_PAD_Y;
+    const barH = Math.max(60, pageH - SCROLLBAR_PAD_Y * 2);
     const track = this.add
-      .image(trackX, areaTop, SCROLL_TRACK_KEY)
+      .image(trackX, barTop, SCROLL_TRACK_KEY)
       .setOrigin(0.5, 0)
-      .setDisplaySize(SCROLLBAR_W, pageH);
+      .setDisplaySize(SCROLLBAR_W, barH);
     this._leftItems.push(track);
 
-    const thumbH = Math.max(30, (pageH * pageH) / gridH);
+    const thumbH = Math.max(30, (barH * pageH) / gridH);
     const thumb = this.add
-      .image(trackX, areaTop, SCROLL_THUMB_KEY)
+      .image(trackX, barTop, SCROLL_THUMB_KEY)
       .setOrigin(0.5, 0)
       .setDisplaySize(SCROLLBAR_THUMB_W, thumbH)
       .setInteractive({ useHandCursor: true, draggable: true, cursor: "grab" });
@@ -405,8 +437,8 @@ export class AlbumScene extends Phaser.Scene {
     this._leftScroll = {
       content,
       thumb,
-      top: areaTop,
-      regionH: pageH,
+      top: barTop,
+      regionH: barH,
       max,
       thumbH,
       offset: 0,
