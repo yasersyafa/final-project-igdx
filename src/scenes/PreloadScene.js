@@ -1,7 +1,3 @@
-// PreloadScene — asset pipeline with a loading bar.
-// No real art yet: placeholder shapes are drawn by PhotoObject / scenes directly.
-// The pipeline below is structured so swapping in real assets is just adding load calls
-// and registering idle animations by the same keys the level data references.
 import Phaser from "phaser";
 import { EASE, DUR } from "../anim/motion.js";
 import { FONTS } from "../config/fonts.js";
@@ -16,8 +12,7 @@ export class PreloadScene extends Phaser.Scene {
   preload() {
     const { width: W, height: H } = this.cameras.main;
 
-    // --- loading bar ---
-    const barW = 420,
+      const barW = 420,
       barH = 18;
     const bx = W / 2 - barW / 2,
       by = H / 2;
@@ -37,7 +32,6 @@ export class PreloadScene extends Phaser.Scene {
       .setOrigin(0, 0.5);
     this.load.on("progress", (p) => (fill.width = barW * p));
 
-    // --- REAL ASSET PIPELINE
     this.load.audio('sfx_button_click', 'src/sounds/sfx/button-clicked.wav');
     this.load.audio('sfx_button_hover', 'src/sounds/sfx/button-hovered.wav');
     this.load.audio('sfx_shutter_click', 'src/sounds/sfx/shutter-clicked.mp3');
@@ -59,14 +53,18 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('decor_corgi', 'src/arts/level-2/decor-2.png');
     this.load.image('ui_dialogue_box', 'src/arts/ui/dialogue-box.png');
     this.load.image('ui_dialogue_name', 'src/arts/ui/dialogue-name.png');
-    // For now load nothing else real; ensure the bar still animates to 100%.
+    this.load.image('ui_pause_button', 'src/arts/ui/pause-button.png');
+    this.load.image('ui_pause_background_maluku', 'src/arts/ui/paused-maluku.png');
+    this.load.image('ui_pause_title', 'src/arts/ui/pause-title.png');
+    this.load.image('ui_resume_button', 'src/arts/ui/resume-button.png');
+    this.load.image('ui_settings_button', 'src/arts/ui/settings-button.png');
+    this.load.image('ui_pause_exit_button', 'src/arts/ui/pause-exit-button.png');
+    
     for (let i = 0; i < 8; i++) this.load.image(`__pad_${i}`, this._blankURI());
   }
 
   create() {
-    // --- REGISTER idleAnim ANIMATIONS HERE when real spritesheets exist ----
-    // (Idle motion is procedural for now — see src/anim/motion.js.)
-    this.anims.create({
+      this.anims.create({
       key: 'anim_kolintang',
       frames: [
         { key: 'kolintang_1' },
@@ -90,16 +88,11 @@ export class PreloadScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    // Wire the AudioManager observer once; it listens on EventBus for the rest
-    // of the game's life (this.sound is Phaser's shared, game-wide sound manager).
     AudioManager.init(this.sound);
 
     this._showTapToStart();
   }
 
-  // Browsers block AudioContext until a real user gesture (click/tap/key —
-  // mouse move does NOT count). Shown after loading so the bar isn't gated on
-  // it; resumes the audio context inside the same gesture handler.
   _showTapToStart() {
     const { width: W, height: H } = this.cameras.main;
 
