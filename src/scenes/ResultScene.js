@@ -1,5 +1,3 @@
-// ResultScene — the result panel. Reveals which missions were actually captured
-// across the roll (the risk of confirming early), the score, and a grade.
 import Phaser from "phaser";
 import { LEVELS } from "./levels.js";
 import { gradeForFrac, starsForFrac, recordResult } from "../core/progress.js";
@@ -30,11 +28,10 @@ export class ResultScene extends Phaser.Scene {
 
     const { grade, color } = gradeForFrac(frac);
     const stars = starsForFrac(frac);
-    // Level counts as "completed" (unlocks the next one) only when every mission
-    // on the shot list is ticked — not just whenever the player hits Selesai.
+
     const doneCount = results.filter((r) => r.done).length;
     const completed = results.length > 0 && doneCount === results.length;
-    // Persist best result; celebrate if this run beat the stored best.
+ 
     const { improved } = recordResult(levelIndex, { frac, total, completed });
 
     const head = this.add
@@ -47,7 +44,6 @@ export class ResultScene extends Phaser.Scene {
       .setOrigin(0.5);
     popIn(head);
 
-    // Mission breakdown list (staggered reveal).
     const listX = W / 2 - 280;
     let y = 150;
     results.forEach((r, i) => {

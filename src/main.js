@@ -1,4 +1,3 @@
-// Phaser game bootstrap. Scene flow: Boot -> Preload -> MainMenu -> LevelSelect -> Cutscene -> Level -> Result.
 import Phaser from 'phaser';
 import { WORLD } from './config/gameConfig.js';
 import { setReducedMotion } from './anim/motion.js';
@@ -12,8 +11,8 @@ import { CutsceneScene } from './scenes/CutsceneScene.js';
 import { LevelScene } from './scenes/LevelScene.js';
 import { ResultScene } from './scenes/ResultScene.js';
 import { TutorialScene } from './scenes/TutorialScene.js';
+import { PauseScene } from './scenes/PauseScene.js';
 
-// Accessibility: respect OS reduced-motion preference (also see setReducedMotion()).
 if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   setReducedMotion(true);
 }
@@ -28,13 +27,10 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene, TutorialScene],
+  scene: [BootScene, PreloadScene, MainMenuScene, LevelSelectScene, AlbumScene, CutsceneScene, LevelScene, ResultScene, TutorialScene, PauseScene],
 };
 
-// Wait for the web fonts (Knewave / Darumadrop One) before starting so canvas text
-// renders in the right face instead of a fallback. Falls back gracefully if fonts/API fail.
 function startGame() {
-  // eslint-disable-next-line no-new
   new Phaser.Game(config);
 }
 
